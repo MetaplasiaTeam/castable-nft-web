@@ -5,6 +5,7 @@ env:
 extends:
   - plugin:vue/essential
   - airbnb-base
+  - prettier
 parserOptions:
   ecmaVersion: latest
   parser: '@typescript-eslint/parser'
