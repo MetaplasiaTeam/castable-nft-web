@@ -2,30 +2,41 @@
   <n-layout>
     <n-layout-header style="display: flex">
       <div id="title-left">CastableNFT</div>
+      <div>
+        <n-dropdown
+          trigger="hover"
+          :options="language"
+          @select="languageSelect"
+        >
+          <n-tag checkable>{{ $t('language') }}</n-tag>
+        </n-dropdown>
+      </div>
     </n-layout-header>
     <n-layout-content
       content-style="padding-left: 20vw; padding-right: 20vw; padding-bottom: 5vh"
     >
       <n-space vertical>
         <n-space justify="center" :style="{ alignItems: 'flex-end' }">
-          <a style="font-size: 2rem; font-weight: bold">铸造</a>
-          <a>创造有价值的 NFT</a>
+          <a style="font-size: 2rem; font-weight: bold">{{
+            $t('home.title')
+          }}</a>
+          <a>{{ $t('home.subtitle') }}</a>
         </n-space>
         <div style="display: flex; flex-direction: row; align-items: center">
           <n-input
             v-model:value="value"
             type="text"
-            placeholder="自定义一个NFT名称(支持中文/英文/数字)"
+            :placeholder="$t('home.input.placeholder')"
             autosize
             style="width: 100%; margin-right: 0"
           />
           <a :style="{ 'font-weight': 'bold' }">#</a>
-          <a style="white-space: nowrap">Token ID 由合约生成</a>
+          <a style="white-space: nowrap">{{ $t('home.token_id') }}</a>
         </div>
         <n-upload>
           <n-upload-dragger>
             <div style="width: 100%; margin-right: 0">
-              + 上传一张图片，请小于 5M
+              {{ $t('home.upload') }}
             </div>
           </n-upload-dragger>
         </n-upload>
@@ -33,33 +44,31 @@
           <n-input
             v-model:value="value"
             type="text"
-            placeholder="铸造价值最低0.002 ETH起/个"
+            :placeholder="$t('home.input.placeholder_2')"
             style="width: 100%; margin-right: 0"
           ></n-input>
-          <n-image
-            width="25"
-            height="25"
-            preview-disabled
-            src="https://d1icd6shlvmxi6.cloudfront.net/gsc/NWITZV/3a/43/a8/3a43a8183c0b4081abd04453fd9efe43/images/%E9%A6%96%E9%A1%B5/u19.png?token=6247d332ced8e4adad5ae608650c35160b1ee65dc42c50a0696b5aa7e1134137&pageId=2106dce6-9473-4bc3-b73c-ef7ba1cf9b57"
-          />
+          <n-image width="25" height="25" preview-disabled src="@/eth.png" />
         </div>
         <!-- <n-button @click="open"> 测试 </n-button>
         {{ address }}
         <vdapp-board /> -->
         <n-collapse arrow-placement="right">
-          <n-collapse-item title="高级选项">
+          <n-collapse-item :title="$t('home.advance_option')">
             <div style="display: flex; flex-direction: column">
               <n-checkbox
                 v-model:checked="bulk"
                 :style="{ 'margin-bottom': '16px' }"
-                >进行批量铸造</n-checkbox
+                >{{ $t('home.batch_mint') }}</n-checkbox
               >
-              <n-input-number :disabled="!bulk" placeholder="发行总量" />
+              <n-input-number
+                :disabled="!bulk"
+                :placeholder="$t('home.input.placeholder_3')"
+              />
             </div>
           </n-collapse-item>
         </n-collapse>
         <n-button type="primary" :style="{ width: '100%' }">
-          现在铸造
+          {{ $t('home.mint_now') }}
         </n-button>
       </n-space>
     </n-layout-content>
@@ -68,6 +77,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from '@vue/runtime-dom'
+import i18n from '@/i18n'
 import {
   NInput,
   NSpace,
@@ -82,6 +92,8 @@ import {
   NCollapseItem,
   NCheckbox,
   NInputNumber,
+  NDropdown,
+  NTag,
 } from 'naive-ui'
 
 // import { useBoard, useEthers } from 'vue-dapp'
@@ -102,6 +114,8 @@ export default defineComponent({
     NCollapseItem,
     NCheckbox,
     NInputNumber,
+    NDropdown,
+    NTag,
   },
   setup() {
     // const { open } = useBoard()
@@ -110,6 +124,20 @@ export default defineComponent({
     return {
       value: ref(null),
       bulk: ref(false),
+      language: [
+        {
+          label: '简体中文',
+          key: 'zh-CN',
+        },
+        {
+          label: 'English',
+          key: 'en',
+        },
+      ],
+      // 更改语言
+      languageSelect(key: string) {
+        i18n.global.locale = key
+      },
       // address,
       // open,
     }

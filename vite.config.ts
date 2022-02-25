@@ -10,6 +10,7 @@ export default defineConfig({
     alias: {
       '@': resolve(__dirname, 'src'),
       '@page': resolve(__dirname, 'src/page'),
+      '@img': resolve(__dirname, 'src/assets/img'),
       process: 'process/browser',
       stream: 'stream-browserify',
       zlib: 'browserify-zlib',

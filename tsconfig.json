@@ -13,7 +13,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@page/*": ["src/page/*"]
+      "@page/*": ["src/page/*"],
+      "@img/*": ["src/asstes/img/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],

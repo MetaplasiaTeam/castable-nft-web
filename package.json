@@ -1,11 +1,11 @@
 {
   "name": "vite-project",
-  "private": true,
   "version": "0.0.0",
-  "packageManager": "yarn@1.22.17",
+  "private": true,
   "scripts": {
-    "dev": "vite --host",
     "build": "vue-tsc --noEmit && vite build",
+    "dev": "vite --host",
+    "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -19,14 +19,17 @@
     "naive-ui": "^2.25.3",
     "vfonts": "^0.0.3",
     "vue": "^3.2.25",
+    "vue-i18n": "9",
     "vue-router": "4",
     "web3": "^1.7.0"
   },
   "devDependencies": {
+    "@intlify/vue-i18n-loader": "^3.0.0",
     "@rollup/plugin-inject": "^4.0.4",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
     "@vitejs/plugin-vue": "^2.2.0",
+    "@vue/cli-shared-utils": "^5.0.1",
     "buffer": "^6.0.3",
     "eslint": "^8.9.0",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -38,6 +41,8 @@
     "typescript": "^4.5.4",
     "util": "^0.12.4",
     "vite": "^2.8.0",
+    "vue-cli-plugin-i18n": "~2.3.1",
     "vue-tsc": "^0.29.8"
-  }
+  },
+  "packageManager": "yarn@1.22.17"
 }

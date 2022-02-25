@@ -1,0 +1,17 @@
+{
+  "language":"Language",
+  "home": {
+    "title": "Mint",
+    "subtitle": "Mint valuable NFT",
+    "token_id": "Token ID Generate by smart contract",
+    "upload": "+ Upload image less than 5M",
+    "advance_option": "Advance Option",
+    "batch_mint": "Batch Mint",
+    "mint_now": "Mint Now",
+    "input": {
+      "placeholder": "Customize NFT name (English/Chinese/number supported)",
+      "placeholder_2": "Minimum mint value 0.002ETH/NFT",
+      "placeholder_3": "Total Supply"
+    }
+  }
+}
