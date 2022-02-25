@@ -1,0 +1,70 @@
+<template>
+  <div
+    style="
+      display: flex;
+      flex-direction: column;
+      margin-left: 1vw;
+      margin-right: 1vw;
+      margin-bottom: 2vh;
+    "
+  >
+    <n-space vertical align="start">
+      <n-image width="200" height="200" :src="imageUrl" />
+      <a>{{ title }}</a>
+      <a>{{ price }}</a>
+      <a>{{ $t('nft_item.total_supply') }}: {{ totalSupply }}</a>
+      <a>{{ $t('nft_item.mint_time') }}: {{ mintTime }}</a>
+    </n-space>
+    <div
+      style="
+        align-self: stretch;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      "
+    >
+      <n-button type="primary" style="width: 40%">{{
+        $t('nft_item.giveaway')
+      }}</n-button>
+      <div width="5vw"></div>
+      <n-button type="primary" style="width: 40%">{{
+        $t('nft_item.burn')
+      }}</n-button>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from '@vue/runtime-dom'
+import { NSpace, NImage, NButton } from 'naive-ui'
+
+export interface NFTItemProps {
+  imageUrl: string
+  title: string
+  price: string
+  totalSupply: string
+  mintTime: string
+}
+
+export default defineComponent({
+  props: {
+    imageUrl: String,
+    title: String,
+    price: String,
+    totalSupply: String,
+    mintTime: String,
+  },
+  components: {
+    NSpace,
+    NImage,
+    NButton,
+  },
+  setup() {
+    return {}
+  },
+})
+</script>
+
+<style scoped>
+
+</style>

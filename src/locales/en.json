@@ -1,5 +1,6 @@
 {
-  "language":"Language",
+  "language": "Language",
+  "profile": "Profile",
   "home": {
     "title": "Mint",
     "subtitle": "Mint valuable NFT",
@@ -13,5 +14,11 @@
       "placeholder_2": "Minimum mint value 0.002ETH/NFT",
       "placeholder_3": "Total Supply"
     }
+  },
+  "nft_item": {
+    "total_supply": "Total Supply",
+    "mint_time": "Mint Time",
+    "giveaway": "Giveaway",
+    "burn": "Burn"
   }
 }

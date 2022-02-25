@@ -1,7 +1,12 @@
 <template>
   <div style="display: flex; padding: 24px; justify-content: space-between">
-    <div id="title-left">CastableNFT</div>
+    <router-link to="/"
+      ><n-tag id="title-left" checkable>CastableNFT</n-tag>
+    </router-link>
     <div>
+      <router-link to="/profile"
+        ><n-tag checkable>{{ $t('profile') }}</n-tag></router-link
+      >
       <n-dropdown trigger="hover" :options="language" @select="languageSelect">
         <n-tag checkable>{{ $t('language') }}</n-tag>
       </n-dropdown>
@@ -44,7 +49,6 @@ export default defineComponent({
 #title-left {
   font-size: 2rem;
   font-weight: bold;
-  color: var(--color-text);
   left: 1vw;
   top: 1vh;
 }

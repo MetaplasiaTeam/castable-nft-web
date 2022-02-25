@@ -1,5 +1,6 @@
 {
-  "language":"语言",
+  "language": "语言",
+  "profile": "个人资料",
   "home": {
     "title": "铸造",
     "subtitle": "创造有价值的 NFT",
@@ -13,5 +14,11 @@
       "placeholder_2": "铸造价值最低 0.002 ETH 起/个",
       "placeholder_3": "发行总量"
     }
+  },
+  "nft_item": {
+    "total_supply": "总量",
+    "mint_time": "铸造时间",
+    "giveaway": "赠送",
+    "burn": "熔炼"
   }
 }

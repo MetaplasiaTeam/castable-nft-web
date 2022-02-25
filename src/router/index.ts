@@ -3,6 +3,11 @@ import Home from '@page/home/index.vue'
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', name: 'home', component: Home },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: () => import('@page/profile/index.vue'),
+  },
 ]
 
 const router = createRouter({

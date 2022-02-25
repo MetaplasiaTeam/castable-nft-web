@@ -1,16 +1,30 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { NConfigProvider, GlobalThemeOverrides } from 'naive-ui'
+
+const themeOverrides: GlobalThemeOverrides = {
+  common: {
+    bodyColor: '#f2f2f2',
+  },
+  Layout: {
+    headerColor: '#f2f2f2',
+  },
+}
+</script>
 
 <template>
-  <router-view />
+  <n-config-provider :theme-overrides="themeOverrides"
+    ><router-view
+  /></n-config-provider>
 </template>
 
 <style>
 :root {
+  --color-background: #f2f2f2;
+  --color-card-background: #ffffff;
   --color-text: #515151;
   --color-text-emphasize: #333333;
   --color-text-lighter: rgba(0, 0, 0, 0.4);
   --color-text-solight: rgba(0, 0, 0, 0.16);
-  --color-background: #ffffff;
   --color-hint: #fcfcfc;
   --color-background-inner: rgba(255, 255, 255, 0.8);
   --color-decoration: rgba(0, 0, 0, 0.04);
@@ -36,9 +50,11 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  background-color: var(--color-background);
   display: block;
   box-sizing: border-box;
   justify-content: center;
+  height: 100vh;
 }
 </style>
+
