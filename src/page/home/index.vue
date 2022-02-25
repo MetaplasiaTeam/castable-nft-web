@@ -1,16 +1,7 @@
 <template>
   <n-layout>
-    <n-layout-header style="display: flex">
-      <div id="title-left">CastableNFT</div>
-      <div>
-        <n-dropdown
-          trigger="hover"
-          :options="language"
-          @select="languageSelect"
-        >
-          <n-tag checkable>{{ $t('language') }}</n-tag>
-        </n-dropdown>
-      </div>
+    <n-layout-header>
+      <top-bar />
     </n-layout-header>
     <n-layout-content
       content-style="padding-left: 20vw; padding-right: 20vw; padding-bottom: 5vh"
@@ -77,7 +68,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from '@vue/runtime-dom'
-import i18n from '@/i18n'
+import TopBar from '@/components/topbar.vue'
 import {
   NInput,
   NSpace,
@@ -92,8 +83,6 @@ import {
   NCollapseItem,
   NCheckbox,
   NInputNumber,
-  NDropdown,
-  NTag,
 } from 'naive-ui'
 
 // import { useBoard, useEthers } from 'vue-dapp'
@@ -101,6 +90,7 @@ import {
 export default defineComponent({
   name: 'home-page',
   components: {
+    TopBar,
     NInput,
     NSpace,
     NUpload,
@@ -114,8 +104,6 @@ export default defineComponent({
     NCollapseItem,
     NCheckbox,
     NInputNumber,
-    NDropdown,
-    NTag,
   },
   setup() {
     // const { open } = useBoard()
@@ -124,20 +112,7 @@ export default defineComponent({
     return {
       value: ref(null),
       bulk: ref(false),
-      language: [
-        {
-          label: '简体中文',
-          key: 'zh-CN',
-        },
-        {
-          label: 'English',
-          key: 'en',
-        },
-      ],
-      // 更改语言
-      languageSelect(key: string) {
-        i18n.global.locale = key
-      },
+
       // address,
       // open,
     }
@@ -149,19 +124,6 @@ export default defineComponent({
 .n-upload-trigger {
   width: 100%;
 }
-.n-layout-header,
-.n-layout-footer {
-  /* background: rgba(128, 128, 128, 0.2); */
-  padding: 24px;
-}
-/* 
-.n-layout-sider {
-  background: rgba(128, 128, 128, 0.3);
-}
-
-.n-layout-content {
-  background: rgba(128, 128, 128, 0.4);
-} */
 </style>
 
 <style scoped>
@@ -177,13 +139,5 @@ export default defineComponent({
     padding-left: 5vw;
     padding-right: 5vw;
   }
-}
-
-#title-left {
-  font-size: 2rem;
-  font-weight: bold;
-  color: var(--color-text);
-  left: 1vw;
-  top: 1vh;
 }
 </style>
