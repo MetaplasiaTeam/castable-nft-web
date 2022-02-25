@@ -23,7 +23,7 @@
         width: 100%;
       "
     >
-      <n-button type="primary" style="width: 40%">{{
+      <n-button type="primary" style="width: 40%" @click="showGiveAwayDialog">{{
         $t('nft_item.giveaway')
       }}</n-button>
       <div width="5vw"></div>
@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/runtime-dom'
-import { NSpace, NImage, NButton } from 'naive-ui'
+import { NSpace, NImage, NButton, useDialog } from 'naive-ui'
 
 export interface NFTItemProps {
   imageUrl: string
@@ -59,12 +59,24 @@ export default defineComponent({
     NImage,
     NButton,
   },
+
   setup() {
-    return {}
+    const giveAwayDialog = useDialog()
+    function showGiveAwayDialog() {
+      giveAwayDialog.success({
+        title: '成功',
+        content: '厉害',
+        positiveText: '哇',
+        onPositiveClick: () => {
+          console.log('耶！')
+        },
+      })
+    }
+    return {
+      showGiveAwayDialog,
+    }
   },
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

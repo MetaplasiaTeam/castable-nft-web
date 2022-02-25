@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { NConfigProvider, GlobalThemeOverrides } from 'naive-ui'
+import {
+  NConfigProvider,
+  GlobalThemeOverrides,
+  NDialogProvider,
+} from 'naive-ui'
 
 const themeOverrides: GlobalThemeOverrides = {
   common: {
@@ -12,9 +16,9 @@ const themeOverrides: GlobalThemeOverrides = {
 </script>
 
 <template>
-  <n-config-provider :theme-overrides="themeOverrides"
-    ><router-view
-  /></n-config-provider>
+  <n-config-provider :theme-overrides="themeOverrides">
+    <n-dialog-provider><router-view /></n-dialog-provider
+  ></n-config-provider>
 </template>
 
 <style>
@@ -57,4 +61,3 @@ const themeOverrides: GlobalThemeOverrides = {
   height: 100vh;
 }
 </style>
-
