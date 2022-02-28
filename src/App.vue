@@ -19,6 +19,7 @@ const themeOverrides: GlobalThemeOverrides = {
   <n-config-provider :theme-overrides="themeOverrides">
     <n-dialog-provider><router-view /></n-dialog-provider
   ></n-config-provider>
+  <vdapp-board />
 </template>
 
 <style>

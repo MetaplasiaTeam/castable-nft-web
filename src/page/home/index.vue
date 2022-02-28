@@ -3,15 +3,16 @@
     <n-layout-header>
       <top-bar />
     </n-layout-header>
-    <n-layout-content
-      content-style="padding-left: 20vw; padding-right: 20vw; padding-bottom: 5vh"
-    >
+    <n-layout-content id="mint-app">
       <n-space vertical>
+        {{ state.web3address }}
         <n-space justify="center" :style="{ alignItems: 'flex-end' }">
-          <a style="font-size: 2rem; font-weight: bold">{{
-            $t('home.title')
-          }}</a>
-          <a>{{ $t('home.subtitle') }}</a>
+          <div>
+            <a style="font-size: 2rem; font-weight: bold">{{
+              $t('home.title')
+            }}</a>
+            <a>{{ $t('home.subtitle') }}</a>
+          </div>
         </n-space>
         <div style="display: flex; flex-direction: row; align-items: center">
           <n-input
@@ -84,6 +85,7 @@ import {
   NCheckbox,
   NInputNumber,
 } from 'naive-ui'
+import { store } from '@/store'
 
 // import { useBoard, useEthers } from 'vue-dapp'
 
@@ -112,6 +114,7 @@ export default defineComponent({
     return {
       value: ref(null),
       bulk: ref(false),
+      state: store.state,
 
       // address,
       // open,
@@ -127,17 +130,16 @@ export default defineComponent({
 </style>
 
 <style scoped>
-#search-app {
-  margin-top: 20vh;
-  display: block;
+#mint-app {
   padding-left: 20vw;
   padding-right: 20vw;
+  padding-bottom: 5vh;
 }
 
-@media screen and (max-width: 768px) {
-  #search-app {
-    padding-left: 5vw;
-    padding-right: 5vw;
+@media screen and (width < 768px) {
+  #mint-app {
+    padding-left: 10vw;
+    padding-right: 10vw;
   }
 }
 </style>

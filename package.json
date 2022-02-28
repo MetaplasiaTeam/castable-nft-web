@@ -16,12 +16,13 @@
     "@fortawesome/vue-fontawesome": "^3.0.0-5",
     "@types/node": "^17.0.19",
     "ethers": "^5.5.4",
+    "ipfs-http-client": "^56.0.1",
     "naive-ui": "^2.25.3",
     "vfonts": "^0.0.3",
     "vue": "^3.2.25",
+    "vue-dapp": "^0.4.7",
     "vue-i18n": "9",
-    "vue-router": "4",
-    "web3": "^1.7.0"
+    "vue-router": "4"
   },
   "devDependencies": {
     "@intlify/vue-i18n-loader": "^3.0.0",

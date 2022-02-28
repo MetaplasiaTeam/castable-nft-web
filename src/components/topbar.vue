@@ -10,6 +10,9 @@
       <n-dropdown trigger="hover" :options="language" @select="languageSelect">
         <n-tag checkable>{{ $t('language') }}</n-tag>
       </n-dropdown>
+      <n-button @click="connectWeb3" type="primary">
+        {{ $t('connect') }}
+      </n-button>
     </div>
   </div>
 </template>
@@ -17,14 +20,34 @@
 <script lang="ts">
 import { defineComponent } from '@vue/runtime-dom'
 import i18n from '@/i18n'
-import { NDropdown, NTag } from 'naive-ui'
+import Web3Modal from 'web3modal'
+import { NDropdown, NTag, NButton } from 'naive-ui'
+import { store } from '@/store'
+
+import {
+  useBoard,
+  useEthers,
+  useWallet,
+  displayChainName,
+  displayEther,
+  shortenAddress,
+} from 'vue-dapp'
+
+const { open } = useBoard()
+const { status, disconnect, error } = useWallet()
+const { address, balance, chainId, isActivated } = useEthers()
 
 export default defineComponent({
   components: {
     NDropdown,
     NTag,
+    NButton,
   },
   setup() {
+    async function connectWeb3() {
+      open()
+    }
+
     return {
       language: [
         {
@@ -40,6 +63,7 @@ export default defineComponent({
       languageSelect(key: string) {
         i18n.global.locale = key
       },
+      connectWeb3,
     }
   },
 })
