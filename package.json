@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vite build",
     "dev": "vite --host",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
     "preview": "vite preview"
@@ -22,6 +22,9 @@
     "vue": "^3.2.25",
     "vue-dapp": "^0.4.7",
     "vue-i18n": "9",
+    "buffer": "^6.0.3",
+    "process": "^0.11.10",
+    "util": "^0.12.4",
     "vue-router": "4"
   },
   "devDependencies": {
@@ -31,16 +34,13 @@
     "@typescript-eslint/parser": "^5.12.1",
     "@vitejs/plugin-vue": "^2.2.0",
     "@vue/cli-shared-utils": "^5.0.1",
-    "buffer": "^6.0.3",
     "eslint": "^8.9.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.4.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^8.5.0",
     "prettier": "^2.5.1",
-    "process": "^0.11.10",
     "typescript": "^4.5.4",
-    "util": "^0.12.4",
     "vite": "^2.8.0",
     "vue-cli-plugin-i18n": "~2.3.1",
     "vue-tsc": "^0.29.8"

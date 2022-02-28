@@ -11,10 +11,10 @@ export default defineConfig({
       '@': resolve(__dirname, 'src'),
       '@page': resolve(__dirname, 'src/page'),
       '@img': resolve(__dirname, 'src/assets/img'),
-      process: 'process/browser',
       stream: 'stream-browserify',
-      zlib: 'browserify-zlib',
-      util: 'util',
+      process: require.resolve('process'),
+      buffer: require.resolve('buffer'),
+      util: require.resolve('util'),
     },
   },
   base: './',
@@ -29,7 +29,7 @@ export default defineConfig({
       plugins: [inject({ Buffer: ['buffer', 'Buffer'] })],
     },
     commonjsOptions: {
-      transformMixedEsModules: false,
+      transformMixedEsModules: true,
     },
   },
 })
