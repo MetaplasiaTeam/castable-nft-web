@@ -3,6 +3,7 @@ import {
   NConfigProvider,
   GlobalThemeOverrides,
   NDialogProvider,
+  NMessageProvider,
 } from 'naive-ui'
 
 const themeOverrides: GlobalThemeOverrides = {
@@ -17,8 +18,10 @@ const themeOverrides: GlobalThemeOverrides = {
 
 <template>
   <n-config-provider :theme-overrides="themeOverrides">
-    <n-dialog-provider><router-view /></n-dialog-provider
-  ></n-config-provider>
+    <n-message-provider
+      ><n-dialog-provider><router-view /></n-dialog-provider
+    ></n-message-provider>
+  </n-config-provider>
   <vdapp-board />
 </template>
 

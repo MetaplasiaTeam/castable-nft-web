@@ -1,6 +1,7 @@
 {
   "language": "语言",
   "connect": "连接 Web3",
+  "disconnect": "断开 Web3",
   "profile": "个人资料",
   "home": {
     "title": "铸造",

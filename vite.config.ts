@@ -12,9 +12,9 @@ export default defineConfig({
       '@page': resolve(__dirname, 'src/page'),
       '@img': resolve(__dirname, 'src/assets/img'),
       stream: 'stream-browserify',
-      process: require.resolve('process'),
-      buffer: require.resolve('buffer'),
-      util: require.resolve('util'),
+      process: 'process/browser',
+      zlib: 'browserify-zlib',
+      util: 'util',
     },
   },
   base: './',
@@ -25,11 +25,27 @@ export default defineConfig({
     'process.env.BASE_URL': '"/"',
   },
   build: {
-    rollupOptions: {
-      plugins: [inject({ Buffer: ['buffer', 'Buffer'] })],
-    },
     commonjsOptions: {
       transformMixedEsModules: true,
+      exclude: [
+        'node_modules/lodash-es/**',
+        'node_modules/@types/lodash-es/**',
+      ],
+    },
+    rollupOptions: {
+      // @ts-ignore
+      plugins: [inject({ Buffer: ['buffer', 'Buffer'] })],
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return id
+              .toString()
+              .split('node_modules/')[1]
+              .split('/')[0]
+              .toString()
+          }
+        },
+      },
     },
   },
 })

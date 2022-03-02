@@ -1,5 +1,5 @@
-const { defineConfig } = require('@vue/cli-service')
-module.exports = defineConfig({
+import { defineConfig } from '@vue/cli-service'
+export default defineConfig({
   pluginOptions: {
     i18n: {
       locale: 'y',
@@ -8,7 +8,7 @@ module.exports = defineConfig({
       enableLegacy: false,
       runtimeOnly: false,
       compositionOnly: false,
-      fullInstall: true
-    }
-  }
+      fullInstall: true,
+    },
+  },
 })

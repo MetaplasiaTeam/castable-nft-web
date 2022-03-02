@@ -13,8 +13,6 @@
           :imageUrl="item.imageUrl"
           :title="item.title"
           :price="item.price"
-          :totalSupply="item.totalSupply"
-          :mintTime="item.mintTime"
         ></NFTItem>
       </div>
     </n-layout-content>
@@ -22,10 +20,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/runtime-dom'
+import { defineComponent, onMounted, ref, watch } from '@vue/runtime-dom'
 import TopBar from '@/components/topbar.vue'
 import { NLayout, NLayoutHeader, NLayoutContent, NSpace } from 'naive-ui'
 import NFTItem, { NFTItemProps } from '@/components/nft-item.vue'
+import { useStore } from '@/store'
+import { Api } from '@/utils/net'
+import { useEthers } from 'vue-dapp'
+import { ethers } from 'ethers'
+import Constants from '@/common/constants'
 
 export default defineComponent({
   components: {
@@ -38,128 +41,37 @@ export default defineComponent({
   },
 
   setup() {
-    let testData = Array<NFTItemProps>(
-      {
-        imageUrl:
-          'https://d1icd6shlvmxi6.cloudfront.net/gsc/NWITZV/93/d5/90/93d5907a8d5a419fa6da19c8492b9111/images/profile/u20.png?token=6a0019ba5389bc1b5d3b27eeb71817470daacc4288515cfda7d3a2d799423145&pageId=3389ab7c-335f-48f9-a1b6-43916d4b7478',
-        title: 'test',
-        price: '0.01',
-        totalSupply: '100',
-        mintTime: '2019-01-01',
-      },
-      {
-        imageUrl:
-          'https://d1icd6shlvmxi6.cloudfront.net/gsc/NWITZV/93/d5/90/93d5907a8d5a419fa6da19c8492b9111/images/profile/u20.png?token=6a0019ba5389bc1b5d3b27eeb71817470daacc4288515cfda7d3a2d799423145&pageId=3389ab7c-335f-48f9-a1b6-43916d4b7478',
-        title: 'test',
-        price: '0.01',
-        totalSupply: '100',
-        mintTime: '2019-01-01',
-      },
-      {
-        imageUrl:
-          'https://d1icd6shlvmxi6.cloudfront.net/gsc/NWITZV/93/d5/90/93d5907a8d5a419fa6da19c8492b9111/images/profile/u20.png?token=6a0019ba5389bc1b5d3b27eeb71817470daacc4288515cfda7d3a2d799423145&pageId=3389ab7c-335f-48f9-a1b6-43916d4b7478',
-        title: 'test',
-        price: '0.01',
-        totalSupply: '100',
-        mintTime: '2019-01-01',
-      },
-      {
-        imageUrl:
-          'https://d1icd6shlvmxi6.cloudfront.net/gsc/NWITZV/93/d5/90/93d5907a8d5a419fa6da19c8492b9111/images/profile/u20.png?token=6a0019ba5389bc1b5d3b27eeb71817470daacc4288515cfda7d3a2d799423145&pageId=3389ab7c-335f-48f9-a1b6-43916d4b7478',
-        title: 'test',
-        price: '0.01',
-        totalSupply: '100',
-        mintTime: '2019-01-01',
-      },
-      {
-        imageUrl:
-          'https://d1icd6shlvmxi6.cloudfront.net/gsc/NWITZV/93/d5/90/93d5907a8d5a419fa6da19c8492b9111/images/profile/u20.png?token=6a0019ba5389bc1b5d3b27eeb71817470daacc4288515cfda7d3a2d799423145&pageId=3389ab7c-335f-48f9-a1b6-43916d4b7478',
-        title: 'test',
-        price: '0.01',
-        totalSupply: '100',
-        mintTime: '2019-01-01',
-      },
-      {
-        imageUrl:
-          'https://d1icd6shlvmxi6.cloudfront.net/gsc/NWITZV/93/d5/90/93d5907a8d5a419fa6da19c8492b9111/images/profile/u20.png?token=6a0019ba5389bc1b5d3b27eeb71817470daacc4288515cfda7d3a2d799423145&pageId=3389ab7c-335f-48f9-a1b6-43916d4b7478',
-        title: 'test',
-        price: '0.01',
-        totalSupply: '100',
-        mintTime: '2019-01-01',
-      },
-      {
-        imageUrl:
-          'https://d1icd6shlvmxi6.cloudfront.net/gsc/NWITZV/93/d5/90/93d5907a8d5a419fa6da19c8492b9111/images/profile/u20.png?token=6a0019ba5389bc1b5d3b27eeb71817470daacc4288515cfda7d3a2d799423145&pageId=3389ab7c-335f-48f9-a1b6-43916d4b7478',
-        title: 'test',
-        price: '0.01',
-        totalSupply: '100',
-        mintTime: '2019-01-01',
-      },
-      {
-        imageUrl:
-          'https://d1icd6shlvmxi6.cloudfront.net/gsc/NWITZV/93/d5/90/93d5907a8d5a419fa6da19c8492b9111/images/profile/u20.png?token=6a0019ba5389bc1b5d3b27eeb71817470daacc4288515cfda7d3a2d799423145&pageId=3389ab7c-335f-48f9-a1b6-43916d4b7478',
-        title: 'test',
-        price: '0.01',
-        totalSupply: '100',
-        mintTime: '2019-01-01',
-      },
-      {
-        imageUrl:
-          'https://d1icd6shlvmxi6.cloudfront.net/gsc/NWITZV/93/d5/90/93d5907a8d5a419fa6da19c8492b9111/images/profile/u20.png?token=6a0019ba5389bc1b5d3b27eeb71817470daacc4288515cfda7d3a2d799423145&pageId=3389ab7c-335f-48f9-a1b6-43916d4b7478',
-        title: 'test',
-        price: '0.01',
-        totalSupply: '100',
-        mintTime: '2019-01-01',
-      },
-      {
-        imageUrl:
-          'https://d1icd6shlvmxi6.cloudfront.net/gsc/NWITZV/93/d5/90/93d5907a8d5a419fa6da19c8492b9111/images/profile/u20.png?token=6a0019ba5389bc1b5d3b27eeb71817470daacc4288515cfda7d3a2d799423145&pageId=3389ab7c-335f-48f9-a1b6-43916d4b7478',
-        title: 'test',
-        price: '0.01',
-        totalSupply: '100',
-        mintTime: '2019-01-01',
-      },
-      {
-        imageUrl:
-          'https://d1icd6shlvmxi6.cloudfront.net/gsc/NWITZV/93/d5/90/93d5907a8d5a419fa6da19c8492b9111/images/profile/u20.png?token=6a0019ba5389bc1b5d3b27eeb71817470daacc4288515cfda7d3a2d799423145&pageId=3389ab7c-335f-48f9-a1b6-43916d4b7478',
-        title: 'test',
-        price: '0.01',
-        totalSupply: '100',
-        mintTime: '2019-01-01',
-      },
-      {
-        imageUrl:
-          'https://d1icd6shlvmxi6.cloudfront.net/gsc/NWITZV/93/d5/90/93d5907a8d5a419fa6da19c8492b9111/images/profile/u20.png?token=6a0019ba5389bc1b5d3b27eeb71817470daacc4288515cfda7d3a2d799423145&pageId=3389ab7c-335f-48f9-a1b6-43916d4b7478',
-        title: 'test',
-        price: '0.01',
-        totalSupply: '100',
-        mintTime: '2019-01-01',
-      },
-      {
-        imageUrl:
-          'https://d1icd6shlvmxi6.cloudfront.net/gsc/NWITZV/93/d5/90/93d5907a8d5a419fa6da19c8492b9111/images/profile/u20.png?token=6a0019ba5389bc1b5d3b27eeb71817470daacc4288515cfda7d3a2d799423145&pageId=3389ab7c-335f-48f9-a1b6-43916d4b7478',
-        title: 'test',
-        price: '0.01',
-        totalSupply: '100',
-        mintTime: '2019-01-01',
-      },
-      {
-        imageUrl:
-          'https://d1icd6shlvmxi6.cloudfront.net/gsc/NWITZV/93/d5/90/93d5907a8d5a419fa6da19c8492b9111/images/profile/u20.png?token=6a0019ba5389bc1b5d3b27eeb71817470daacc4288515cfda7d3a2d799423145&pageId=3389ab7c-335f-48f9-a1b6-43916d4b7478',
-        title: 'test',
-        price: '0.01',
-        totalSupply: '100',
-        mintTime: '2019-01-01',
-      },
-      {
-        imageUrl:
-          'https://d1icd6shlvmxi6.cloudfront.net/gsc/NWITZV/93/d5/90/93d5907a8d5a419fa6da19c8492b9111/images/profile/u20.png?token=6a0019ba5389bc1b5d3b27eeb71817470daacc4288515cfda7d3a2d799423145&pageId=3389ab7c-335f-48f9-a1b6-43916d4b7478',
-        title: 'test',
-        price: '0.01',
-        totalSupply: '100',
-        mintTime: '2019-01-01',
+    const store = useStore()
+    const { signer } = useEthers()
+
+    let testData = ref(Array<NFTItemProps>())
+
+    onMounted(() => {
+      if (signer.value !== null) {
+        console.log('profile mounted')
+        let contract = new ethers.Contract(
+          Constants.CONTRACT_ADDRESS,
+          Constants.CONTRACT_ABI,
+          signer.value
+        )
+        Api.getAllNftInfo(contract)
+          .then((nftInfoList) => {
+            console.log(nftInfoList)
+            let tempList: NFTItemProps[] = []
+            nftInfoList.forEach((element) => {
+              tempList.push({
+                imageUrl: element.info.image,
+                title: element.info.name,
+                price: element.value.toString(),
+              })
+            })
+            testData.value = tempList
+          })
+          .catch((err) => {
+            console.log(err)
+          })
       }
-    )
+    })
 
     return {
       testData,
@@ -173,8 +85,9 @@ export default defineComponent({
   background-color: var(--color-card-background);
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: start;
   padding-top: 5vh;
+  padding-left: 2vw;
   padding-bottom: 5vh;
   border-radius: 30px;
 }

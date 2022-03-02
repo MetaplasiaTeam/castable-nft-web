@@ -1,6 +1,7 @@
 {
   "language": "Language",
   "connect": "Connect Web3",
+  "disconnect": "Disconnect Web3",
   "profile": "Profile",
   "home": {
     "title": "Mint",

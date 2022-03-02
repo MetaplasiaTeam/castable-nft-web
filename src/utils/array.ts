@@ -1,0 +1,8 @@
+async function asyncForEach(
+  array: string | any[],
+  callback: (arg0: any, arg1: number, arg2: any) => any
+) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array)
+  }
+}

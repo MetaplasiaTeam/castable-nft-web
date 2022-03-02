@@ -12,8 +12,6 @@
       <n-image width="200" height="200" :src="imageUrl" />
       <a>{{ title }}</a>
       <a>{{ price }}</a>
-      <a>{{ $t('nft_item.total_supply') }}: {{ totalSupply }}</a>
-      <a>{{ $t('nft_item.mint_time') }}: {{ mintTime }}</a>
     </n-space>
     <div
       style="
@@ -42,8 +40,6 @@ export interface NFTItemProps {
   imageUrl: string
   title: string
   price: string
-  totalSupply: string
-  mintTime: string
 }
 
 export default defineComponent({
@@ -51,8 +47,6 @@ export default defineComponent({
     imageUrl: String,
     title: String,
     price: String,
-    totalSupply: String,
-    mintTime: String,
   },
   components: {
     NSpace,
