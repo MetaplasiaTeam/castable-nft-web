@@ -3,6 +3,7 @@
   "connect": "Connect Web3",
   "disconnect": "Disconnect Web3",
   "profile": "Profile",
+  "cancle": "Cancel",
   "home": {
     "title": "Mint",
     "subtitle": "Mint valuable NFT",
@@ -21,6 +22,31 @@
     "total_supply": "Total Supply",
     "mint_time": "Mint Time",
     "giveaway": "Giveaway",
-    "burn": "Burn"
+    "burn": "Burn",
+    "send": {
+      "title": "Send to friend",
+      "button": "Send Now"
+    },
+    "burn_d": {
+      "title": "Burn NFT",
+      "message1": "Retrieve the value：{0} ETH",
+      "message2": "Burn is destroying the NFT, the mint value will be released back to holder's accountCurrent Value {0} ETH"
+    }
+  },
+  "error": {
+    "please_connect_web3": "Please connect Web3",
+    "upload_image_error": "Upload image error",
+    "please_upload_image": "Please upload the image first or wait for the image to finish uploading",
+    "please_input_integer": "Casting quantity is not a mint number"
+  },
+  "sucess": {
+    "mint_success": "Mint success",
+    "multiple_mint_success": "Multiple mint success",
+    "send_success": "Send success",
+    "burn_success": "Burn success",
+    "upload_image_success": "Upload image success"
+  },
+  "loading": {
+    "upload_image_loading": "Uploading image now"
   }
 }

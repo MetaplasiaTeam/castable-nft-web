@@ -9,7 +9,9 @@
       <div id="nftcard">
         <NFTItem
           v-for="(item, index) in testData"
+          @refresh="receiveRefresh"
           :key="index"
+          :tokenId="item.tokenId"
           :imageUrl="item.imageUrl"
           :title="item.title"
           :price="item.price"
@@ -47,6 +49,20 @@ export default defineComponent({
     let testData = ref(Array<NFTItemProps>())
 
     onMounted(() => {
+      getAllNft()
+    })
+
+    function receiveRefresh(bool: boolean) {
+      if (bool) {
+        console.log('refresh')
+        getAllNft()
+      }
+    }
+
+    function getAllNft() {
+      if (store.state.nftList !== undefined) {
+        testData.value = store.state.nftList
+      }
       if (signer.value !== null) {
         console.log('profile mounted')
         let contract = new ethers.Contract(
@@ -60,21 +76,24 @@ export default defineComponent({
             let tempList: NFTItemProps[] = []
             nftInfoList.forEach((element) => {
               tempList.push({
+                tokenId: element.id,
                 imageUrl: element.info.image,
                 title: element.info.name,
                 price: element.value.toString(),
               })
             })
             testData.value = tempList
+            store.commit('setNftList', tempList)
           })
           .catch((err) => {
             console.log(err)
           })
       }
-    })
+    }
 
     return {
       testData,
+      receiveRefresh,
     }
   },
 })

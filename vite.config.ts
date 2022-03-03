@@ -10,7 +10,7 @@ export default defineConfig({
     alias: {
       '@': resolve(__dirname, 'src'),
       '@page': resolve(__dirname, 'src/page'),
-      '@img': resolve(__dirname, 'src/assets/img'),
+      '/img': resolve(__dirname, 'src/assets/img'),
       stream: 'stream-browserify',
       process: 'process/browser',
       zlib: 'browserify-zlib',
@@ -27,10 +27,7 @@ export default defineConfig({
   build: {
     commonjsOptions: {
       transformMixedEsModules: true,
-      exclude: [
-        'node_modules/lodash-es/**',
-        'node_modules/@types/lodash-es/**',
-      ],
+      // exclude: ['node_modules/lodash-es/**'],
     },
     rollupOptions: {
       // @ts-ignore

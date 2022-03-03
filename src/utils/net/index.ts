@@ -125,8 +125,11 @@ export class Api {
             let info = await this.getNftInfo(link)
             allNFTInfo.push({
               id: ele.id.toNumber(),
-              value: parseInt(
-                (ele.value.toBigInt() / BigInt(10000)).toString()
+              value: parseFloat(
+                (
+                  parseFloat(ele.value.toString()) /
+                  parseFloat('1000000000000000000')
+                ).toString()
               ),
               info: await info.data,
             })

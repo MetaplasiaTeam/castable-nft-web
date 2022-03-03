@@ -14,7 +14,7 @@
     "paths": {
       "@/*": ["src/*"],
       "@page/*": ["src/page/*"],
-      "@img/*": ["src/asstes/img/*"]
+      "/img/*": ["src/asstes/img/*"]
     }
   },
   "ts-node": {

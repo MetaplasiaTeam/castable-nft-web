@@ -4,7 +4,14 @@ import {
   GlobalThemeOverrides,
   NDialogProvider,
   NMessageProvider,
+  darkTheme,
+  useOsTheme,
 } from 'naive-ui'
+import { BuiltInGlobalTheme } from 'naive-ui/lib/themes/interface'
+import { computed, ref } from 'vue'
+
+const osThemeRef = useOsTheme()
+const theme = computed(() => (osThemeRef.value === 'dark' ? darkTheme : null))
 
 const themeOverrides: GlobalThemeOverrides = {
   common: {
@@ -14,12 +21,25 @@ const themeOverrides: GlobalThemeOverrides = {
     headerColor: '#f2f2f2',
   },
 }
+
+const darkThemeOverrides: GlobalThemeOverrides = {
+  common: {
+    bodyColor: '#1f2223',
+  },
+  Layout: {
+    headerColor: '#1f2223',
+  },
+}
 </script>
 
 <template>
-  <n-config-provider :theme-overrides="themeOverrides">
+  <n-config-provider
+    :theme="theme"
+    :theme-overrides="theme === null ? themeOverrides : darkThemeOverrides"
+  >
     <n-message-provider
-      ><n-dialog-provider><router-view /></n-dialog-provider
+      ><n-dialog-provider
+        ><div id="nftapp"><router-view /></div></n-dialog-provider
     ></n-message-provider>
   </n-config-provider>
   <vdapp-board />
@@ -45,9 +65,9 @@ const themeOverrides: GlobalThemeOverrides = {
     --color-text-emphasize: #eeeeee;
     --color-text-lighter: rgba(255, 255, 255, 0.4);
     --color-text-solight: rgba(255, 255, 255, 0.16);
-    --color-background: #222222;
+    --color-background: #1f2223;
     --color-hint: #202020;
-    --color-background-inner: rgba(hexToRGB(#222222), 0.8);
+    --color-background-inner: rgba(hexToRGB(#1f2223), 0.8);
     --color-decoration: rgba(255, 255, 255, 0.04);
     --color-decoration-darker: rgba(255, 255, 255, 0.08);
   }
@@ -62,6 +82,11 @@ const themeOverrides: GlobalThemeOverrides = {
   display: block;
   box-sizing: border-box;
   justify-content: center;
+  height: 100vh;
+}
+
+#nftapp {
+  background-color: var(--color-background);
   height: 100vh;
 }
 </style>

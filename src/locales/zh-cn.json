@@ -3,6 +3,7 @@
   "connect": "连接 Web3",
   "disconnect": "断开 Web3",
   "profile": "个人资料",
+  "cancle": "取消",
   "home": {
     "title": "铸造",
     "subtitle": "创造有价值的 NFT",
@@ -21,6 +22,31 @@
     "total_supply": "总量",
     "mint_time": "铸造时间",
     "giveaway": "赠送",
-    "burn": "熔炼"
+    "burn": "熔炼",
+    "send": {
+      "title": "赠送给朋友",
+      "button": "赠送"
+    },
+    "burn_d": {
+      "title": "熔炼 NFT",
+      "message1":"NFT 价值：{0} ETH",
+      "message2":"熔炼 NFT 之后铸造价值会返还到你的账户，当前价值为 {0} ETH"
+    }
+  },
+  "error": {
+    "please_connect_web3": "请先连接 Web3",
+    "upload_image_error": "上传图片出错",
+    "please_upload_image": "请先上传图片或等待图片上传完成",
+    "please_input_integer": "铸造数量不为整"
+  },
+  "sucess": {
+    "mint_success": "铸造成功",
+    "multiple_mint_success": "批量铸造成功",
+    "send_success": "赠送成功",
+    "burn_success": "熔炼成功",
+    "upload_image_success": "上传图片成功"
+  },
+  "loading": {
+    "upload_image_loading": "正在上传图片"
   }
 }

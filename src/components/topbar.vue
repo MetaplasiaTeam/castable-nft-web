@@ -1,42 +1,36 @@
 <template>
   <div style="display: flex; padding: 24px; justify-content: space-between">
     <router-link to="/"
-      ><n-tag id="title-left" checkable>CastableNFT</n-tag>
+      ><n-tag id="title-left" checkable
+        ><img style="width: 20vw" src="@/assets/logo.png"
+      /></n-tag>
     </router-link>
     <div>
       <n-tag v-if="isActivated" checkable>{{ shortenAddress(address) }}</n-tag>
 
-      <router-link to="/profile"
-        ><n-tag checkable>{{ $t('profile') }}</n-tag></router-link
-      >
+      <n-tag checkable @click="toProfile">{{ $t('profile') }}</n-tag>
+
       <n-dropdown trigger="hover" :options="language" @select="languageSelect">
         <n-tag checkable>{{ $t('language') }}</n-tag>
       </n-dropdown>
 
       <n-button @click="connectWeb3" type="primary">
-        {{ buttonText }}
+        {{ store.state.topbarButtonText }}
       </n-button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, onMounted } from '@vue/runtime-dom'
+import { defineComponent, ref, watch, defineExpose } from '@vue/runtime-dom'
 import i18n from '@/i18n'
 import { NDropdown, NTag, NButton } from 'naive-ui'
 import { ethers } from 'ethers'
 import { useStore } from '@/store'
 import Constants from '@/common/constants'
+import { useRouter } from 'vue-router'
 
-import {
-  useBoard,
-  useEthers,
-  useWallet,
-  displayChainName,
-  displayEther,
-  shortenAddress,
-  ConnectionState,
-} from 'vue-dapp'
+import { useBoard, useEthers, useWallet, shortenAddress } from 'vue-dapp'
 
 const { open } = useBoard()
 const { status, disconnect, error } = useWallet()
@@ -50,12 +44,21 @@ export default defineComponent({
   },
   setup() {
     const store = useStore()
+    const router = useRouter()
 
     async function connectWeb3() {
       if (isActivated.value) {
         disconnect()
       } else {
         open()
+      }
+    }
+
+    function toProfile() {
+      if (!isActivated.value) {
+        open()
+      } else {
+        router.push('/profile')
       }
     }
 
@@ -72,18 +75,20 @@ export default defineComponent({
             signer.value
           )
         )
-        buttonText.value = i18n.global.t('disconnect')
       }
-      buttonText.value = i18n.global.t('connect')
     })
 
-    // watch(isActivated, (val) => {
-    //   if (val) {
-    //     buttonText.value = i18n.global.t('disconnect')
-    //   } else {
-    //     buttonText.value = i18n.global.t('connect')
-    //   }
-    // })
+    watch(isActivated, (val) => {
+      if (val) {
+        store.commit('setTopbarButtonText', i18n.global.t('disconnect'))
+      } else {
+        store.commit('setTopbarButtonText', i18n.global.t('connect'))
+      }
+    })
+
+    defineExpose({
+      connectWeb3,
+    })
 
     return {
       language: [
@@ -103,7 +108,9 @@ export default defineComponent({
       buttonText,
       connectWeb3,
       shortenAddress,
+      toProfile,
       address,
+      store,
       isActivated,
     }
   },

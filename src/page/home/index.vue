@@ -1,11 +1,10 @@
 <template>
   <n-layout>
     <n-layout-header>
-      <top-bar />
+      <top-bar ref="connect" />
     </n-layout-header>
     <n-layout-content id="mint-app">
       <n-space vertical>
-        {{ store.state.web3address }}
         <n-space justify="center" :style="{ alignItems: 'flex-end' }">
           <div>
             <a style="font-size: 2rem; font-weight: bold">{{
@@ -37,14 +36,15 @@
             </div>
           </n-upload-dragger>
         </n-upload>
-        <div style="display: flex; flex-direction: row">
+        <div style="display: flex; flex-direction: row; align-items: center">
           <n-input
             v-model:value="price"
             type="text"
+            maxlength="8"
             :placeholder="$t('home.input.placeholder_2')"
             style="width: 100%; margin-right: 0"
           ></n-input>
-          <n-image width="25" height="25" preview-disabled src="@/eth.png" />
+          <n-image width="25" height="25" preview-disabled src="/img/eth.png" />
         </div>
         <n-collapse arrow-placement="right">
           <n-collapse-item :title="$t('home.advance_option')">
@@ -57,6 +57,8 @@
               <n-input-number
                 :disabled="!bulk"
                 v-model:value="amount"
+                :min="1"
+                :max="100"
                 :placeholder="$t('home.input.placeholder_3')"
               />
             </div>
@@ -93,9 +95,10 @@ import {
 import { useStore } from '@/store'
 
 import { useEthers, useWallet } from 'vue-dapp'
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import { Api } from '@/utils/net'
 import Constants from '@/common/constants'
+import i18n from '@/i18n'
 
 export default defineComponent({
   name: 'home-page',
@@ -119,24 +122,30 @@ export default defineComponent({
     const message = useMessage()
     const store = useStore()
     const { signer } = useEthers()
+    let connect = ref()
 
     let name = ref('')
     let price = ref('')
-    let amount = ref(0)
+    let amount = ref(1)
+    let bulk = ref(false)
 
     let jsonUrl = ref('')
     let uploadSuccess = ref(false)
 
-    const mint = () => {
-      console.log(store.state.nftContract)
-      if (!uploadSuccess.value) {
-        // TODO: i18n
-        message.error('请先上传图片或等待图片上传完成')
-        return
+    function mint() {
+      if (bulk.value) {
+        mintMultiple()
+      } else {
+        mintSingle()
       }
+    }
 
-      // let contract = store.state.nftContract
+    function mintSingle() {
       if (signer.value !== null) {
+        if (!uploadSuccess.value) {
+          message.error(i18n.global.t('error.please_upload_image'))
+          return
+        }
         let trueSigner = signer.value
 
         let contract = new ethers.Contract(
@@ -149,20 +158,75 @@ export default defineComponent({
           let contractWithSigner = contract!!.connect(trueSigner)
           contractWithSigner
             .createCollectible(jsonUrl.value, 0, {
-              gasLimit: gas,
+              gasLimit: gas.add(BigNumber.from(1552481)),
               value: ethers.utils.parseEther(price.value),
             })
             .then(function (tx: any) {
               console.log(tx)
+              message.success(i18n.global.t('sucess.mint_success'))
+            })
+            .catch((err: Error) => {
+              message.error(err.message)
             })
         })
       } else {
-        message.error('请先连接 Web3')
+        message.error(i18n.global.t('error.please_connect_web3'))
+        connect?.value?.connectWeb3()
       }
+    }
+
+    function mintMultiple() {
+      if (!isInteger(amount.value)) {
+        message.error(i18n.global.t('error.please_input_integer'))
+        return
+      }
+      if (signer.value !== null) {
+        if (!uploadSuccess.value) {
+          message.error(i18n.global.t('error.please_upload_image'))
+          return
+        }
+        let trueSigner = signer.value
+
+        let contract = new ethers.Contract(
+          Constants.CONTRACT_ADDRESS,
+          Constants.CONTRACT_ABI,
+          signer.value
+        )
+        contract.estimateGas
+          .createMultipleCollectibles(jsonUrl.value, amount.value, 0)
+          .then((gas) => {
+            let contractWithSigner = contract!!.connect(trueSigner)
+            contractWithSigner
+              .createMultipleCollectibles(jsonUrl.value, amount.value, 0, {
+                gasLimit: gas.add(BigNumber.from(1552481)),
+                value: ethers.utils.parseEther(
+                  (parseFloat(price.value) * amount.value).toString()
+                ),
+              })
+              .then(function (tx: any) {
+                console.log(tx)
+                message.success(i18n.global.t('sucess.multiple_mint_success'))
+              })
+              .catch((err: Error) => {
+                console.log(err.message)
+                message.error(err.message)
+              })
+          })
+      } else {
+        message.error(i18n.global.t('error.please_connect_web3'))
+        connect?.value?.connectWeb3()
+      }
+    }
+
+    function isInteger(obj: any) {
+      return Math.floor(obj) === obj
     }
 
     // 传图，注意 uploadSuccess 数据
     function upload(options: UploadCustomRequestOptions) {
+      message.loading(i18n.global.t('loading.upload_image_loading'), {
+        duration: 0,
+      })
       uploadSuccess.value = false
       let file = options.file
       if (file.file !== null && file.file !== undefined) {
@@ -181,18 +245,23 @@ export default defineComponent({
                 options.onFinish()
                 jsonUrl.value = `https://ipfs.io/ipfs/${res.IpfsHash}`
                 uploadSuccess.value = true
-                message.success('上传成功')
+                message.destroyAll()
+                message.success(i18n.global.t('sucess.upload_image_success'))
               })
               .catch((err: any) => {
                 console.log(err)
                 options.onError()
                 uploadSuccess.value = false
+                message.destroyAll()
+                message.error(i18n.global.t('error.upload_image_error'))
               })
           })
           .catch((err: any) => {
             console.log(err)
             options.onError()
             uploadSuccess.value = false
+            message.destroyAll()
+            message.error(i18n.global.t('error.upload_image_error'))
           })
       } else {
         options.onError()
@@ -204,10 +273,10 @@ export default defineComponent({
       name,
       price,
       amount,
-      bulk: ref(false),
-      store,
+      bulk,
       mint,
       upload,
+      connect,
     }
   },
 })
