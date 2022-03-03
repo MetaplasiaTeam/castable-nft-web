@@ -15,5 +15,3 @@ plugins:
   - '@typescript-eslint'
   - 'plugin:prettier/recommended'
 rules: {}
-globals:
-  defineExpose: true

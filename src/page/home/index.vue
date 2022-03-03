@@ -154,10 +154,10 @@ export default defineComponent({
           signer.value
         )
 
-        contract.estimateGas.createCollectible(jsonUrl.value, 0).then((gas) => {
+        contract.estimateGas.mint(jsonUrl.value, 0).then((gas) => {
           let contractWithSigner = contract!!.connect(trueSigner)
           contractWithSigner
-            .createCollectible(jsonUrl.value, 0, {
+            .mint(jsonUrl.value, 0, {
               gasLimit: gas.add(BigNumber.from(1552481)),
               value: ethers.utils.parseEther(price.value),
             })
@@ -193,11 +193,11 @@ export default defineComponent({
           signer.value
         )
         contract.estimateGas
-          .createMultipleCollectibles(jsonUrl.value, amount.value, 0)
+          .mintAvg(jsonUrl.value, amount.value, 0)
           .then((gas) => {
             let contractWithSigner = contract!!.connect(trueSigner)
             contractWithSigner
-              .createMultipleCollectibles(jsonUrl.value, amount.value, 0, {
+              .mintAvg(jsonUrl.value, amount.value, 0, {
                 gasLimit: gas.add(BigNumber.from(1552481)),
                 value: ethers.utils.parseEther(
                   (parseFloat(price.value) * amount.value).toString()
@@ -237,13 +237,13 @@ export default defineComponent({
             Api.uploadJson({
               name: name.value,
               description: name.value,
-              image: `https://ipfs.io/ipfs/${res.IpfsHash}`,
+              image: `https://gateway.pinata.cloud/ipfs/${res.IpfsHash}`,
               attributes: [],
             })
               .then((res: any) => {
                 console.log(res)
                 options.onFinish()
-                jsonUrl.value = `https://ipfs.io/ipfs/${res.IpfsHash}`
+                jsonUrl.value = `https://gateway.pinata.cloud/ipfs/${res.IpfsHash}`
                 uploadSuccess.value = true
                 message.destroyAll()
                 message.success(i18n.global.t('sucess.upload_image_success'))

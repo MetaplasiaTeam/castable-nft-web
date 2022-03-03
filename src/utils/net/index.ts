@@ -113,7 +113,7 @@ export class Api {
         return
       }
       contract
-        .getCollectiblesByOwner(store.state.web3address)
+        .getByOwner(store.state.web3address)
         .then(async (res: NFTInfo[]) => {
           let allNFTInfo: Array<{ id: number; value: number; info: PinIPFS }> =
             []

@@ -27,7 +27,6 @@ export default defineConfig({
   build: {
     commonjsOptions: {
       transformMixedEsModules: true,
-      // exclude: ['node_modules/lodash-es/**'],
     },
     rollupOptions: {
       // @ts-ignore

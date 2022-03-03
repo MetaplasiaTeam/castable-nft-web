@@ -110,102 +110,9 @@ export default class Constants {
     },
     {
       inputs: [{ internalType: 'uint256', name: '_tokenId', type: 'uint256' }],
-      name: 'burnCollectible',
+      name: 'burn',
       outputs: [],
       stateMutability: 'nonpayable',
-      type: 'function',
-    },
-    {
-      inputs: [
-        { internalType: 'string', name: '_uri', type: 'string' },
-        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
-      ],
-      name: 'createCollectible',
-      outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-      stateMutability: 'payable',
-      type: 'function',
-    },
-    {
-      inputs: [
-        { internalType: 'address', name: '_addr', type: 'address' },
-        { internalType: 'uint256', name: '_value', type: 'uint256' },
-        { internalType: 'string', name: '_uri', type: 'string' },
-        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
-      ],
-      name: 'createCollectibleByERC20',
-      outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-      stateMutability: 'nonpayable',
-      type: 'function',
-    },
-    {
-      inputs: [
-        { internalType: 'address', name: '_addr', type: 'address' },
-        { internalType: 'uint256', name: '_id', type: 'uint256' },
-        { internalType: 'string', name: '_uri', type: 'string' },
-        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
-      ],
-      name: 'createCollectibleByERC721',
-      outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-      stateMutability: 'nonpayable',
-      type: 'function',
-    },
-    {
-      inputs: [
-        { internalType: 'string', name: '_uri', type: 'string' },
-        { internalType: 'uint256', name: 'count', type: 'uint256' },
-        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
-      ],
-      name: 'createMultipleCollectibles',
-      outputs: [{ internalType: 'uint256[]', name: '', type: 'uint256[]' }],
-      stateMutability: 'payable',
-      type: 'function',
-    },
-    {
-      inputs: [
-        { internalType: 'address', name: '_addr', type: 'address' },
-        { internalType: 'string', name: '_uri', type: 'string' },
-        { internalType: 'uint256', name: '_value', type: 'uint256' },
-        { internalType: 'uint256', name: 'count', type: 'uint256' },
-        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
-      ],
-      name: 'createMultipleCollectiblesByERC20',
-      outputs: [{ internalType: 'uint256[]', name: '', type: 'uint256[]' }],
-      stateMutability: 'nonpayable',
-      type: 'function',
-    },
-    {
-      inputs: [
-        { internalType: 'address', name: '_addr', type: 'address' },
-        { internalType: 'string[]', name: '_uris', type: 'string[]' },
-        { internalType: 'uint256[]', name: '_values', type: 'uint256[]' },
-        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
-      ],
-      name: 'createMultipleCollectiblesByERC20Custom',
-      outputs: [{ internalType: 'uint256[]', name: '', type: 'uint256[]' }],
-      stateMutability: 'nonpayable',
-      type: 'function',
-    },
-    {
-      inputs: [
-        { internalType: 'address', name: '_addr', type: 'address' },
-        { internalType: 'string[]', name: '_uris', type: 'string[]' },
-        { internalType: 'uint256[]', name: '_ids', type: 'uint256[]' },
-        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
-      ],
-      name: 'createMultipleCollectiblesByERC721',
-      outputs: [{ internalType: 'uint256[]', name: '', type: 'uint256[]' }],
-      stateMutability: 'nonpayable',
-      type: 'function',
-    },
-    {
-      inputs: [
-        { internalType: 'string[]', name: '_uris', type: 'string[]' },
-        { internalType: 'uint256[]', name: '_values', type: 'uint256[]' },
-        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
-      ],
-      name: 'createMultipleCollectiblesCustom',
-      outputs: [{ internalType: 'uint256[]', name: '', type: 'uint256[]' }],
-      stateMutability: 'payable',
       type: 'function',
     },
     {
@@ -217,7 +124,7 @@ export default class Constants {
     },
     {
       inputs: [{ internalType: 'address', name: '_owner', type: 'address' }],
-      name: 'getCollectiblesByOwner',
+      name: 'getByOwner',
       outputs: [
         {
           components: [
@@ -249,6 +156,99 @@ export default class Constants {
       name: 'minMintValue',
       outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
       stateMutability: 'view',
+      type: 'function',
+    },
+    {
+      inputs: [
+        { internalType: 'string', name: '_uri', type: 'string' },
+        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
+      ],
+      name: 'mint',
+      outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+      stateMutability: 'payable',
+      type: 'function',
+    },
+    {
+      inputs: [
+        { internalType: 'string', name: '_uri', type: 'string' },
+        { internalType: 'uint256', name: 'count', type: 'uint256' },
+        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
+      ],
+      name: 'mintAvg',
+      outputs: [{ internalType: 'uint256[]', name: '', type: 'uint256[]' }],
+      stateMutability: 'payable',
+      type: 'function',
+    },
+    {
+      inputs: [
+        { internalType: 'address', name: '_addr', type: 'address' },
+        { internalType: 'uint256', name: '_value', type: 'uint256' },
+        { internalType: 'string', name: '_uri', type: 'string' },
+        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
+      ],
+      name: 'mintByERC20',
+      outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+      stateMutability: 'nonpayable',
+      type: 'function',
+    },
+    {
+      inputs: [
+        { internalType: 'address', name: '_addr', type: 'address' },
+        { internalType: 'string', name: '_uri', type: 'string' },
+        { internalType: 'uint256', name: '_value', type: 'uint256' },
+        { internalType: 'uint256', name: 'count', type: 'uint256' },
+        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
+      ],
+      name: 'mintByERC20Avg',
+      outputs: [{ internalType: 'uint256[]', name: '', type: 'uint256[]' }],
+      stateMutability: 'nonpayable',
+      type: 'function',
+    },
+    {
+      inputs: [
+        { internalType: 'address', name: '_addr', type: 'address' },
+        { internalType: 'string[]', name: '_uris', type: 'string[]' },
+        { internalType: 'uint256[]', name: '_values', type: 'uint256[]' },
+        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
+      ],
+      name: 'mintByERC20Custom',
+      outputs: [{ internalType: 'uint256[]', name: '', type: 'uint256[]' }],
+      stateMutability: 'nonpayable',
+      type: 'function',
+    },
+    {
+      inputs: [
+        { internalType: 'address', name: '_addr', type: 'address' },
+        { internalType: 'uint256', name: '_id', type: 'uint256' },
+        { internalType: 'string', name: '_uri', type: 'string' },
+        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
+      ],
+      name: 'mintByERC721',
+      outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+      stateMutability: 'nonpayable',
+      type: 'function',
+    },
+    {
+      inputs: [
+        { internalType: 'address', name: '_addr', type: 'address' },
+        { internalType: 'string[]', name: '_uris', type: 'string[]' },
+        { internalType: 'uint256[]', name: '_ids', type: 'uint256[]' },
+        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
+      ],
+      name: 'mintByERC721Custom',
+      outputs: [{ internalType: 'uint256[]', name: '', type: 'uint256[]' }],
+      stateMutability: 'nonpayable',
+      type: 'function',
+    },
+    {
+      inputs: [
+        { internalType: 'string[]', name: '_uris', type: 'string[]' },
+        { internalType: 'uint256[]', name: '_values', type: 'uint256[]' },
+        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
+      ],
+      name: 'mintCustom',
+      outputs: [{ internalType: 'uint256[]', name: '', type: 'uint256[]' }],
+      stateMutability: 'payable',
       type: 'function',
     },
     {
