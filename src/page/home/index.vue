@@ -64,7 +64,12 @@
             </div>
           </n-collapse-item>
         </n-collapse>
-        <n-button type="primary" :style="{ width: '100%' }" @click="mint">
+        <n-button
+          :loading="mintIng"
+          type="primary"
+          :style="{ width: '100%' }"
+          @click="mint"
+        >
           {{ $t('home.mint_now') }}
         </n-button>
       </n-space>
@@ -124,6 +129,8 @@ export default defineComponent({
     const { signer } = useEthers()
     let connect = ref()
 
+    let imageHash = ref('')
+    let mintIng = ref(false)
     let name = ref('')
     let price = ref('')
     let amount = ref(1)
@@ -133,11 +140,33 @@ export default defineComponent({
     let uploadSuccess = ref(false)
 
     function mint() {
-      if (bulk.value) {
-        mintMultiple()
-      } else {
-        mintSingle()
-      }
+      mintIng.value = true
+      // 上传 json
+      Api.uploadJson({
+        name: name.value,
+        description: name.value,
+        image: `https://gateway.pinata.cloud/ipfs/${imageHash.value}`,
+        attributes: [
+          {
+            trait_type: 'castable_value',
+            value: ethers.utils.parseEther(price.value),
+          },
+        ],
+      })
+        .then((res: any) => {
+          console.log(res)
+          jsonUrl.value = `https://gateway.pinata.cloud/ipfs/${res.IpfsHash}`
+          if (bulk.value) {
+            mintMultiple()
+          } else {
+            mintSingle()
+          }
+        })
+        .catch((err: any) => {
+          console.log(err)
+          message.error(i18n.global.t('error.upload_image_error'))
+          mintIng.value = false
+        })
     }
 
     function mintSingle() {
@@ -164,14 +193,17 @@ export default defineComponent({
             .then(function (tx: any) {
               console.log(tx)
               message.success(i18n.global.t('sucess.mint_success'))
+              mintIng.value = false
             })
             .catch((err: Error) => {
               message.error(err.message)
+              mintIng.value = false
             })
         })
       } else {
         message.error(i18n.global.t('error.please_connect_web3'))
         connect?.value?.connectWeb3()
+        mintIng.value = false
       }
     }
 
@@ -206,14 +238,17 @@ export default defineComponent({
               .then(function (tx: any) {
                 console.log(tx)
                 message.success(i18n.global.t('sucess.multiple_mint_success'))
+                mintIng.value = false
               })
               .catch((err: Error) => {
                 console.log(err.message)
                 message.error(err.message)
+                mintIng.value = false
               })
           })
       } else {
         message.error(i18n.global.t('error.please_connect_web3'))
+        mintIng.value = false
         connect?.value?.connectWeb3()
       }
     }
@@ -233,33 +268,11 @@ export default defineComponent({
         // 上传图片
         Api.uploadFile(file.file)
           .then((res: any) => {
-            // 上传 json
-            Api.uploadJson({
-              name: name.value,
-              description: name.value,
-              image: `https://gateway.pinata.cloud/ipfs/${res.IpfsHash}`,
-              attributes: [
-                {
-                  trait_type: 'castable_value',
-                  value: ethers.utils.parseEther(price.value),
-                },
-              ],
-            })
-              .then((res: any) => {
-                console.log(res)
-                options.onFinish()
-                jsonUrl.value = `https://gateway.pinata.cloud/ipfs/${res.IpfsHash}`
-                uploadSuccess.value = true
-                message.destroyAll()
-                message.success(i18n.global.t('sucess.upload_image_success'))
-              })
-              .catch((err: any) => {
-                console.log(err)
-                options.onError()
-                uploadSuccess.value = false
-                message.destroyAll()
-                message.error(i18n.global.t('error.upload_image_error'))
-              })
+            message.destroyAll()
+            message.success(i18n.global.t('sucess.upload_image_success'))
+            uploadSuccess.value = true
+            imageHash.value = res.IpfsHash
+            options.onFinish()
           })
           .catch((err: any) => {
             console.log(err)
@@ -267,6 +280,7 @@ export default defineComponent({
             uploadSuccess.value = false
             message.destroyAll()
             message.error(i18n.global.t('error.upload_image_error'))
+            options.onError()
           })
       } else {
         options.onError()
@@ -282,6 +296,7 @@ export default defineComponent({
       mint,
       upload,
       connect,
+      mintIng,
     }
   },
 })
