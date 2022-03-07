@@ -238,7 +238,12 @@ export default defineComponent({
               name: name.value,
               description: name.value,
               image: `https://gateway.pinata.cloud/ipfs/${res.IpfsHash}`,
-              attributes: [],
+              attributes: [
+                {
+                  trait_type: 'castable_value',
+                  value: ethers.utils.parseEther(price.value),
+                },
+              ],
             })
               .then((res: any) => {
                 console.log(res)

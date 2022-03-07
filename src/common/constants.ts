@@ -1,5 +1,5 @@
 export default class Constants {
-  static CONTRACT_ADDRESS = '0x7F087eB3956C41151742485676BDfAcA5eE04111'
+  static CONTRACT_ADDRESS = '0xb55C74905572A47DE02167D19687d495Fc2C3F1b'
   static CONTRACT_ABI = [
     { inputs: [], stateMutability: 'nonpayable', type: 'constructor' },
     {
@@ -116,6 +116,27 @@ export default class Constants {
       type: 'function',
     },
     {
+      inputs: [{ internalType: 'uint256', name: '_tokenId', type: 'uint256' }],
+      name: 'get',
+      outputs: [
+        {
+          components: [
+            { internalType: 'uint256', name: 'id', type: 'uint256' },
+            { internalType: 'uint256', name: 'mintTyp', type: 'uint256' },
+            { internalType: 'uint256', name: 'value', type: 'uint256' },
+            { internalType: 'uint256', name: 'burnTime', type: 'uint256' },
+            { internalType: 'address', name: 'addr', type: 'address' },
+            { internalType: 'string', name: 'uri', type: 'string' },
+          ],
+          internalType: 'struct CastableNFT.Collectible',
+          name: '',
+          type: 'tuple',
+        },
+      ],
+      stateMutability: 'view',
+      type: 'function',
+    },
+    {
       inputs: [{ internalType: 'uint256', name: 'tokenId', type: 'uint256' }],
       name: 'getApproved',
       outputs: [{ internalType: 'address', name: '', type: 'address' }],
@@ -129,7 +150,9 @@ export default class Constants {
         {
           components: [
             { internalType: 'uint256', name: 'id', type: 'uint256' },
+            { internalType: 'uint256', name: 'mintTyp', type: 'uint256' },
             { internalType: 'uint256', name: 'value', type: 'uint256' },
+            { internalType: 'uint256', name: 'burnTime', type: 'uint256' },
             { internalType: 'address', name: 'addr', type: 'address' },
             { internalType: 'string', name: 'uri', type: 'string' },
           ],
@@ -161,7 +184,7 @@ export default class Constants {
     {
       inputs: [
         { internalType: 'string', name: '_uri', type: 'string' },
-        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
+        { internalType: 'uint256', name: '_burnTime', type: 'uint256' },
       ],
       name: 'mint',
       outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -172,7 +195,7 @@ export default class Constants {
       inputs: [
         { internalType: 'string', name: '_uri', type: 'string' },
         { internalType: 'uint256', name: 'count', type: 'uint256' },
-        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
+        { internalType: 'uint256', name: '_burnTime', type: 'uint256' },
       ],
       name: 'mintAvg',
       outputs: [{ internalType: 'uint256[]', name: '', type: 'uint256[]' }],
@@ -184,7 +207,7 @@ export default class Constants {
         { internalType: 'address', name: '_addr', type: 'address' },
         { internalType: 'uint256', name: '_value', type: 'uint256' },
         { internalType: 'string', name: '_uri', type: 'string' },
-        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
+        { internalType: 'uint256', name: '_burnTime', type: 'uint256' },
       ],
       name: 'mintByERC20',
       outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -197,7 +220,7 @@ export default class Constants {
         { internalType: 'string', name: '_uri', type: 'string' },
         { internalType: 'uint256', name: '_value', type: 'uint256' },
         { internalType: 'uint256', name: 'count', type: 'uint256' },
-        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
+        { internalType: 'uint256', name: '_burnTime', type: 'uint256' },
       ],
       name: 'mintByERC20Avg',
       outputs: [{ internalType: 'uint256[]', name: '', type: 'uint256[]' }],
@@ -209,7 +232,7 @@ export default class Constants {
         { internalType: 'address', name: '_addr', type: 'address' },
         { internalType: 'string[]', name: '_uris', type: 'string[]' },
         { internalType: 'uint256[]', name: '_values', type: 'uint256[]' },
-        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
+        { internalType: 'uint256', name: '_burnTime', type: 'uint256' },
       ],
       name: 'mintByERC20Custom',
       outputs: [{ internalType: 'uint256[]', name: '', type: 'uint256[]' }],
@@ -221,7 +244,7 @@ export default class Constants {
         { internalType: 'address', name: '_addr', type: 'address' },
         { internalType: 'uint256', name: '_id', type: 'uint256' },
         { internalType: 'string', name: '_uri', type: 'string' },
-        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
+        { internalType: 'uint256', name: '_burnTime', type: 'uint256' },
       ],
       name: 'mintByERC721',
       outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
@@ -233,7 +256,7 @@ export default class Constants {
         { internalType: 'address', name: '_addr', type: 'address' },
         { internalType: 'string[]', name: '_uris', type: 'string[]' },
         { internalType: 'uint256[]', name: '_ids', type: 'uint256[]' },
-        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
+        { internalType: 'uint256', name: '_burnTime', type: 'uint256' },
       ],
       name: 'mintByERC721Custom',
       outputs: [{ internalType: 'uint256[]', name: '', type: 'uint256[]' }],
@@ -244,7 +267,7 @@ export default class Constants {
       inputs: [
         { internalType: 'string[]', name: '_uris', type: 'string[]' },
         { internalType: 'uint256[]', name: '_values', type: 'uint256[]' },
-        { internalType: 'uint256', name: '_burnBlockNum', type: 'uint256' },
+        { internalType: 'uint256', name: '_burnTime', type: 'uint256' },
       ],
       name: 'mintCustom',
       outputs: [{ internalType: 'uint256[]', name: '', type: 'uint256[]' }],
@@ -318,13 +341,6 @@ export default class Constants {
       inputs: [],
       name: 'symbol',
       outputs: [{ internalType: 'string', name: '', type: 'string' }],
-      stateMutability: 'view',
-      type: 'function',
-    },
-    {
-      inputs: [{ internalType: 'uint256', name: '_tokenId', type: 'uint256' }],
-      name: 'tokenBurnBlockNum',
-      outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
       stateMutability: 'view',
       type: 'function',
     },
