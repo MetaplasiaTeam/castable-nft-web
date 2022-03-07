@@ -8,9 +8,9 @@
     <div>
       <n-tag checkable @click="toProfile">{{ $t('profile') }}</n-tag>
 
-      <n-dropdown trigger="hover" :options="language" @select="languageSelect">
+      <!-- <n-dropdown trigger="hover" :options="language" @select="languageSelect">
         <n-tag checkable>{{ $t('language') }}</n-tag>
-      </n-dropdown>
+      </n-dropdown> -->
 
       <n-button color="#8FDBFD" @click="connectWeb3" type="primary">
         {{ store.state.topbarButtonText }}

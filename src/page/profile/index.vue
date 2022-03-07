@@ -6,17 +6,19 @@
     <n-layout-content
       content-style="padding-left: 5vw; padding-right: 5vw; padding-bottom: 5vh"
     >
-      <div id="nftcard">
-        <NFTItem
-          v-for="(item, index) in testData"
-          @refresh="receiveRefresh"
-          :key="index"
-          :tokenId="item.tokenId"
-          :imageUrl="item.imageUrl"
-          :title="item.title"
-          :price="item.price"
-        ></NFTItem>
-      </div>
+      <n-spin :show="loadNft">
+        <div id="nftcard">
+          <NFTItem
+            v-for="(item, index) in testData"
+            @refresh="receiveRefresh"
+            :key="index"
+            :tokenId="item.tokenId"
+            :imageUrl="item.imageUrl"
+            :title="item.title"
+            :price="item.price"
+          ></NFTItem>
+        </div>
+      </n-spin>
     </n-layout-content>
   </n-layout>
 </template>
@@ -24,7 +26,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from '@vue/runtime-dom'
 import TopBar from '@/components/topbar.vue'
-import { NLayout, NLayoutHeader, NLayoutContent, NSpace } from 'naive-ui'
+import { NLayout, NLayoutHeader, NLayoutContent, NSpace, NSpin } from 'naive-ui'
 import NFTItem, { NFTItemProps } from '@/components/nft-item.vue'
 import { useStore } from '@/store'
 import { Api } from '@/utils/net'
@@ -40,16 +42,19 @@ export default defineComponent({
     NLayoutContent,
     NSpace,
     NFTItem,
+    NSpin,
   },
 
   setup() {
     const store = useStore()
     const { signer } = useEthers()
 
+    let loadNft = ref(false)
     let testData = ref(Array<NFTItemProps>())
 
     onMounted(() => {
       getAllNft()
+      loadNft.value = true
     })
 
     function receiveRefresh(bool: boolean) {
@@ -88,12 +93,16 @@ export default defineComponent({
           .catch((err) => {
             console.log(err)
           })
+          .finally(() => {
+            loadNft.value = false
+          })
       }
     }
 
     return {
       testData,
       receiveRefresh,
+      loadNft,
     }
   },
 })

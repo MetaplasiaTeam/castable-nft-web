@@ -9,7 +9,7 @@
     "
   >
     <n-space vertical align="start">
-      <n-image width="200" :src="imageUrl" preview-disabled @click="toInfo" />
+      <n-image height="200" :src="imageUrl" preview-disabled @click="toInfo" />
       <a>{{ title }}#{{ tokenId?.toString() }}</a>
       <a>{{ price }} ETH</a>
     </n-space>
@@ -215,7 +215,7 @@ export default defineComponent({
         message.error(i18n.global.t('error.please_connect_web3'))
         return
       }
-      sending.value = true
+      burndialog.value = true
 
       let trueSigner = signer.value
 
@@ -232,10 +232,17 @@ export default defineComponent({
           })
           .then((tx: any) => {
             console.log(tx)
-            message.success(i18n.global.t('sucess.burn_success'))
-            showBurnDialog.value = false
-            burndialog.value = false
-            context.emit('refresh', true)
+            tx.wait()
+              .then((res: any) => {
+                message.success(i18n.global.t('sucess.burn_success'))
+                showBurnDialog.value = false
+                burndialog.value = false
+                context.emit('refresh', true)
+              })
+              .catch((err: Error) => {
+                message.error(err.message)
+                burndialog.value = false
+              })
           })
           .catch((err: Error) => {
             message.error(err.message)
