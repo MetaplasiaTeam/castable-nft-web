@@ -232,7 +232,9 @@ export default defineComponent({
         )
         contract.estimateGas
           .mintAvg(jsonUrl.value, amount.value, 0, {
-            value: ethers.utils.parseEther(price.value),
+            value: ethers.utils.parseEther(
+              (parseFloat(price.value) * amount.value).toString()
+            ),
           })
           .then((gas) => {
             let contractWithSigner = contract!!.connect(trueSigner)
