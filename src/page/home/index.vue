@@ -114,7 +114,7 @@
         style="flex-basis: 150; flex-grow: 2"
         type="primary"
         @click="
-          openLink(
+          util.openLink(
             `https://opensea.io/assets/0x842864f1cd1491b77a404b0e30aac2b67b2c647b/${lastTokenId}`
           )
         "
@@ -150,9 +150,10 @@ import { useStore } from '@/store'
 
 import { useEthers, useWallet } from 'vue-dapp'
 import { BigNumber, ethers } from 'ethers'
-import { Api } from '@/utils/net'
+import { Api } from '@/common/utils/net'
 import Constants from '@/common/constants'
 import i18n from '@/i18n'
+import util from '@/common/utils/common-util'
 
 export default defineComponent({
   name: 'home-page',
@@ -403,7 +404,7 @@ export default defineComponent({
         width: '600px',
       },
       lastTokenId,
-      openLink,
+      util,
     }
   },
 })

@@ -20,6 +20,8 @@
 
 use `yarn` to install dependencies.
 
+use `yarn bsctest` to run the development server by BSC Test network.
+
 use `yarn dev` to run the development server.
 
 use `yarn build` to build the production version.

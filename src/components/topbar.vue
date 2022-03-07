@@ -29,7 +29,7 @@ import {
 } from '@vue/runtime-dom'
 import i18n from '@/i18n'
 import { NDropdown, NTag, NButton } from 'naive-ui'
-import { ethers } from 'ethers'
+import { Contract, ethers } from 'ethers'
 import { useStore } from '@/store'
 import Constants from '@/common/constants'
 import { useRouter } from 'vue-router'
@@ -48,6 +48,7 @@ export default defineComponent({
   },
   setup() {
     onMounted(() => {
+      console.log(Constants.CONTRACT_ADDRESS)
       i18n.global.locale = 'en'
     })
 

@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "vite build",
+    "bsctest": "vite --mode bsctest --host ",
     "dev": "vite --host",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
     "preview": "vite preview "

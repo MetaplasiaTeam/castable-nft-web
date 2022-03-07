@@ -125,10 +125,11 @@
 <script lang="ts">
 import { defineComponent, ref } from '@vue/runtime-dom'
 import { NSpace, NImage, NButton, NModal, NInput, useMessage } from 'naive-ui'
-import { useEthers, useWallet } from 'vue-dapp'
-import { BigNumber, ethers } from 'ethers'
+import { useEthers } from 'vue-dapp'
+import { ethers } from 'ethers'
 import Constants from '@/common/constants'
 import i18n from '@/i18n'
+import commonUtil from '@/common/utils/common-util'
 
 export interface NFTItemProps {
   tokenId: number
@@ -252,9 +253,8 @@ export default defineComponent({
     }
 
     function toInfo() {
-      window.open(
-        `https://etherscan.io/nft/0x842864f1cd1491b77a404b0e30aac2b67b2c647b/${props.tokenId}`,
-        '_blank'
+      commonUtil.openLink(
+        `https://etherscan.io/nft/0x842864f1cd1491b77a404b0e30aac2b67b2c647b/${props.tokenId}`
       )
     }
 
