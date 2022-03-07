@@ -45,7 +45,12 @@
             :placeholder="$t('home.input.placeholder_2')"
             style="width: 100%; margin-right: 0"
           ></n-input>
-          <n-image width="25" height="25" preview-disabled src="/img/eth.png" />
+          <n-image
+            width="25"
+            height="25"
+            preview-disabled
+            :src="getSrc('eth')"
+          />
         </div>
         <n-collapse arrow-placement="right">
           <n-collapse-item :title="$t('home.advance_option')">
@@ -66,6 +71,7 @@
           </n-collapse-item>
         </n-collapse>
         <n-button
+          color="#8FDBFD"
           :loading="mintIng"
           type="primary"
           :style="{ width: '100%' }"
@@ -76,6 +82,46 @@
       </n-space>
     </n-layout-content>
   </n-layout>
+  <!-- 铸造完成弹窗 -->
+  <n-modal
+    v-model:show="afterMintDialog"
+    :mask-closable="false"
+    class="custom-card"
+    preset="card"
+    :style="bodyStyle"
+    :title="$t('prompt')"
+    size="huge"
+    :bordered="false"
+  >
+    <a>Minting, check and trade directly on OpenSea</a>
+    <div
+      style="
+        display: flex;
+        flex-direction: row;
+        margin-top: 16px;
+        justify-content: space-around;
+      "
+    >
+      <n-button
+        color="#8FDBFD"
+        style="flex-basis: 100; flex-grow: 1; margin-right: 16px"
+        @click="afterMintDialog = false"
+      >
+        Countiun Mint
+      </n-button>
+      <n-button
+        color="#8FDBFD"
+        style="flex-basis: 150; flex-grow: 2"
+        type="primary"
+        @click="
+          openLink(
+            `https://opensea.io/assets/0x842864f1cd1491b77a404b0e30aac2b67b2c647b/${lastTokenId}`
+          )
+        "
+        >Go OpenSea</n-button
+      >
+    </div>
+  </n-modal>
 </template>
 
 <script lang="ts">
@@ -95,6 +141,7 @@ import {
   NCollapseItem,
   NCheckbox,
   NInputNumber,
+  NModal,
   UploadCustomRequestOptions,
   useMessage,
   UploadFileInfo,
@@ -124,6 +171,7 @@ export default defineComponent({
     NCollapseItem,
     NCheckbox,
     NInputNumber,
+    NModal,
   },
   setup() {
     const message = useMessage()
@@ -137,9 +185,15 @@ export default defineComponent({
     let price = ref('')
     let amount = ref(1)
     let bulk = ref(false)
+    let lastTokenId = ref(0)
 
     let jsonUrl = ref('')
     let uploadSuccess = ref(false)
+    let afterMintDialog = ref(false)
+
+    function getSrc(name: string) {
+      return new URL(`../../assets/img/${name}.png`, import.meta.url).href
+    }
 
     function mint() {
       if (!uploadSuccess.value) {
@@ -196,10 +250,20 @@ export default defineComponent({
                 gasLimit: gas.add(BigNumber.from(10000)),
                 value: ethers.utils.parseEther(price.value),
               })
-              .then(function (tx: any) {
-                console.log(tx)
-                message.success(i18n.global.t('sucess.mint_success'))
-                mintIng.value = false
+              .then((tx: any) => {
+                tx.wait()
+                  .then((res: any) => {
+                    lastTokenId.value = parseInt(
+                      (res.events[0].args[2] as BigNumber).toString()
+                    )
+                    message.success(i18n.global.t('sucess.mint_success'))
+                    afterMintDialog.value = true
+                    mintIng.value = false
+                  })
+                  .catch((err: Error) => {
+                    message.error(err.message)
+                    mintIng.value = false
+                  })
               })
               .catch((err: Error) => {
                 message.error(err.message)
@@ -318,6 +382,10 @@ export default defineComponent({
       }
     }
 
+    function openLink(link: any) {
+      window.open(link, '_blank')
+    }
+
     return {
       name,
       price,
@@ -328,6 +396,13 @@ export default defineComponent({
       connect,
       mintIng,
       checkImage,
+      getSrc,
+      afterMintDialog,
+      bodyStyle: {
+        width: '600px',
+      },
+      lastTokenId,
+      openLink
     }
   },
 })

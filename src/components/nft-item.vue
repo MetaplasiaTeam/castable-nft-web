@@ -22,6 +22,7 @@
       "
     >
       <n-button
+        color="#8FDBFD"
         type="primary"
         style="width: 40%"
         @click="showGiveAwayDialog = true"
@@ -29,6 +30,7 @@
       >
       <div width="5vw"></div>
       <n-button
+        color="#8FDBFD"
         type="primary"
         style="width: 40%"
         @click="showBurnDialog = true"
@@ -61,6 +63,7 @@
       "
     >
       <n-button
+        color="#8FDBFD"
         style="flex-basis: 100; flex-grow: 1; margin-right: 16px"
         :disabled="sending"
         @click="showGiveAwayDialog = false"
@@ -68,6 +71,7 @@
         {{ $t('cancle') }}</n-button
       >
       <n-button
+        color="#8FDBFD"
         style="flex-basis: 150; flex-grow: 2"
         :loading="sending"
         type="primary"
@@ -99,6 +103,7 @@
       "
     >
       <n-button
+        color="#8FDBFD"
         style="flex-basis: 100; flex-grow: 1; margin-right: 16px"
         :disabled="burndialog"
         @click="showBurnDialog = false"
@@ -106,6 +111,7 @@
         {{ $t('cancle') }}</n-button
       >
       <n-button
+        color="#8FDBFD"
         style="flex-basis: 150; flex-grow: 2"
         :loading="burndialog"
         type="primary"
@@ -218,10 +224,10 @@ export default defineComponent({
         Constants.CONTRACT_ABI,
         signer.value
       )
-      contract.estimateGas.burnCollectible(props.tokenId).then((gas) => {
+      contract.estimateGas.burn(props.tokenId).then((gas) => {
         let contractWithSigner = contract!!.connect(trueSigner)
         contractWithSigner
-          .burnCollectible(props.tokenId, {
+          .burn(props.tokenId, {
             gasLimit: gas,
           })
           .then((tx: any) => {
@@ -239,7 +245,10 @@ export default defineComponent({
     }
 
     function toInfo() {
-      message.info('这里应该跳转链接')
+      window.open(
+        `https://etherscan.io/nft/0x842864f1cd1491b77a404b0e30aac2b67b2c647b/${props.tokenId}`,
+        '_blank'
+      )
     }
 
     return {

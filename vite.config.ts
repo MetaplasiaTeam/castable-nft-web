@@ -6,6 +6,7 @@ import inject from '@rollup/plugin-inject'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
+  assetsInclude: ['src/assets/*'],
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),

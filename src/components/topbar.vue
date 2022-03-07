@@ -12,7 +12,7 @@
         <n-tag checkable>{{ $t('language') }}</n-tag>
       </n-dropdown>
 
-      <n-button @click="connectWeb3" type="primary">
+      <n-button color="#8FDBFD" @click="connectWeb3" type="primary">
         {{ store.state.topbarButtonText }}
       </n-button>
     </div>
