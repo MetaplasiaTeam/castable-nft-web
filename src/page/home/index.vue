@@ -193,7 +193,7 @@ export default defineComponent({
             let contractWithSigner = contract!!.connect(trueSigner)
             contractWithSigner
               .mint(jsonUrl.value, 0, {
-                gasLimit: gas.add(BigNumber.from(1552481)),
+                gasLimit: gas.add(BigNumber.from(10000)),
                 value: ethers.utils.parseEther(price.value),
               })
               .then(function (tx: any) {
@@ -240,7 +240,7 @@ export default defineComponent({
             let contractWithSigner = contract!!.connect(trueSigner)
             contractWithSigner
               .mintAvg(jsonUrl.value, amount.value, 0, {
-                gasLimit: gas.add(BigNumber.from(1552481)),
+                gasLimit: gas.add(BigNumber.from(1000)),
                 value: ethers.utils.parseEther(
                   (parseFloat(price.value) * amount.value).toString()
                 ),
