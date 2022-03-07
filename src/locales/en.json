@@ -8,7 +8,7 @@
     "title": "Mint",
     "subtitle": "Mint valuable NFT",
     "token_id": "Token ID Generate by smart contract",
-    "upload": "+ Upload image less than 5M",
+    "upload": "+ Upload image less than 1 MB",
     "advance_option": "Advance Option",
     "batch_mint": "Batch Mint",
     "mint_now": "Mint Now",
@@ -37,7 +37,9 @@
     "please_connect_web3": "Please connect Web3",
     "upload_image_error": "Upload image error",
     "please_upload_image": "Please upload the image first or wait for the image to finish uploading",
-    "please_input_integer": "Casting quantity is not a mint number"
+    "please_input_integer": "Casting quantity is not a mint number",
+    "not_image": "Please upload a image",
+    "image_big": "Image size is too big"
   },
   "sucess": {
     "mint_success": "Mint success",

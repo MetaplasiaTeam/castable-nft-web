@@ -6,8 +6,6 @@
       /></n-tag>
     </router-link>
     <div>
-      <n-tag v-if="isActivated" checkable>{{ shortenAddress(address) }}</n-tag>
-
       <n-tag checkable @click="toProfile">{{ $t('profile') }}</n-tag>
 
       <n-dropdown trigger="hover" :options="language" @select="languageSelect">
@@ -22,7 +20,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, defineExpose } from '@vue/runtime-dom'
+import {
+  defineComponent,
+  ref,
+  watch,
+  defineExpose,
+  onMounted,
+} from '@vue/runtime-dom'
 import i18n from '@/i18n'
 import { NDropdown, NTag, NButton } from 'naive-ui'
 import { ethers } from 'ethers'
@@ -33,8 +37,8 @@ import { useRouter } from 'vue-router'
 import { useBoard, useEthers, useWallet, shortenAddress } from 'vue-dapp'
 
 const { open } = useBoard()
-const { status, disconnect, error } = useWallet()
-const { address, balance, chainId, isActivated, network, signer } = useEthers()
+const { disconnect } = useWallet()
+const { address, isActivated, signer } = useEthers()
 
 export default defineComponent({
   components: {
@@ -43,6 +47,10 @@ export default defineComponent({
     NButton,
   },
   setup() {
+    onMounted(() => {
+      i18n.global.locale = 'en'
+    })
+
     const store = useStore()
     const router = useRouter()
 
@@ -80,7 +88,7 @@ export default defineComponent({
 
     watch(isActivated, (val) => {
       if (val) {
-        store.commit('setTopbarButtonText', i18n.global.t('disconnect'))
+        store.commit('setTopbarButtonText', shortenAddress(address.value))
       } else {
         store.commit('setTopbarButtonText', i18n.global.t('connect'))
       }

@@ -25,6 +25,7 @@
           <a style="white-space: nowrap">{{ $t('home.token_id') }}</a>
         </div>
         <n-upload
+          @before-upload="checkImage"
           :custom-request="upload"
           :show-file-list="true"
           list-type="image"
@@ -78,7 +79,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@vue/runtime-dom'
+import { defineComponent, ref, onMounted } from '@vue/runtime-dom'
 import TopBar from '@/components/topbar.vue'
 import {
   NInput,
@@ -96,6 +97,7 @@ import {
   NInputNumber,
   UploadCustomRequestOptions,
   useMessage,
+  UploadFileInfo,
 } from 'naive-ui'
 import { useStore } from '@/store'
 
@@ -149,7 +151,7 @@ export default defineComponent({
         attributes: [
           {
             trait_type: 'castable_value',
-            value: ethers.utils.parseEther(price.value),
+            value: ethers.utils.parseEther(price.value).toString(),
           },
         ],
       })
@@ -257,6 +259,26 @@ export default defineComponent({
       return Math.floor(obj) === obj
     }
 
+    async function checkImage(data: {
+      file: UploadFileInfo
+      fileList: UploadFileInfo[]
+    }) {
+      if (data.file.file !== undefined && data.file.file !== null) {
+        if (
+          data.file.file.type !== 'image/jpeg' &&
+          data.file.file.type !== 'image/png'
+        ) {
+          message.error(i18n.global.t('error.not_image'))
+          return false
+        }
+        if (data.file.file.size > 1024 * 1024 * 1) {
+          message.error(i18n.global.t('error.image_big'))
+          return false
+        }
+      }
+      return true
+    }
+
     // 传图，注意 uploadSuccess 数据
     function upload(options: UploadCustomRequestOptions) {
       message.loading(i18n.global.t('loading.upload_image_loading'), {
@@ -297,6 +319,7 @@ export default defineComponent({
       upload,
       connect,
       mintIng,
+      checkImage,
     }
   },
 })

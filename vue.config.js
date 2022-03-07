@@ -3,7 +3,7 @@ export default defineConfig({
   pluginOptions: {
     i18n: {
       locale: 'y',
-      fallbackLocale: 'zh',
+      fallbackLocale: 'en',
       localeDir: 'locales',
       enableLegacy: false,
       runtimeOnly: false,

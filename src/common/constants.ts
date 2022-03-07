@@ -1,5 +1,5 @@
 export default class Constants {
-  static CONTRACT_ADDRESS = '0xb55C74905572A47DE02167D19687d495Fc2C3F1b'
+  static CONTRACT_ADDRESS = '0x842864f1Cd1491B77a404b0E30aAc2B67b2c647B'
   static CONTRACT_ABI = [
     { inputs: [], stateMutability: 'nonpayable', type: 'constructor' },
     {

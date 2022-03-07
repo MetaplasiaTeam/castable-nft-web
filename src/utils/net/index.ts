@@ -11,7 +11,7 @@ const request = new Request({
   baseURL: 'https://api.pinata.cloud/',
   headers: {
     Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJlNmIyYzVkZS1kMDdmLTQ4YzMtOTQzNS1iMmE1MDgyNGU0MzYiLCJlbWFpbCI6Im5paGFvY3VuMjAwMDEyMjVAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siaWQiOiJGUkExIiwiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjF9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZX0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6Ijc2NDlkNDJjNTczNzM2M2Y4Yjc3Iiwic2NvcGVkS2V5U2VjcmV0IjoiNTFlMDI4OTliMjMwNWExNTc2MzdlYjc0M2E5OGNjZjBlMjc3NjQ0M2FiMDQzM2ExZjJhN2U4YWFmNjA1YTJkMCIsImlhdCI6MTY0NjEzMjQ2OX0.Wu2YDpjhMdab1FbeWFG_JqR1OpK6kCFHNmycd2MLXYU',
+      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiIyZmY1MTAyMy1iODY4LTQwNzctOGIyOS03YTNiNDExNzBmMDMiLCJlbWFpbCI6Im1vbmtleWNvaW42NkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGluX3BvbGljeSI6eyJyZWdpb25zIjpbeyJpZCI6Ik5ZQzEiLCJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MX1dLCJ2ZXJzaW9uIjoxfSwibWZhX2VuYWJsZWQiOmZhbHNlfSwiYXV0aGVudGljYXRpb25UeXBlIjoic2NvcGVkS2V5Iiwic2NvcGVkS2V5S2V5IjoiY2NmOThiYWM0ZGIwNWNkMDZlM2QiLCJzY29wZWRLZXlTZWNyZXQiOiI4ZGFjZDVhZDFmNzkyODQ5YmQ3ZmI1OTUyZDBkZWZiMGRhNzk3ODY4ZDg1NjVkZWU5ZjY2ZTE5YjJkNDcyOWJhIiwiaWF0IjoxNjQ2NjI0NzMzfQ.Gkc4g31mx_BAkkJJdDotZKikxNH8DiHMBYwwT1RwLgg',
   },
   interceptorHooks: {
     requestInterceptor: (config) => {
@@ -34,9 +34,9 @@ export class Api {
     return request.get({
       url: 'data/testAuthentication',
       headers: {
-        pinata_api_key: '7649d42c5737363f8b77',
+        pinata_api_key: 'ccf98bac4db05cd06e3d',
         pinata_secret_api_key:
-          '51e02899b2305a157637eb743a98ccf0e2776443ab0433a1f2a7e8aaf605a2d0',
+          '8dacd5ad1f792849bd7fb5952d0defb0da797868d8565dee9f66e19b2d4729ba',
       },
     })
   }
@@ -48,9 +48,9 @@ export class Api {
       url: 'pinning/pinFileToIPFS',
       data: data,
       headers: {
-        pinata_api_key: '7649d42c5737363f8b77',
+        pinata_api_key: 'ccf98bac4db05cd06e3d',
         pinata_secret_api_key:
-          '51e02899b2305a157637eb743a98ccf0e2776443ab0433a1f2a7e8aaf605a2d0',
+          '8dacd5ad1f792849bd7fb5952d0defb0da797868d8565dee9f66e19b2d4729ba',
       },
     })
   }
@@ -60,9 +60,9 @@ export class Api {
       url: 'pinning/pinJSONToIPFS',
       data: pinIPFS,
       headers: {
-        pinata_api_key: '7649d42c5737363f8b77',
+        pinata_api_key: 'ccf98bac4db05cd06e3d',
         pinata_secret_api_key:
-          '51e02899b2305a157637eb743a98ccf0e2776443ab0433a1f2a7e8aaf605a2d0',
+          '8dacd5ad1f792849bd7fb5952d0defb0da797868d8565dee9f66e19b2d4729ba',
       },
     })
   }

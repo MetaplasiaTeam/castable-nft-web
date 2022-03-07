@@ -8,7 +8,7 @@
     "title": "铸造",
     "subtitle": "创造有价值的 NFT",
     "token_id": "Token ID 由合约生成",
-    "upload": "+ 上传一张图片，请小于 5M",
+    "upload": "+ 上传一张图片，请小于 1 MB",
     "advance_option": "高级选项",
     "batch_mint": "进行批量铸造",
     "mint_now": "现在铸造",
@@ -29,15 +29,17 @@
     },
     "burn_d": {
       "title": "熔炼 NFT",
-      "message1":"NFT 价值：{0} ETH",
-      "message2":"熔炼 NFT 之后铸造价值会返还到你的账户，当前价值为 {0} ETH"
+      "message1": "NFT 价值：{0} ETH",
+      "message2": "熔炼 NFT 之后铸造价值会返还到你的账户，当前价值为 {0} ETH"
     }
   },
   "error": {
     "please_connect_web3": "请先连接 Web3",
     "upload_image_error": "上传图片出错",
     "please_upload_image": "请先上传图片或等待图片上传完成",
-    "please_input_integer": "铸造数量不为整"
+    "please_input_integer": "铸造数量不为整",
+    "not_image": "请上传图片",
+    "image_big": "图片大小超过 1 MB"
   },
   "sucess": {
     "mint_success": "铸造成功",
