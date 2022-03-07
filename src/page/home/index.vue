@@ -338,7 +338,8 @@ export default defineComponent({
       if (data.file.file !== undefined && data.file.file !== null) {
         if (
           data.file.file.type !== 'image/jpeg' &&
-          data.file.file.type !== 'image/png'
+          data.file.file.type !== 'image/png' &&
+          data.file.file.type !== 'image/gif'
         ) {
           message.error(i18n.global.t('error.not_image'))
           return false
@@ -402,7 +403,7 @@ export default defineComponent({
         width: '600px',
       },
       lastTokenId,
-      openLink
+      openLink,
     }
   },
 })
