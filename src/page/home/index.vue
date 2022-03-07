@@ -142,6 +142,10 @@ export default defineComponent({
     let uploadSuccess = ref(false)
 
     function mint() {
+      if (!uploadSuccess.value) {
+        message.error(i18n.global.t('error.please_upload_image'))
+        return
+      }
       mintIng.value = true
       // 上传 json
       Api.uploadJson({
@@ -173,10 +177,6 @@ export default defineComponent({
 
     function mintSingle() {
       if (signer.value !== null) {
-        if (!uploadSuccess.value) {
-          message.error(i18n.global.t('error.please_upload_image'))
-          return
-        }
         let trueSigner = signer.value
 
         let contract = new ethers.Contract(
@@ -185,23 +185,27 @@ export default defineComponent({
           signer.value
         )
 
-        contract.estimateGas.mint(jsonUrl.value, 0).then((gas) => {
-          let contractWithSigner = contract!!.connect(trueSigner)
-          contractWithSigner
-            .mint(jsonUrl.value, 0, {
-              gasLimit: gas.add(BigNumber.from(1552481)),
-              value: ethers.utils.parseEther(price.value),
-            })
-            .then(function (tx: any) {
-              console.log(tx)
-              message.success(i18n.global.t('sucess.mint_success'))
-              mintIng.value = false
-            })
-            .catch((err: Error) => {
-              message.error(err.message)
-              mintIng.value = false
-            })
-        })
+        contract.estimateGas
+          .mint(jsonUrl.value, 0, {
+            value: ethers.utils.parseEther(price.value),
+          })
+          .then((gas) => {
+            let contractWithSigner = contract!!.connect(trueSigner)
+            contractWithSigner
+              .mint(jsonUrl.value, 0, {
+                gasLimit: gas.add(BigNumber.from(1552481)),
+                value: ethers.utils.parseEther(price.value),
+              })
+              .then(function (tx: any) {
+                console.log(tx)
+                message.success(i18n.global.t('sucess.mint_success'))
+                mintIng.value = false
+              })
+              .catch((err: Error) => {
+                message.error(err.message)
+                mintIng.value = false
+              })
+          })
       } else {
         message.error(i18n.global.t('error.please_connect_web3'))
         connect?.value?.connectWeb3()
@@ -227,7 +231,9 @@ export default defineComponent({
           signer.value
         )
         contract.estimateGas
-          .mintAvg(jsonUrl.value, amount.value, 0)
+          .mintAvg(jsonUrl.value, amount.value, 0, {
+            value: ethers.utils.parseEther(price.value),
+          })
           .then((gas) => {
             let contractWithSigner = contract!!.connect(trueSigner)
             contractWithSigner
