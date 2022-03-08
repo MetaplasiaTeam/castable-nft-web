@@ -17,6 +17,10 @@ const routes: Array<RouteRecordRaw> = [
       }
     },
   },
+  {
+    path: '/introduction',
+    component: () => import('@page/introduction/index.vue'),
+  },
 ]
 
 const router = createRouter({

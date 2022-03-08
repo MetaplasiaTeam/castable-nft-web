@@ -12,6 +12,7 @@ const themeOverrides: GlobalThemeOverrides = {
   },
   Layout: {
     headerColor: '#f2f2f2',
+    footerColor: '#f2f2f2',
   },
 }
 

@@ -81,6 +81,18 @@
         </n-button>
       </n-space>
     </n-layout-content>
+    <n-layout-footer>
+      <br />
+      <br />
+      <router-link target="_blank" to="/introduction"
+        ><a id="link">Introduction</a></router-link
+      >
+      <br />
+      <br />
+      Copyright © 2022
+      <a id="link" href="https://metaplasia.io">Metaplasia.io</a> All rights
+      reserved.
+    </n-layout-footer>
   </n-layout>
   <!-- 铸造完成弹窗 -->
   <n-modal
@@ -141,6 +153,7 @@ import {
   NCollapseItem,
   NCheckbox,
   NInputNumber,
+  NLayoutFooter,
   NModal,
   UploadCustomRequestOptions,
   useMessage,
@@ -171,6 +184,7 @@ export default defineComponent({
     NCollapse,
     NCollapseItem,
     NCheckbox,
+    NLayoutFooter,
     NInputNumber,
     NModal,
   },
@@ -428,5 +442,17 @@ export default defineComponent({
     padding-left: 10vw;
     padding-right: 10vw;
   }
+}
+
+#link {
+  color: #8fdbfd;
+  text-decoration: none;
+}
+a {
+  text-decoration: none;
+}
+
+.router-link-active {
+  text-decoration: none;
 }
 </style>
