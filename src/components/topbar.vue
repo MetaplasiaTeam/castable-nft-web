@@ -38,7 +38,7 @@ import { useBoard, useEthers, useWallet, shortenAddress } from 'vue-dapp'
 
 const { open } = useBoard()
 const { disconnect } = useWallet()
-const { address, isActivated, signer } = useEthers()
+const { address, isActivated, signer, provider } = useEthers()
 
 export default defineComponent({
   components: {
@@ -48,7 +48,6 @@ export default defineComponent({
   },
   setup() {
     onMounted(() => {
-      console.log(Constants.CONTRACT_ADDRESS)
       i18n.global.locale = 'en'
     })
 
@@ -87,7 +86,7 @@ export default defineComponent({
       }
     })
 
-    watch(isActivated, (val) => {
+    watch(isActivated, async (val) => {
       if (val) {
         store.commit('setTopbarButtonText', shortenAddress(address.value))
       } else {

@@ -40,7 +40,8 @@
     "please_upload_image": "Please upload the image first or wait for the image to finish uploading",
     "please_input_integer": "Casting quantity is not a mint number",
     "not_image": "Please upload a image",
-    "image_big": "Image size is too big"
+    "image_big": "Image size is too big",
+    "input_error": "Input error"
   },
   "sucess": {
     "mint_success": "Mint success",

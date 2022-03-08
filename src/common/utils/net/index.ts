@@ -67,43 +67,6 @@ export class Api {
     })
   }
 
-  static getAllNFTId(contract: ethers.Contract | undefined): Promise<number[]> {
-    return new Promise((resolve, reject) => {
-      if (contract === undefined) {
-        reject('contract is undefined')
-        return
-      }
-      const message = useMessage()
-      const store = useStore()
-      contract
-        .tokenCounter()
-        .then(async (count: BigNumber) => {
-          let trueCount = count.toNumber()
-          console.log(trueCount)
-          let allNFTId: Array<number> = []
-          let currCount: number
-          for (currCount = 0; currCount < trueCount; currCount++) {
-            await contract
-              .ownerOf(currCount)
-              .then((address: string) => {
-                if (address === store.state.web3address) {
-                  allNFTId.push(currCount)
-                }
-              })
-              .catch((err: Error) => {
-                // message.error(err.message)
-                // reject(err.message)
-              })
-          }
-          resolve(allNFTId)
-        })
-        .catch((err: Error) => {
-          message.error(err.message)
-          reject(err.message)
-        })
-    })
-  }
-
   static getAllNftInfo(
     contract: ethers.Contract | undefined
   ): Promise<{ id: number; value: number; info: PinIPFS }[]> {
@@ -117,8 +80,12 @@ export class Api {
         .then(async (res: NFTInfo[]) => {
           let allNFTInfo: Array<{ id: number; value: number; info: PinIPFS }> =
             []
+          console.log(res)
           for (let ele of res) {
-            let link = `https://gateway.pinata.cloud/ipfs${ele.uri.substring(
+            if (ele.uri === '') {
+              continue
+            }
+            let link = `https://cloudflare-ipfs.com/ipfs${ele.uri.substring(
               ele.uri.lastIndexOf('/'),
               ele.uri.length
             )}`

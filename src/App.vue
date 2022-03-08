@@ -4,11 +4,7 @@ import {
   GlobalThemeOverrides,
   NDialogProvider,
   NMessageProvider,
-  darkTheme,
-  useOsTheme,
 } from 'naive-ui'
-import { BuiltInGlobalTheme } from 'naive-ui/lib/themes/interface'
-import { computed, ref } from 'vue'
 
 const themeOverrides: GlobalThemeOverrides = {
   common: {

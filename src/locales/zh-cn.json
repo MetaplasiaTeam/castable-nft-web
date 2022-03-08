@@ -40,7 +40,8 @@
     "please_upload_image": "请先上传图片或等待图片上传完成",
     "please_input_integer": "铸造数量不为整",
     "not_image": "请上传图片",
-    "image_big": "图片大小超过 1 MB"
+    "image_big": "图片大小超过 1 MB",
+    "input_error": "输入错误"
   },
   "sucess": {
     "mint_success": "铸造成功",

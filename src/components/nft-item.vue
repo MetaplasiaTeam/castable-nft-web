@@ -9,7 +9,25 @@
     "
   >
     <n-space vertical align="start">
-      <n-image height="200" :src="imageUrl" preview-disabled @click="toInfo" />
+      <div
+        style="
+          display: table-cell;
+          width: 200px;
+          height: 200px;
+          vertical-align: middle;
+        "
+      >
+        <img
+          :style="{
+            'max-width': '100%',
+            'max-height': '100%',
+            display: 'block',
+            margin: 'auto',
+          }"
+          :src="imageUrl"
+          @click="toInfo"
+        />
+      </div>
       <a>{{ title }}#{{ tokenId?.toString() }}</a>
       <a>{{ price }} ETH</a>
     </n-space>
@@ -123,7 +141,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@vue/runtime-dom'
+import { defineComponent, ref, onMounted } from '@vue/runtime-dom'
 import { NSpace, NImage, NButton, NModal, NInput, useMessage } from 'naive-ui'
 import { useEthers } from 'vue-dapp'
 import { ethers } from 'ethers'
@@ -154,7 +172,7 @@ export default defineComponent({
   },
 
   setup(props, context) {
-    const { signer, address } = useEthers()
+    const { signer, address, provider } = useEthers()
     const message = useMessage()
     let showGiveAwayDialog = ref(false)
     let showBurnDialog = ref(false)
@@ -164,12 +182,26 @@ export default defineComponent({
 
     let friendAddress = ref('')
 
-    function send() {
+    async function send() {
       if (signer.value === null) {
         message.error(i18n.global.t('error.please_connect_web3'))
         return
       }
-      if (friendAddress.value) {
+      if (friendAddress.value && provider.value !== null) {
+        let sendAddress: string | null = ''
+        if (friendAddress.value.endsWith('.eth')) {
+          sendAddress = await provider.value.resolveName(friendAddress.value)
+        } else if (friendAddress.value.startsWith('0x')) {
+          sendAddress = friendAddress.value
+        } else {
+          message.error(i18n.global.t('error.input_error'))
+          return
+        }
+        if (sendAddress === null) {
+          message.error(i18n.global.t('error.input_error'))
+          return
+        }
+
         sending.value = true
 
         let trueSigner = signer.value

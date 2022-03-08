@@ -206,7 +206,7 @@ export default defineComponent({
       Api.uploadJson({
         name: name.value,
         description: name.value,
-        image: `https://gateway.pinata.cloud/ipfs/${imageHash.value}`,
+        image: `https://cloudflare-ipfs.com/ipfs/${imageHash.value}`,
         attributes: [
           {
             trait_type: 'castable_value',
@@ -216,7 +216,7 @@ export default defineComponent({
       })
         .then((res: any) => {
           console.log(res)
-          jsonUrl.value = `https://gateway.pinata.cloud/ipfs/${res.IpfsHash}`
+          jsonUrl.value = `https://cloudflare-ipfs.com/ipfs/${res.IpfsHash}`
           if (bulk.value) {
             mintMultiple()
           } else {

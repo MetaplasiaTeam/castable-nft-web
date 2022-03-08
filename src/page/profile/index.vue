@@ -6,11 +6,11 @@
     <n-layout-content
       content-style="padding-left: 5vw; padding-right: 5vw; padding-bottom: 5vh"
     >
-      <n-spin :show="loadNft">
+      <n-spin :show="nftListLoading">
         <div id="nftcard">
           <NFTItem
             v-for="(item, index) in testData"
-            @refresh="receiveRefresh"
+            @refresh="refreshNftList"
             :key="index"
             :tokenId="item.tokenId"
             :imageUrl="item.imageUrl"
@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from '@vue/runtime-dom'
+import { defineComponent, onMounted, ref } from '@vue/runtime-dom'
 import TopBar from '@/components/topbar.vue'
 import { NLayout, NLayoutHeader, NLayoutContent, NSpace, NSpin } from 'naive-ui'
 import NFTItem, { NFTItemProps } from '@/components/nft-item.vue'
@@ -49,27 +49,26 @@ export default defineComponent({
     const store = useStore()
     const { signer } = useEthers()
 
-    let loadNft = ref(false)
+    let nftListLoading = ref(false)
     let testData = ref(Array<NFTItemProps>())
 
     onMounted(() => {
       getAllNft()
-      loadNft.value = true
+      nftListLoading.value = true
     })
 
-    function receiveRefresh(bool: boolean) {
+    function refreshNftList(bool: boolean) {
       if (bool) {
-        console.log('refresh')
         getAllNft()
       }
     }
 
     function getAllNft() {
+      // 检测缓存
       if (store.state.nftList !== undefined) {
         testData.value = store.state.nftList
       }
       if (signer.value !== null) {
-        console.log('profile mounted')
         let contract = new ethers.Contract(
           Constants.CONTRACT_ADDRESS,
           Constants.CONTRACT_ABI,
@@ -82,7 +81,10 @@ export default defineComponent({
             nftInfoList.forEach((element) => {
               tempList.push({
                 tokenId: element.id,
-                imageUrl: element.info.image,
+                imageUrl: `https://cloudflare-ipfs.com/ipfs${element.info.image.substring(
+                  element.info.image.lastIndexOf('/'),
+                  element.info.image.length
+                )}`,
                 title: element.info.name,
                 price: element.value.toString(),
               })
@@ -94,15 +96,15 @@ export default defineComponent({
             console.log(err)
           })
           .finally(() => {
-            loadNft.value = false
+            nftListLoading.value = false
           })
       }
     }
 
     return {
       testData,
-      receiveRefresh,
-      loadNft,
+      refreshNftList,
+      nftListLoading,
     }
   },
 })
