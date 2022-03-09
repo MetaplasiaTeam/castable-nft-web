@@ -1,8 +1,7 @@
 import { PinIPFS } from '@/types/pin-ipfs'
-import { useMessage } from 'naive-ui'
-import { BigNumber, ethers } from 'ethers'
+import { ethers } from 'ethers'
 import Request from './request'
-import { store, useStore } from '@/store'
+import { store } from '@/store'
 import axios from 'axios'
 import { NFTInfo } from '@/types/nft-info'
 
