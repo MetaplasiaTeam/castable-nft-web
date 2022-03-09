@@ -18,6 +18,9 @@ const themeOverrides: GlobalThemeOverrides = {
     headerColor: '#19191a',
     footerColor: '#19191a',
   },
+  Popover: {
+    color: '#19191a',
+  },
 }
 
 const darkThemeOverrides: GlobalThemeOverrides = {

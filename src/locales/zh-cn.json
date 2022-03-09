@@ -9,7 +9,7 @@
     "title": "铸造",
     "subtitle": "创造有价值的 NFT",
     "token_id": "Token ID 由合约生成",
-    "upload": "+ 上传一张图片，请小于 1 MB",
+    "upload": "上传一张图片，请小于 1 MB",
     "advance_option": "高级选项",
     "batch_mint": "进行批量铸造",
     "mint_now": "现在铸造",

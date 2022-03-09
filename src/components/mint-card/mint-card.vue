@@ -273,7 +273,7 @@ export default defineComponent({
         <a id="title">{{ $t('home.title') }}</a>
         <a>{{ $t('home.subtitle') }}</a>
       </div>
-      <div style="display: flex; flex-direction: row; align-items: center">
+      <div id="input-name-div">
         <n-input
           v-model:value="nftName"
           type="text"
@@ -292,7 +292,19 @@ export default defineComponent({
         :max="1"
       >
         <n-upload-dragger>
-          <div style="width: 100%; margin-right: 0; height: 6vh">
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              width: 100%;
+              margin-right: 0;
+              height: 6vh;
+              padding-bottom: 16px;
+              justify-content: center;
+              align-items: center;
+            "
+          >
+            <img width="48" height="48" :src="util.getSrc('upload.svg')" />
             {{ $t('home.upload') }}
           </div>
         </n-upload-dragger>
@@ -342,7 +354,7 @@ export default defineComponent({
       </n-button>
     </div>
     <div id="right">
-      <img width="316" :src="util.getSrc('right.svg')" />
+      <img width="250" :src="util.getSrc('right.svg')" />
     </div>
   </div>
 </template>
@@ -379,5 +391,33 @@ export default defineComponent({
   border-top-right-radius: 25px;
   border-bottom-right-radius: 25px;
   display: flex;
+  justify-content: center;
+}
+
+#input-name-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+@media screen and (max-width: 1100px) {
+  #right {
+    display: none;
+  }
+}
+
+@media screen and (width < 768px) {
+  #input-name-div {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #left {
+    padding-right: 32px;
+  }
+
+  #mint-card {
+    padding-left: 32px;
+  }
 }
 </style>

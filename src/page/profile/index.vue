@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from '@vue/runtime-dom'
-import TopBar from '@/components/topbar.vue'
+import TopBar from '@/components/top-bar/topbar.vue'
 import { NLayout, NLayoutHeader, NLayoutContent, NSpace, NSpin } from 'naive-ui'
 import { NftItem, NFTItemProps } from '@/components'
 import { useStore } from '@/store'
@@ -118,5 +118,12 @@ export default defineComponent({
   padding-right: 10vw;
   padding-bottom: 5vh;
   border-radius: 30px;
+}
+
+@media screen and (max-width: 1080px) {
+  #nftdiv {
+    padding-left: 5vw;
+    padding-right: 5vw;
+  }
 }
 </style>

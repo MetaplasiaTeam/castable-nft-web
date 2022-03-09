@@ -51,7 +51,7 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/runtime-dom'
-import TopBar from '@/components/topbar.vue'
+import TopBar from '@/components/top-bar/topbar.vue'
 import { MintCard } from '@/components'
 import {
   NInput,
@@ -114,8 +114,8 @@ export default defineComponent({
 
 @media screen and (width < 768px) {
   #mint-app {
-    padding-left: 10vw;
-    padding-right: 10vw;
+    padding-left: 5vw;
+    padding-right: 5vw;
   }
 }
 
