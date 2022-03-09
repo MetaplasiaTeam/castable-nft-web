@@ -7,6 +7,9 @@ import inject from '@rollup/plugin-inject'
 export default defineConfig({
   plugins: [vue()],
   assetsInclude: ['src/assets/*'],
+  optimizeDeps: {
+    include: ['vue3-pdfjs', 'pdfjs-dist'],
+  },
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),

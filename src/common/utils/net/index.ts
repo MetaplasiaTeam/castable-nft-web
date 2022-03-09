@@ -80,12 +80,11 @@ export class Api {
         .then(async (res: NFTInfo[]) => {
           let allNFTInfo: Array<{ id: number; value: number; info: PinIPFS }> =
             []
-          console.log(res)
           for (let ele of res) {
             if (ele.uri === '') {
               continue
             }
-            let link = `https://cloudflare-ipfs.com/ipfs${ele.uri.substring(
+            let link = `https://gateway.pinata.cloud/ipfs${ele.uri.substring(
               ele.uri.lastIndexOf('/'),
               ele.uri.length
             )}`

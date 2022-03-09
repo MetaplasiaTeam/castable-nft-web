@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="317px" height="444px" viewBox="0 0 317 444" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组 8@3x</title>
+    <defs>
+        <linearGradient x1="28.4265667%" y1="34.1026419%" x2="71.5734333%" y2="68.2740505%" id="linearGradient-1">
+            <stop stop-color="#000000" offset="0%"></stop>
+            <stop stop-color="#4A4A4A" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="71.4815338%" y1="33.1755651%" x2="32.0113622%" y2="72.0970875%" id="linearGradient-2">
+            <stop stop-color="#000000" offset="0%"></stop>
+            <stop stop-color="#3A3A3A" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板备份-12" transform="translate(-1204.000000, -370.000000)">
+            <g id="编组-8" transform="translate(1204.500000, 370.106602)">
+                <ellipse id="椭圆形" fill="url(#linearGradient-1)" transform="translate(42.500000, 57.000000) rotate(-10.000000) translate(-42.500000, -57.000000) " cx="42.5" cy="57" rx="33.5" ry="51"></ellipse>
+                <ellipse id="椭圆形备份" fill="url(#linearGradient-2)" transform="translate(266.500000, 377.500000) scale(-1, 1) rotate(-10.000000) translate(-266.500000, -377.500000) " cx="266.5" cy="377.5" rx="39" ry="59.5"></ellipse>
+                <path d="M18,88 C69.4046721,105.561209 121.071339,180.227875 173,312" id="路径-6" stroke="#FFFFFF"></path>
+                <path d="M8,57 C57.4455669,61.371117 107.016647,105.027193 156.71324,187.968227 C231.25813,312.379778 219.891895,383.920688 293,414" id="路径-7" stroke="#FFFFFF"></path>
+                <g id="编组-5" transform="translate(150.500000, 173.500000) rotate(60.000000) translate(-150.500000, -173.500000) translate(117.000000, 151.000000)">
+                    <rect id="矩形" stroke="#FFFFFF" stroke-width="0.5" fill="#0A0A0A" x="0" y="0" width="67" height="44.5"></rect>
+                    <rect id="矩形" stroke="#FFFFFF" stroke-width="0.5" x="7.5" y="6" width="52" height="32.5"></rect>
+                    <text id="NFT" font-family="HarmonyOS_Sans_SC_Medium, HarmonyOS Sans SC" font-size="18" font-weight="400" fill="#FFFFFF">
+                        <tspan x="16.1576802" y="30.5136864">NFT</tspan>
+                    </text>
+                </g>
+                <path d="" id="路径-8" stroke="#979797"></path>
+                <path d="" id="路径-9"></path>
+                <path d="M303,394 C277.562085,371.742905 255.1933,336.093496 235.893645,287.051775 C206.944163,213.489193 152.201279,36 12,36" id="路径-10" stroke="#FFFFFF"></path>
+                <g id="编组-2" transform="translate(110.000000, 69.000000)">
+                    <circle id="椭圆形" stroke="#FFFFFF" stroke-width="0.5" fill="#0A0A0A" cx="19" cy="19" r="19"></circle>
+                    <circle id="椭圆形" stroke="#FFFFFF" stroke-width="0.5" fill="#0A0A0A" cx="19" cy="19" r="14"></circle>
+                    <g id="以太坊" transform="translate(14.000000, 10.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                        <path d="M5.28000614,17.2700201 L2.57571742e-14,9.68001126 L5.28000614,12.870015 L10.5600123,9.68001126 L5.28000614,17.2700201 Z M5.28000614,11.990014 L2.57571742e-14,8.69001011 L5.28000614,3.65929509e-13 L10.5600123,8.69001011 L5.28000614,11.990014 Z" id="形状"></path>
+                    </g>
+                </g>
+                <g id="编组-2备份-2" transform="translate(215.000000, 252.000000)">
+                    <circle id="椭圆形" stroke="#FFFFFF" stroke-width="0.5" fill="#0A0A0A" cx="19" cy="19" r="19"></circle>
+                    <circle id="椭圆形" stroke="#FFFFFF" stroke-width="0.5" fill="#0A0A0A" cx="19" cy="19" r="14"></circle>
+                    <g id="以太坊" transform="translate(14.000000, 10.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                        <path d="M5.28000614,17.2700201 L2.57571742e-14,9.68001126 L5.28000614,12.870015 L10.5600123,9.68001126 L5.28000614,17.2700201 Z M5.28000614,11.990014 L2.57571742e-14,8.69001011 L5.28000614,3.65929509e-13 L10.5600123,8.69001011 L5.28000614,11.990014 Z" id="形状"></path>
+                    </g>
+                </g>
+                <g id="编组-2备份" transform="translate(129.000000, 238.000000)">
+                    <circle id="椭圆形" stroke="#FFFFFF" stroke-width="0.5" fill="#0A0A0A" cx="19" cy="19" r="19"></circle>
+                    <circle id="椭圆形" stroke="#FFFFFF" stroke-width="0.5" fill="#0A0A0A" cx="19" cy="19" r="14"></circle>
+                    <g id="以太坊" transform="translate(14.000000, 10.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                        <path d="M5.28000614,17.2700201 L2.57571742e-14,9.68001126 L5.28000614,12.870015 L10.5600123,9.68001126 L5.28000614,17.2700201 Z M5.28000614,11.990014 L2.57571742e-14,8.69001011 L5.28000614,3.65929509e-13 L10.5600123,8.69001011 L5.28000614,11.990014 Z" id="形状"></path>
+                    </g>
+                </g>
+                <line x1="173" y1="312" x2="159" y2="302" id="路径-11" stroke="#FFFFFF"></line>
+                <line x1="173.5" y1="312" x2="173.5" y2="295" id="路径-12" stroke="#FFFFFF"></line>
+                <path d="M194,370 L199.225868,373.147718 C200.578559,373.962489 202.269008,373.970274 203.629145,373.167997 L209,370 L209,370 L205.841972,375.29847 C205.033544,376.654832 205.033544,378.345168 205.841972,379.70153 L209,385 L209,385 L203.592437,381.881231 C202.250745,381.107421 200.596572,381.114957 199.261987,381.90096 L194,385 L194,385 L197.158028,379.70153 C197.966456,378.345168 197.966456,376.654832 197.158028,375.29847 L194,370 L194,370 Z" id="矩形" fill="#000000" transform="translate(201.500000, 377.500000) rotate(45.000000) translate(-201.500000, -377.500000) "></path>
+                <path d="M268,291 L271.135521,292.888631 C271.947135,293.377493 272.961405,293.382165 273.777487,292.900798 L277,291 L277,291 L275.105183,294.179082 C274.620126,294.992899 274.620126,296.007101 275.105183,296.820918 L277,300 L277,300 L273.755462,298.128739 C272.950447,297.664453 271.957943,297.668974 271.157192,298.140576 L268,300 L268,300 L269.894817,296.820918 C270.379874,296.007101 270.379874,294.992899 269.894817,294.179082 L268,291 L268,291 Z" id="矩形备份-4" fill="#000000" transform="translate(272.500000, 295.500000) rotate(45.000000) translate(-272.500000, -295.500000) "></path>
+                <path d="M71,4 L76.2258684,7.14771771 C77.5785586,7.96248887 79.2690078,7.97027442 80.6291455,7.16799748 L86,4 L86,4 L82.8419718,9.29846954 C82.0335436,10.6548324 82.0335436,12.3451676 82.8419718,13.7015305 L86,19 L86,19 L80.5924373,15.8812313 C79.2507455,15.1074212 77.5965724,15.1149572 76.2619867,15.9009598 L71,19 L71,19 L74.1580282,13.7015305 C74.9664564,12.3451676 74.9664564,10.6548324 74.1580282,9.29846954 L71,4 L71,4 Z" id="矩形备份-5" fill="#000000" transform="translate(78.500000, 11.500000) rotate(45.000000) translate(-78.500000, -11.500000) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

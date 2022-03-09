@@ -4,15 +4,19 @@ import {
   GlobalThemeOverrides,
   NDialogProvider,
   NMessageProvider,
+  useOsTheme,
+  darkTheme,
 } from 'naive-ui'
-
+import { computed } from 'vue'
+const osThemeRef = useOsTheme()
+const theme = computed(() => (osThemeRef.value === 'dark' ? darkTheme : null))
 const themeOverrides: GlobalThemeOverrides = {
   common: {
-    bodyColor: '#f2f2f2',
+    bodyColor: '#19191a',
   },
   Layout: {
-    headerColor: '#f2f2f2',
-    footerColor: '#f2f2f2',
+    headerColor: '#19191a',
+    footerColor: '#19191a',
   },
 }
 
@@ -27,7 +31,7 @@ const darkThemeOverrides: GlobalThemeOverrides = {
 </script>
 
 <template>
-  <n-config-provider :theme="null" :theme-overrides="themeOverrides">
+  <n-config-provider :theme="theme" :theme-overrides="themeOverrides">
     <n-message-provider
       ><n-dialog-provider
         ><div id="nftapp"><router-view /></div></n-dialog-provider
@@ -38,7 +42,7 @@ const darkThemeOverrides: GlobalThemeOverrides = {
 
 <style>
 :root {
-  --color-background: #f2f2f2;
+  --color-background: #19191a;
   --color-card-background: #ffffff;
   --color-text: #515151;
   --color-text-emphasize: #333333;
@@ -49,20 +53,21 @@ const darkThemeOverrides: GlobalThemeOverrides = {
   --color-decoration: rgba(0, 0, 0, 0.04);
   --color-decoration-darker: rgba(0, 0, 0, 0.08);
 }
-/* @media screen and (prefers-color-scheme: dark) {
+
+@media screen and (prefers-color-scheme: dark) {
   :root {
     --color-text: rgba(255, 255, 255, 0.6);
     --color-text-emphasize: #eeeeee;
     --color-text-lighter: rgba(255, 255, 255, 0.4);
     --color-text-solight: rgba(255, 255, 255, 0.16);
-    --color-card-background: #181818;
-    --color-background: #1f2223;
+    --color-card-background: #303030;
+    --color-background: #19191a;
     --color-hint: #202020;
-    --color-background-inner: rgba(hexToRGB(#1f2223), 0.8);
+    --color-background-inner: rgba(hexToRGB(#19191a), 0.8);
     --color-decoration: rgba(255, 255, 255, 0.04);
     --color-decoration-darker: rgba(255, 255, 255, 0.08);
   }
-} */
+}
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

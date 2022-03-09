@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <VuePdf v-for="page in numOfPages" :key="page" :src="pdfSrc" :page="page" />
 </template>
 
@@ -19,4 +19,4 @@ onMounted(() => {
     numOfPages.value = pdf.numPages
   })
 })
-</script>
+</script> -->

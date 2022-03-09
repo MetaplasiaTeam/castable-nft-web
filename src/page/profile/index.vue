@@ -3,12 +3,10 @@
     <n-layout-header>
       <top-bar />
     </n-layout-header>
-    <n-layout-content
-      content-style="padding-left: 5vw; padding-right: 5vw; padding-bottom: 5vh"
-    >
+    <n-layout-content>
       <n-spin :show="nftListLoading">
-        <div id="nftcard">
-          <NFTItem
+        <div id="nftdiv">
+          <nft-item
             v-for="(item, index) in testData"
             @refresh="refreshNftList"
             :key="index"
@@ -16,7 +14,7 @@
             :imageUrl="item.imageUrl"
             :title="item.title"
             :price="item.price"
-          ></NFTItem>
+          ></nft-item>
         </div>
       </n-spin>
     </n-layout-content>
@@ -27,7 +25,7 @@
 import { defineComponent, onMounted, ref } from '@vue/runtime-dom'
 import TopBar from '@/components/topbar.vue'
 import { NLayout, NLayoutHeader, NLayoutContent, NSpace, NSpin } from 'naive-ui'
-import NFTItem, { NFTItemProps } from '@/components/nft-item.vue'
+import { NftItem, NFTItemProps } from '@/components'
 import { useStore } from '@/store'
 import { Api } from '@/common/utils/net'
 import { useEthers } from 'vue-dapp'
@@ -41,7 +39,7 @@ export default defineComponent({
     NLayoutHeader,
     NLayoutContent,
     NSpace,
-    NFTItem,
+    NftItem,
     NSpin,
   },
 
@@ -76,7 +74,6 @@ export default defineComponent({
         )
         Api.getAllNftInfo(contract)
           .then((nftInfoList) => {
-            console.log(nftInfoList)
             let tempList: NFTItemProps[] = []
             nftInfoList.forEach((element) => {
               tempList.push({
@@ -111,13 +108,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#nftcard {
+#nftdiv {
   background-color: var(--color-card-background);
   display: flex;
   flex-wrap: wrap;
-  justify-content: start;
+  justify-content: center;
   padding-top: 5vh;
-  padding-left: 2vw;
+  padding-left: 10vw;
+  padding-right: 10vw;
   padding-bottom: 5vh;
   border-radius: 30px;
 }
