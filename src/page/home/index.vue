@@ -112,7 +112,7 @@ export default defineComponent({
   padding-bottom: 5vh;
 }
 
-@media screen and (width < 768px) {
+@media (max-width: 768px) {
   #mint-app {
     padding-left: 5vw;
     padding-right: 5vw;

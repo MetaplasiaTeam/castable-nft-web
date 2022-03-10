@@ -406,7 +406,7 @@ export default defineComponent({
   }
 }
 
-@media screen and (width < 768px) {
+@media screen and (max-width: 768px) {
   #input-name-div {
     flex-direction: column;
     align-items: flex-start;

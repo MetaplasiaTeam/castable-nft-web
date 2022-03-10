@@ -131,14 +131,14 @@ export default defineComponent({
   }
 }
 
-@media screen and (width < 768px) {
+@media screen and (max-width: 768px) {
   #top-bar-div {
     padding-left: 10vw;
     padding-right: 10vw;
   }
 }
 
-@media screen and (width < 678px) {
+@media screen and (max-width: 678px) {
   #nomal-buttons {
     display: none;
   }
