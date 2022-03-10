@@ -1,13 +1,23 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Home from '@page/home/index.vue'
 import { useWallet } from 'vue-dapp'
-const { status, disconnect, error } = useWallet()
+const { status } = useWallet()
 
 const routes: Array<RouteRecordRaw> = [
-  { path: '/', name: 'home', component: Home },
+  {
+    path: '/',
+    name: 'home',
+    component: Home,
+    meta: {
+      title: 'Castable NFT',
+    },
+  },
   {
     path: '/profile',
     name: 'profile',
+    meta: {
+      title: 'Castable NFT | Profile',
+    },
     component: () => import('@page/profile/index.vue'),
     beforeEnter: (to, from, next) => {
       if (status.value === 'connected') {
@@ -18,8 +28,11 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: '/introduction',
-    component: () => import('@page/introduction/index.vue'),
+    path: '/faq',
+    component: () => import('@page/faq/index.vue'),
+    meta: {
+      title: 'Castable NFT | FAQ',
+    },
   },
 ]
 

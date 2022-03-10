@@ -14,10 +14,6 @@ const { address, isActivated, signer, provider } = useEthers()
 const store = useStore()
 const router = useRouter()
 
-function toPDF() {
-  router.push('/introduction')
-}
-
 async function connectWeb3() {
   if (isActivated.value) {
     disconnect()
@@ -59,7 +55,12 @@ watch(isActivated, async (val) => {
 
 <template>
   <div id="buttons">
-    <button class="nft-button" id="pdf" @click="toPDF" text-color="#fff">
+    <button
+      class="nft-button"
+      id="pdf"
+      @click="router.push('/faq')"
+      text-color="#fff"
+    >
       FAQ
     </button>
 

@@ -6,6 +6,13 @@ import { VueDapp } from 'vue-dapp'
 import { key, store } from './store'
 import VuePdf from 'vue3-pdfjs'
 
+router.beforeEach((to, _from, next) => {
+  if (to.meta.title) {
+    document.title = to.meta.title as string
+  }
+  next()
+})
+
 createApp(App)
   .use(i18n)
   .use(router)

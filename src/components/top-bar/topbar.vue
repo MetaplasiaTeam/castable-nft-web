@@ -1,3 +1,50 @@
+<script setup lang="ts">
+import { defineExpose, onMounted } from '@vue/runtime-dom'
+import buttons from './buttons.vue'
+import i18n from '@/i18n'
+import { NPopover } from 'naive-ui'
+import { useStore } from '@/store'
+import { useRouter } from 'vue-router'
+import { useBoard, useEthers, useWallet } from 'vue-dapp'
+
+const { open } = useBoard()
+const { disconnect } = useWallet()
+const { address, isActivated, signer, provider } = useEthers()
+const store = useStore()
+const router = useRouter()
+
+onMounted(() => {
+  i18n.global.locale = 'en'
+})
+
+let language = [
+  {
+    label: '简体中文',
+    key: 'zh-CN',
+  },
+  {
+    label: 'English',
+    key: 'en',
+  },
+]
+
+async function connectWeb3() {
+  if (isActivated.value) {
+    disconnect()
+  } else {
+    open()
+  }
+}
+
+defineExpose({
+  connectWeb3,
+})
+
+function languageSelect(key: string) {
+  i18n.global.locale = key
+}
+</script>
+
 <template>
   <div id="top-bar-div">
     <router-link to="/"
@@ -12,72 +59,6 @@
     </n-popover>
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent, defineExpose, onMounted } from '@vue/runtime-dom'
-import buttons from './buttons.vue'
-import i18n from '@/i18n'
-import { NDropdown, NTag, NButton, NPopover } from 'naive-ui'
-import { useStore } from '@/store'
-import { useRouter } from 'vue-router'
-
-import { useBoard, useEthers, useWallet, shortenAddress } from 'vue-dapp'
-
-const { open } = useBoard()
-const { disconnect } = useWallet()
-const { address, isActivated, signer, provider } = useEthers()
-
-export default defineComponent({
-  components: {
-    NDropdown,
-    NTag,
-    NButton,
-    NPopover,
-    buttons,
-  },
-  setup() {
-    onMounted(() => {
-      i18n.global.locale = 'en'
-    })
-
-    const store = useStore()
-    const router = useRouter()
-
-    async function connectWeb3() {
-      if (isActivated.value) {
-        disconnect()
-      } else {
-        open()
-      }
-    }
-
-    defineExpose({
-      connectWeb3,
-    })
-
-    return {
-      language: [
-        {
-          label: '简体中文',
-          key: 'zh-CN',
-        },
-        {
-          label: 'English',
-          key: 'en',
-        },
-      ],
-      // 更改语言
-      languageSelect(key: string) {
-        i18n.global.locale = key
-      },
-      connectWeb3,
-      shortenAddress,
-      address,
-      isActivated,
-    }
-  },
-})
-</script>
 
 <style scoped>
 #top-bar-div {
@@ -127,7 +108,7 @@ export default defineComponent({
 
 @media screen and (max-height: 900px) {
   #top-bar-div {
-    padding-bottom: 5vh;
+    padding-bottom: 4vh;
   }
 }
 

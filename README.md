@@ -1,6 +1,6 @@
 # CaseableNFT Web
 
-![Logo](src/assets/logo.png)
+![Logo](src/assets/logo.svg)
 
 ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-007ACC?style=for-the-badge&logo=Visual+Studio+Code)
 ![Yarn](https://img.shields.io/badge/Yarn-282c34?style=for-the-badge&logo=yarn)

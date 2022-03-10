@@ -1,20 +1,14 @@
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
 import {
   NInput,
-  NSpace,
   NUpload,
   NUploadDragger,
-  NImage,
   NButton,
-  NLayout,
-  NLayoutHeader,
-  NLayoutContent,
   NCollapse,
   NCollapseItem,
   NCheckbox,
   NInputNumber,
-  NLayoutFooter,
   NModal,
   UploadCustomRequestOptions,
   useMessage,
@@ -26,244 +20,213 @@ import { Api } from '@/common/utils/net'
 import Constants from '@/common/constants'
 import i18n from '@/i18n'
 import util from '@/common/utils/common-util'
+import SelectSymbol from './select-symbol.vue'
 
-export default defineComponent({
-  name: 'mint-card',
-  components: {
-    NInput,
-    NSpace,
-    NUpload,
-    NUploadDragger,
-    NImage,
-    NButton,
-    NLayout,
-    NLayoutHeader,
-    NLayoutContent,
-    NCollapse,
-    NCollapseItem,
-    NCheckbox,
-    NInputNumber,
-    NLayoutFooter,
-    NModal,
-  },
-  setup() {
-    let message = useMessage()
-    const { signer } = useEthers()
+let message = useMessage()
+const { signer, isActivated, network } = useEthers()
 
-    let imageHash = ref('')
-    let nftName = ref('')
-    let nftPrice = ref('')
-    let jsonUrl = ref('')
+let imageHash = ref('')
+let nftName = ref('')
+let nftPrice = ref('')
+let jsonUrl = ref('')
 
-    let amount = ref(1)
-    let lastTokenId = ref(0)
+let amount = ref(1)
+let lastTokenId = ref(0)
 
-    let mintIng = ref(false)
-    let bulk = ref(false)
-    let uploadSuccess = ref(false)
+let mintIng = ref(false)
+let bulk = ref(false)
+let uploadSuccess = ref(false)
 
-    let afterMintDialog = ref(false)
+let afterMintDialog = ref(false)
 
-    function mint() {
-      if (!uploadSuccess.value) {
-        message.error(i18n.global.t('error.please_upload_image'))
-        return
+function mint() {
+  if (!uploadSuccess.value) {
+    message.error(i18n.global.t('error.please_upload_image'))
+    return
+  }
+  mintIng.value = true
+  // 开始上传 JSON
+  Api.uploadJson({
+    name: nftName.value,
+    description: nftName.value,
+    image: `ipfs://${imageHash.value}`,
+    attributes: [
+      {
+        trait_type: 'castable_value',
+        value: ethers.utils.parseEther(nftPrice.value).toString(),
+      },
+    ],
+  })
+    .then((res: any) => {
+      console.log(res)
+      jsonUrl.value = `ipfs://${res.IpfsHash}`
+      if (bulk.value) {
+        // 铸造多个
+        mintMultiple()
+      } else {
+        mintSingle()
       }
-      mintIng.value = true
-      // 开始上传 JSON
-      Api.uploadJson({
-        name: nftName.value,
-        description: nftName.value,
-        image: `ipfs://${imageHash.value}`,
-        attributes: [
-          {
-            trait_type: 'castable_value',
-            value: ethers.utils.parseEther(nftPrice.value).toString(),
-          },
-        ],
-      })
-        .then((res: any) => {
-          console.log(res)
-          jsonUrl.value = `ipfs://${res.IpfsHash}`
-          if (bulk.value) {
-            // 铸造多个
-            mintMultiple()
-          } else {
-            mintSingle()
-          }
+    })
+    .catch((err: any) => {
+      console.log(err)
+      message.error(i18n.global.t('error.upload_image_error'))
+      mintIng.value = false
+    })
+}
+
+// 铸造单个
+function mintSingle() {
+  if (signer.value === null) {
+    message.error(i18n.global.t('error.please_connect_web3'))
+    // connect?.value?.connectWeb3()
+    mintIng.value = false
+    return
+  }
+  let contract = new ethers.Contract(
+    Constants.CONTRACT_ADDRESS,
+    Constants.CONTRACT_ABI,
+    signer.value
+  )
+  let mySigner = signer.value
+
+  contract.estimateGas
+    .mint(jsonUrl.value, 0, {
+      value: ethers.utils.parseEther(nftPrice.value),
+    })
+    .then((gas) => {
+      let contractWithSigner = contract!!.connect(mySigner)
+      contractWithSigner
+        .mint(jsonUrl.value, 0, {
+          gasLimit: gas.add(BigNumber.from(10000)),
+          value: ethers.utils.parseEther(nftPrice.value),
         })
-        .catch((err: any) => {
-          console.log(err)
-          message.error(i18n.global.t('error.upload_image_error'))
+        .then((tx: any) => {
+          // 等待链上执行完成
+          tx.wait()
+            .then((res: any) => {
+              lastTokenId.value = parseInt(
+                (res.events[0].args[2] as BigNumber).toString()
+              )
+              message.success(i18n.global.t('sucess.mint_success'))
+              afterMintDialog.value = true
+              mintIng.value = false
+            })
+            .catch((err: Error) => {
+              message.error(err.message)
+              mintIng.value = false
+            })
+        })
+        .catch((err: Error) => {
+          message.error(err.message)
           mintIng.value = false
         })
-    }
+    })
+}
 
-    // 铸造单个
-    function mintSingle() {
-      if (signer.value === null) {
-        message.error(i18n.global.t('error.please_connect_web3'))
-        // connect?.value?.connectWeb3()
-        mintIng.value = false
-        return
-      }
-      let contract = new ethers.Contract(
-        Constants.CONTRACT_ADDRESS,
-        Constants.CONTRACT_ABI,
-        signer.value
-      )
-      let mySigner = signer.value
+// 铸造多个
+function mintMultiple() {
+  if (signer.value === null) {
+    message.error(i18n.global.t('error.please_connect_web3'))
+    // connect?.value?.connectWeb3()
+    mintIng.value = false
+    return
+  }
+  let contract = new ethers.Contract(
+    Constants.CONTRACT_ADDRESS,
+    Constants.CONTRACT_ABI,
+    signer.value
+  )
+  let mySigner = signer.value
 
-      contract.estimateGas
-        .mint(jsonUrl.value, 0, {
+  contract.estimateGas
+    .mintAvg(jsonUrl.value, amount.value, 0, {
+      value: ethers.utils.parseEther(nftPrice.value),
+    })
+    .then((gas) => {
+      let contractWithSigner = contract!!.connect(mySigner)
+      contractWithSigner
+        .mint(jsonUrl.value, amount.value, 0, {
+          gasLimit: gas.add(BigNumber.from(10000)),
           value: ethers.utils.parseEther(nftPrice.value),
         })
-        .then((gas) => {
-          let contractWithSigner = contract!!.connect(mySigner)
-          contractWithSigner
-            .mint(jsonUrl.value, 0, {
-              gasLimit: gas.add(BigNumber.from(10000)),
-              value: ethers.utils.parseEther(nftPrice.value),
-            })
-            .then((tx: any) => {
-              // 等待链上执行完成
-              tx.wait()
-                .then((res: any) => {
-                  lastTokenId.value = parseInt(
-                    (res.events[0].args[2] as BigNumber).toString()
-                  )
-                  message.success(i18n.global.t('sucess.mint_success'))
-                  afterMintDialog.value = true
-                  mintIng.value = false
-                })
-                .catch((err: Error) => {
-                  message.error(err.message)
-                  mintIng.value = false
-                })
+        .then((tx: any) => {
+          // 等待链上执行完成
+          tx.wait()
+            .then((res: any) => {
+              lastTokenId.value = parseInt(
+                (res.events[0].args[2] as BigNumber).toString()
+              )
+              message.success(i18n.global.t('sucess.mint_success'))
+              afterMintDialog.value = true
+              mintIng.value = false
             })
             .catch((err: Error) => {
               message.error(err.message)
               mintIng.value = false
             })
         })
-    }
-
-    // 铸造多个
-    function mintMultiple() {
-      if (signer.value === null) {
-        message.error(i18n.global.t('error.please_connect_web3'))
-        // connect?.value?.connectWeb3()
-        mintIng.value = false
-        return
-      }
-      let contract = new ethers.Contract(
-        Constants.CONTRACT_ADDRESS,
-        Constants.CONTRACT_ABI,
-        signer.value
-      )
-      let mySigner = signer.value
-
-      contract.estimateGas
-        .mintAvg(jsonUrl.value, amount.value, 0, {
-          value: ethers.utils.parseEther(nftPrice.value),
+        .catch((err: Error) => {
+          message.error(err.message)
+          mintIng.value = false
         })
-        .then((gas) => {
-          let contractWithSigner = contract!!.connect(mySigner)
-          contractWithSigner
-            .mint(jsonUrl.value, amount.value, 0, {
-              gasLimit: gas.add(BigNumber.from(10000)),
-              value: ethers.utils.parseEther(nftPrice.value),
-            })
-            .then((tx: any) => {
-              // 等待链上执行完成
-              tx.wait()
-                .then((res: any) => {
-                  lastTokenId.value = parseInt(
-                    (res.events[0].args[2] as BigNumber).toString()
-                  )
-                  message.success(i18n.global.t('sucess.mint_success'))
-                  afterMintDialog.value = true
-                  mintIng.value = false
-                })
-                .catch((err: Error) => {
-                  message.error(err.message)
-                  mintIng.value = false
-                })
-            })
-            .catch((err: Error) => {
-              message.error(err.message)
-              mintIng.value = false
-            })
-        })
-    }
+    })
+}
 
-    async function checkImage(data: {
-      file: UploadFileInfo
-      fileList: UploadFileInfo[]
-    }) {
-      if (data.file.file !== undefined && data.file.file !== null) {
-        if (
-          data.file.file.type !== 'image/jpeg' &&
-          data.file.file.type !== 'image/png' &&
-          data.file.file.type !== 'image/gif'
-        ) {
-          message.error(i18n.global.t('error.not_image'))
-          return false
-        }
-        if (data.file.file.size > 1024 * 1024 * 1) {
-          message.error(i18n.global.t('error.image_big'))
-          return false
-        }
-      }
-      return true
+async function checkImage(data: {
+  file: UploadFileInfo
+  fileList: UploadFileInfo[]
+}) {
+  if (data.file.file !== undefined && data.file.file !== null) {
+    if (
+      data.file.file.type !== 'image/jpeg' &&
+      data.file.file.type !== 'image/png' &&
+      data.file.file.type !== 'image/gif'
+    ) {
+      message.error(i18n.global.t('error.not_image'))
+      return false
     }
+    if (data.file.file.size > 1024 * 1024 * 1) {
+      message.error(i18n.global.t('error.image_big'))
+      return false
+    }
+  }
+  return true
+}
 
-    // 传图，注意 uploadSuccess 数据
-    function uploadImage(options: UploadCustomRequestOptions) {
-      message.loading(i18n.global.t('loading.upload_image_loading'), {
-        duration: 0,
+// 传图，注意 uploadSuccess 数据
+function uploadImage(options: UploadCustomRequestOptions) {
+  message.loading(i18n.global.t('loading.upload_image_loading'), {
+    duration: 0,
+  })
+  uploadSuccess.value = false
+  let file = options.file
+  if (file.file !== null && file.file !== undefined) {
+    // 上传图片
+    Api.uploadFile(file.file)
+      .then((res: any) => {
+        message.destroyAll()
+        message.success(i18n.global.t('sucess.upload_image_success'))
+        uploadSuccess.value = true
+        imageHash.value = res.IpfsHash
+        options.onFinish()
       })
-      uploadSuccess.value = false
-      let file = options.file
-      if (file.file !== null && file.file !== undefined) {
-        // 上传图片
-        Api.uploadFile(file.file)
-          .then((res: any) => {
-            message.destroyAll()
-            message.success(i18n.global.t('sucess.upload_image_success'))
-            uploadSuccess.value = true
-            imageHash.value = res.IpfsHash
-            options.onFinish()
-          })
-          .catch((err: any) => {
-            console.log(err)
-            options.onError()
-            uploadSuccess.value = false
-            message.destroyAll()
-            message.error(i18n.global.t('error.upload_image_error'))
-            options.onError()
-          })
-      } else {
+      .catch((err: any) => {
+        console.log(err)
         options.onError()
         uploadSuccess.value = false
-      }
-    }
+        message.destroyAll()
+        message.error(i18n.global.t('error.upload_image_error'))
+        options.onError()
+      })
+  } else {
+    options.onError()
+    uploadSuccess.value = false
+  }
+}
 
-    return {
-      nftName,
-      nftPrice,
-      amount,
-      bulk,
-      mintIng,
-      afterMintDialog,
-      lastTokenId,
-      util,
-      mint,
-      uploadImage,
-      checkImage,
-    }
-  },
-})
+let bodyStyle = {
+  width: '600px',
+}
 </script>
 
 <template>
@@ -317,10 +280,10 @@ export default defineComponent({
           :placeholder="$t('home.input.placeholder_2')"
           style="width: 100%; margin-right: 0"
         >
-          <template #suffix> ETH </template></n-input
-        >
+          <template #suffix> <select-symbol /> </template
+        ></n-input>
       </div>
-      <n-collapse arrow-placement="right" :style="{ 'margin-top': '50px' }">
+      <n-collapse arrow-placement="right" :style="{ 'margin-top': '40px' }">
         <n-collapse-item :title="$t('home.advance_option')">
           <div style="display: flex; flex-direction: column">
             <n-checkbox
@@ -339,14 +302,10 @@ export default defineComponent({
         </n-collapse-item>
       </n-collapse>
       <n-button
+        id="mint-button"
         color="#8FDBFD"
         :loading="mintIng"
         type="primary"
-        :style="{
-          width: '100%',
-          'margin-top': '60px',
-          'margin-bottom': '36px',
-        }"
         text-color="#000"
         @click="mint"
       >
@@ -357,6 +316,46 @@ export default defineComponent({
       <img width="250" :src="util.getSrc('right.svg')" />
     </div>
   </div>
+  <!-- 铸造完成弹窗 -->
+  <n-modal
+    v-model:show="afterMintDialog"
+    :mask-closable="false"
+    class="custom-card"
+    preset="card"
+    :style="bodyStyle"
+    :title="$t('prompt')"
+    size="huge"
+    :bordered="false"
+  >
+    <a>Minting, check and trade directly on OpenSea</a>
+    <div
+      style="
+        display: flex;
+        flex-direction: row;
+        margin-top: 16px;
+        justify-content: space-around;
+      "
+    >
+      <n-button
+        color="#8FDBFD"
+        style="flex-basis: 100; flex-grow: 1; margin-right: 16px"
+        @click="afterMintDialog = false"
+      >
+        Countiun Mint
+      </n-button>
+      <n-button
+        color="#8FDBFD"
+        style="flex-basis: 150; flex-grow: 2"
+        type="primary"
+        @click="
+          util.openLink(
+            `https://opensea.io/assets/0x842864f1cd1491b77a404b0e30aac2b67b2c647b/${lastTokenId}`
+          )
+        "
+        >Go OpenSea</n-button
+      >
+    </div>
+  </n-modal>
 </template>
 
 <style scoped>
@@ -398,6 +397,13 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+#mint-button {
+  width: 100%;
+  margin-top: 60px;
+  margin-bottom: 36px;
+  background-image: linear-gradient(to bottom right, #d6f2ff, #8edbfd);
 }
 
 @media screen and (max-width: 1100px) {
