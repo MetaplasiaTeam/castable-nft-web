@@ -6,7 +6,7 @@ import { NPopover } from 'naive-ui'
 import { useStore } from '@/store'
 import { useRouter } from 'vue-router'
 import { useBoard, useEthers, useWallet } from 'vue-dapp'
-
+import Constants from '@/common/constants'
 const { open } = useBoard()
 const { disconnect } = useWallet()
 const { address, isActivated, signer, provider } = useEthers()
@@ -50,6 +50,14 @@ function languageSelect(key: string) {
     <router-link to="/"
       ><img style="height: 30px" src="@/assets/img/logo.svg" />
     </router-link>
+    <a
+      v-if="
+        Constants.CONTRACT_ADDRESS ===
+        '0xb55C74905572A47DE02167D19687d495Fc2C3F1b'
+      "
+      style="color: #fff"
+      >BSC TEST</a
+    >
     <buttons id="nomal-buttons" />
     <n-popover trigger="click">
       <template #trigger>

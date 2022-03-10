@@ -68,7 +68,7 @@ export class Api {
 
   static getAllNftInfo(
     contract: ethers.Contract | undefined
-  ): Promise<{ id: number; value: number; info: PinIPFS }[]> {
+  ): Promise<{ id: number; value: number; addr: string; info: PinIPFS }[]> {
     return new Promise((resolve, reject) => {
       if (contract === undefined) {
         reject('contract is undefined')
@@ -77,8 +77,12 @@ export class Api {
       contract
         .getByOwner(store.state.web3address)
         .then(async (res: NFTInfo[]) => {
-          let allNFTInfo: Array<{ id: number; value: number; info: PinIPFS }> =
-            []
+          let allNFTInfo: Array<{
+            id: number
+            addr: string
+            value: number
+            info: PinIPFS
+          }> = []
           for (let ele of res) {
             if (ele.uri === '') {
               continue
@@ -96,6 +100,7 @@ export class Api {
                   parseFloat('1000000000000000000')
                 ).toString()
               ),
+              addr: ele.addr.toString(),
               info: await info.data,
             })
           }

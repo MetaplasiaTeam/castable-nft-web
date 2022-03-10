@@ -15,7 +15,7 @@
     "mint_now": "现在铸造",
     "input": {
       "placeholder": "自定义一个 NFT 名称 (支持中文/英文/数字)",
-      "placeholder_2": "铸造价值最低 0.002 ETH 起/个",
+      "placeholder_2": "铸造价值最低 0.002 {0} 起/个",
       "placeholder_3": "发行总量"
     }
   },
@@ -30,8 +30,8 @@
     },
     "burn_d": {
       "title": "熔炼 NFT",
-      "message1": "NFT 价值：{0} ETH",
-      "message2": "熔炼 NFT 之后铸造价值会返还到你的账户，当前价值为 {0} ETH"
+      "message1": "NFT 价值：{0} {1}",
+      "message2": "熔炼 NFT 之后铸造价值会返还到你的账户，当前价值为 {0} {1}"
     }
   },
   "error": {

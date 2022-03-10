@@ -47,6 +47,7 @@ function getAllNft() {
               element.info.image.lastIndexOf('/'),
               element.info.image.length
             )}`,
+            addr: element.addr,
             title: element.info.name,
             price: element.value.toString(),
           })
@@ -80,6 +81,7 @@ function getAllNft() {
             :imageUrl="item.imageUrl"
             :title="item.title"
             :price="item.price"
+            :addr="item.addr"
           ></nft-item>
         </div>
       </n-spin>

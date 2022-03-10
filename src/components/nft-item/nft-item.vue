@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import NftImage from './nft-img.vue'
 import { NButton, NModal, NInput, useMessage } from 'naive-ui'
-import { defineEmits, defineComponent, ref } from 'vue'
+import { defineEmits, defineComponent, ref, onMounted } from 'vue'
 import { useEthers } from 'vue-dapp'
 import i18n from '@/i18n'
 import { ethers } from 'ethers'
 import Constants from '@/common/constants'
+import commonUtil from '@/common/utils/common-util'
 
 let props = defineProps({
   tokenId: Number,
   imageUrl: String,
+  addr: String,
   title: String,
   price: String,
 })
@@ -35,6 +37,14 @@ let friendAddress = ref('')
 
 let sending = ref(false)
 let burndialog = ref(false)
+
+let symbol = ref('ETH')
+
+onMounted(() => {
+  if (props.addr !== '0x0000000000000000000000000000000000000000') {
+    symbol.value = commonUtil.getSymbol(props.addr!)
+  }
+})
 
 async function giveaway() {
   if (signer.value === null) {
@@ -120,7 +130,7 @@ function burn() {
       .then((tx: any) => {
         console.log(tx)
         tx.wait()
-          .then((res: any) => {
+          .then(() => {
             message.success(i18n.global.t('sucess.burn_success'))
             showBurnDialog.value = false
             burndialog.value = false
@@ -137,15 +147,21 @@ function burn() {
       })
   })
 }
+
+function toInfo() {
+  commonUtil.openLink(
+    `https://etherscan.io/nft/0x842864f1cd1491b77a404b0e30aac2b67b2c647b/${props.tokenId}`
+  )
+}
 </script>
 
 <template>
   <div id="nft-card">
-    <nft-image :image-url="imageUrl" />
+    <nft-image @click="toInfo" :image-url="imageUrl" />
     <div id="content">
       <a>{{ title }}#{{ tokenId?.toString() }}</a>
       <a>Prize</a>
-      <a>{{ price }} ETH</a>
+      <a>{{ price }} {{ symbol }}</a>
     </div>
     <div id="buttons">
       <n-button
@@ -223,9 +239,9 @@ function burn() {
     size="huge"
     :bordered="false"
   >
-    <a>{{ $t('nft_item.burn_d.message1', [price]) }}</a
+    <a>{{ $t('nft_item.burn_d.message1', [price, symbol]) }}</a
     ><br />
-    <a>{{ $t('nft_item.burn_d.message2', [price]) }}</a>
+    <a>{{ $t('nft_item.burn_d.message2', [price, symbol]) }}</a>
     <div
       style="
         display: flex;

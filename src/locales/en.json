@@ -15,7 +15,7 @@
     "mint_now": "Mint Now",
     "input": {
       "placeholder": "Customize NFT name (English/Chinese/number supported)",
-      "placeholder_2": "Minimum mint value 0.002ETH/NFT",
+      "placeholder_2": "Minimum mint value 0.002 {0}/NFT",
       "placeholder_3": "Total Supply"
     }
   },
@@ -30,8 +30,8 @@
     },
     "burn_d": {
       "title": "Burn NFT",
-      "message1": "Retrieve the value：{0} ETH",
-      "message2": "Burn is destroying the NFT, the mint value will be released back to holder's accountCurrent Value {0} ETH"
+      "message1": "Retrieve the value：{0} {1}",
+      "message2": "Burn is destroying the NFT, the mint value will be released back to holder's accountCurrent Value {0} {1}"
     }
   },
   "error": {

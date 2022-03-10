@@ -7,13 +7,15 @@ export interface State {
     | {
         tokenId: number
         imageUrl: string
+        addr: string
         title: string
         price: string
       }[]
     | undefined
   web3address: string | undefined
   nftContract: ethers.Contract | undefined
-  topbarButtonText:string
+  topbarButtonText: string
+  symbol: string
 }
 
 export const key: InjectionKey<Store<State>> = Symbol('store')
@@ -29,6 +31,7 @@ export const store = createStore({
       nftContract: undefined,
       nftList: undefined,
       topbarButtonText: i18n.global.t('connect'),
+      symbol: 'ETH',
     }
   },
   mutations: {
@@ -51,6 +54,9 @@ export const store = createStore({
     },
     setTopbarButtonText(state: any, text: string) {
       state.topbarButtonText = text
-    }
+    },
+    setSymbol(state: any, symbol: string) {
+      state.symbol = symbol
+    },
   },
 })
