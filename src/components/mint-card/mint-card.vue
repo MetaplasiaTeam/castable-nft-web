@@ -17,14 +17,14 @@ import {
 } from 'naive-ui'
 import { useEthers, ERC20 } from 'vue-dapp'
 import { BigNumber, ethers } from 'ethers'
-import { Api } from '@/common/utils/net'
-import Constants from '@/common/constants'
+import { Api } from '@/common/net'
+import Constants from '@/common/data/constants'
 import i18n from '@/i18n'
 import util from '@/common/utils/common-util'
 import SelectSymbol from './select-symbol.vue'
 import emitter from '@/emitter'
 import { useStore } from '@/store'
-import * as erc20 from '../../common/utils/erc20'
+import ERC20Util, * as erc20 from '../../common/utils/erc20'
 
 let message = useMessage()
 const store = useStore()
@@ -34,7 +34,6 @@ let imageHash = ref('')
 let nftName = ref('')
 let nftPrice = ref('')
 let jsonUrl = ref('')
-let balance = ref('* ETH')
 let symbol = ref('ETH')
 
 // erc20
@@ -402,27 +401,24 @@ emitter.on('changeSymbol', async (val) => {
   }
   if (val === 'ETH') {
     mintErc20.value = false
-    return
+  } else {
+    mintErc20.value = true
   }
   if (val === 'Other Token') {
     // TODO
     return
   }
-  mintErc20.value = true
   loading.value = true
-  let contract = erc20.default.getERC20Contract(val)?.connect(signer.value)
-  if (contract !== undefined && signer.value !== null) {
-    let balanceBig = await contract.balanceOf(
-      ethers.utils.getAddress(address.value)
-    )
-    let decimals = await contract.decimals()
-    erc20Decimals.value = decimals
-    balance.value = `${(balanceBig / 10 ** decimals).toString()} ${
-      store.state.symbol
-    }`
-    erc20Address.value = contract.address
+
+  let _erc20Address = ERC20Util.getAddress(val)
+  let _erc20Decimals = ERC20Util.getDecimals(val)
+
+  if (_erc20Address !== undefined && _erc20Decimals !== undefined) {
+    erc20Address.value = _erc20Address
+    erc20Decimals.value = _erc20Decimals
+    symbol.value = val
     loading.value = false
-    console.log(erc20Decimals.value)
+    return
   }
 })
 </script>

@@ -6,7 +6,7 @@ import { NPopover } from 'naive-ui'
 import { useStore } from '@/store'
 import { useRouter } from 'vue-router'
 import { useBoard, useEthers, useWallet } from 'vue-dapp'
-import Constants from '@/common/constants'
+import Constants from '@/common/data/constants'
 const { open } = useBoard()
 const { disconnect } = useWallet()
 const { address, isActivated, signer, provider } = useEthers()

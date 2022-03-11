@@ -1,6 +1,4 @@
 export default class Constants {
-  static USDT_ADDRESS = '0xdac17f958d2ee523a2206206994597c13d831ec7'
-  static DAI_ADDRESS = '0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867'
   static CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS
   static CONTRACT_ABI = [
     { inputs: [], stateMutability: 'nonpayable', type: 'constructor' },

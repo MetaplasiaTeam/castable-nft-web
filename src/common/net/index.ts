@@ -68,7 +68,7 @@ export class Api {
 
   static getAllNftInfo(
     contract: ethers.Contract | undefined
-  ): Promise<{ id: number; value: number; addr: string; info: PinIPFS }[]> {
+  ): Promise<{ id: number; value: string; addr: string; info: PinIPFS }[]> {
     return new Promise((resolve, reject) => {
       if (contract === undefined) {
         reject('contract is undefined')
@@ -80,7 +80,7 @@ export class Api {
           let allNFTInfo: Array<{
             id: number
             addr: string
-            value: number
+            value: string
             info: PinIPFS
           }> = []
           for (let ele of res) {
@@ -91,15 +91,10 @@ export class Api {
               ele.uri.lastIndexOf('/'),
               ele.uri.length
             )}`
-            let info = await this.getNftInfo(link)
+            let info = await axios.get(link)
             allNFTInfo.push({
               id: ele.id.toNumber(),
-              value: parseFloat(
-                (
-                  parseFloat(ele.value.toString()) /
-                  parseFloat('1000000000000000000')
-                ).toString()
-              ),
+              value: ele.value.toString(),
               addr: ele.addr.toString(),
               info: await info.data,
             })
@@ -110,10 +105,6 @@ export class Api {
           reject(err)
         })
     })
-  }
-
-  private static getNftInfo(link: string) {
-    return axios.get(link)
   }
 }
 

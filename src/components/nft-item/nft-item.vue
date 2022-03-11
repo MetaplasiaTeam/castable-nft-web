@@ -5,8 +5,9 @@ import { defineEmits, defineComponent, ref, onMounted } from 'vue'
 import { useEthers } from 'vue-dapp'
 import i18n from '@/i18n'
 import { ethers } from 'ethers'
-import Constants from '@/common/constants'
+import Constants from '@/common/data/constants'
 import commonUtil from '@/common/utils/common-util'
+import ERC20Util from '@/common/utils/erc20'
 
 let props = defineProps({
   tokenId: Number,
@@ -39,10 +40,20 @@ let sending = ref(false)
 let burndialog = ref(false)
 
 let symbol = ref('ETH')
+let value = ref(0)
 
 onMounted(() => {
-  if (props.addr !== '0x0000000000000000000000000000000000000000') {
-    symbol.value = commonUtil.getSymbol(props.addr!)
+  if (props.addr !== undefined && props.price !== undefined) {
+    let _symbol = ERC20Util.getSymbol(props.addr)
+    let _decimal = ERC20Util.getDecimals(props.addr)
+    if (_symbol !== undefined) {
+      symbol.value = _symbol
+    }
+    if (_decimal !== undefined) {
+      value.value = parseFloat(
+        (parseFloat(props.price) / Math.pow(10, _decimal)).toFixed(5)
+      )
+    }
   }
 })
 
@@ -161,7 +172,7 @@ function toInfo() {
     <div id="content">
       <a>{{ title }}#{{ tokenId?.toString() }}</a>
       <a>Prize</a>
-      <a>{{ price }} {{ symbol }}</a>
+      <a>{{ value }} {{ symbol }}</a>
     </div>
     <div id="buttons">
       <n-button
@@ -239,9 +250,9 @@ function toInfo() {
     size="huge"
     :bordered="false"
   >
-    <a>{{ $t('nft_item.burn_d.message1', [price, symbol]) }}</a
+    <a>{{ $t('nft_item.burn_d.message1', [value, symbol]) }}</a
     ><br />
-    <a>{{ $t('nft_item.burn_d.message2', [price, symbol]) }}</a>
+    <a>{{ $t('nft_item.burn_d.message2', [value, symbol]) }}</a>
     <div
       style="
         display: flex;

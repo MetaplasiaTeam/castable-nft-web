@@ -1,4 +1,4 @@
-import Constants from '../constants'
+import Constants from '../data/constants'
 
 export default {
   name: 'commonUtil',
@@ -12,14 +12,5 @@ export default {
 
   isInteger(obj: any) {
     return Math.floor(obj) === obj
-  },
-
-  getSymbol(addr: string) {
-    switch (addr) {
-      case Constants.DAI_ADDRESS:
-        return 'DAI'
-      default:
-        return 'ETH'
-    }
   },
 }

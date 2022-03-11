@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { onMounted, ref } from '@vue/runtime-dom'
 import TopBar from '@/components/top-bar/topbar.vue'
-import { NLayout, NLayoutHeader, NLayoutContent, NSpace, NSpin } from 'naive-ui'
+import { NLayout, NLayoutHeader, NLayoutContent, NSpin } from 'naive-ui'
 import { NftItem, NFTItemProps } from '@/components'
 import { useStore } from '@/store'
-import { Api } from '@/common/utils/net'
+import { Api } from '@/common/net'
 import { useEthers } from 'vue-dapp'
 import { ethers } from 'ethers'
-import Constants from '@/common/constants'
+import Constants from '@/common/data/constants'
 
 const store = useStore()
 const { signer } = useEthers()
 
 let nftListLoading = ref(false)
-let testData = ref(Array<NFTItemProps>())
+let nftListData = ref(Array<NFTItemProps>())
 
 onMounted(() => {
   getAllNft()
@@ -29,7 +29,7 @@ function refreshNftList(bool: boolean) {
 function getAllNft() {
   // 检测缓存
   if (store.state.nftList !== undefined) {
-    testData.value = store.state.nftList
+    nftListData.value = store.state.nftList
   }
   if (signer.value !== null) {
     let contract = new ethers.Contract(
@@ -52,7 +52,7 @@ function getAllNft() {
             price: element.value.toString(),
           })
         })
-        testData.value = tempList
+        nftListData.value = tempList
         store.commit('setNftList', tempList)
       })
       .catch((err) => {
@@ -74,7 +74,7 @@ function getAllNft() {
       <n-spin :show="nftListLoading">
         <div id="nftdiv">
           <nft-item
-            v-for="(item, index) in testData"
+            v-for="(item, index) in nftListData"
             @refresh="refreshNftList"
             :key="index"
             :tokenId="item.tokenId"
@@ -99,7 +99,8 @@ function getAllNft() {
   padding-left: 10vw;
   padding-right: 10vw;
   padding-bottom: 5vh;
-  border-radius: 30px;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
 }
 
 @media screen and (max-width: 1080px) {

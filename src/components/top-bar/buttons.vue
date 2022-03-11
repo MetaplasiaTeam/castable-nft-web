@@ -2,7 +2,7 @@
 import { watch } from 'vue'
 import { useBoard, useEthers, useWallet, shortenAddress } from 'vue-dapp'
 import { useStore } from '@/store'
-import Constants from '@/common/constants'
+import Constants from '@/common/data/constants'
 import { useRouter } from 'vue-router'
 import { ethers } from 'ethers'
 import i18n from '@/i18n'
