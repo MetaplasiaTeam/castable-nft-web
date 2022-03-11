@@ -14,7 +14,7 @@ export class ERC20Data {
     address: '0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867',
     decimals: 18,
   }
-  static ALL_DATA = [ERC20Data.ETH, ERC20Data.USDT, ERC20Data.DAI]
+  static ALL_DATA = [ERC20Data.ETH, ERC20Data.USDT]
 }
 
 export interface IERC20 {

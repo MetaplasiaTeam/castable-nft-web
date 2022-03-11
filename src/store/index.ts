@@ -2,6 +2,7 @@ import { ethers } from 'ethers'
 import { InjectionKey } from 'vue'
 import { createStore, Store, useStore as baseUseStore } from 'vuex'
 import i18n from '@/i18n'
+import { IERC20 } from '@/common/data/erc20'
 export interface State {
   nftList:
     | {
@@ -16,6 +17,7 @@ export interface State {
   nftContract: ethers.Contract | undefined
   topbarButtonText: string
   symbol: string
+  tokenCache: Array<IERC20>
 }
 
 export const key: InjectionKey<Store<State>> = Symbol('store')
@@ -32,6 +34,7 @@ export const store = createStore({
       nftList: undefined,
       topbarButtonText: i18n.global.t('connect'),
       symbol: 'ETH',
+      tokenCache: Array<IERC20>(),
     }
   },
   mutations: {
@@ -57,6 +60,9 @@ export const store = createStore({
     },
     setSymbol(state: any, symbol: string) {
       state.symbol = symbol
+    },
+    addNewTokenCache(state: any, token: IERC20) {
+      state.tokenCache.push(token)
     },
   },
 })

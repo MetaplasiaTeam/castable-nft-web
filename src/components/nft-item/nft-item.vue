@@ -31,11 +31,21 @@ onMounted(() => {
     let _decimal = ERC20Util.getDecimals(props.addr)
     if (_symbol !== undefined) {
       symbol.value = _symbol
+    } else {
+      ERC20Util.searchToken(props.addr).then((res) => {
+        symbol.value = res.symbol
+      })
     }
     if (_decimal !== undefined) {
       value.value = parseFloat(
         (parseFloat(props.price) / Math.pow(10, _decimal)).toFixed(5)
       )
+    } else {
+      ERC20Util.searchToken(props.addr).then((res) => {
+        value.value = parseFloat(
+          (parseFloat(props.price!) / Math.pow(10, res.decimals)).toFixed(5)
+        )
+      })
     }
   }
 })

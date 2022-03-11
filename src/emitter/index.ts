@@ -1,13 +1,10 @@
+import { IERC20 } from '@/common/data/erc20'
 import mitt from 'mitt'
 
 type Events = {
   changeSymbol: string
   refreshNftList: boolean
-  searchContractResult: {
-    address: string
-    symbol: string
-    decimals: number
-  }
+  searchContractResult: IERC20
 }
 
 const emitter = mitt<Events>()

@@ -1,10 +1,16 @@
 import { ethers } from 'ethers'
 import { ERC20Data, IERC20 } from '../data/erc20'
 import { ERC20 } from 'vue-dapp'
-
+import { useStore } from '@/store'
+import { useEthers } from 'vue-dapp'
 export default class ERC20Util {
   static getSymbol(addr: string): string | undefined {
-    let filterData = ERC20Data.ALL_DATA.filter((data: IERC20) => {
+    const store = useStore()
+    let dataList: IERC20[] = []
+    dataList.push(...ERC20Data.ALL_DATA)
+    dataList.push(...store.state.tokenCache)
+    console.log(dataList)
+    let filterData = dataList.filter((data: IERC20) => {
       return data.address == addr
     })
 
@@ -15,7 +21,12 @@ export default class ERC20Util {
   }
 
   static getAddress(symbol: string): string | undefined {
-    let filterData = ERC20Data.ALL_DATA.filter((data: IERC20) => {
+    const store = useStore()
+    let dataList: IERC20[] = []
+    dataList.push(...ERC20Data.ALL_DATA)
+    dataList.push(...store.state.tokenCache)
+    console.log(dataList)
+    let filterData = dataList.filter((data: IERC20) => {
       return data.symbol == symbol
     })
     if (filterData.length > 0) {
@@ -25,13 +36,47 @@ export default class ERC20Util {
   }
 
   static getDecimals(addressOrSymbol: string): number | undefined {
-    let filterData = ERC20Data.ALL_DATA.filter((data: IERC20) => {
+    const store = useStore()
+    let dataList: IERC20[] = []
+    dataList.push(...ERC20Data.ALL_DATA)
+    dataList.push(...store.state.tokenCache)
+    console.log(dataList)
+    let filterData = dataList.filter((data: IERC20) => {
       return data.address == addressOrSymbol || data.symbol == addressOrSymbol
     })
     if (filterData.length > 0) {
       return filterData[0].decimals
     }
     return undefined
+  }
+
+  static searchToken(address: string): Promise<IERC20> {
+    return new Promise((resolve, reject) => {
+      const { signer } = useEthers()
+      const store = useStore()
+
+      if (address === '' || signer.value === null) {
+        return
+      }
+      let contract = ERC20Util.getERC20Contract(address)?.connect(signer.value)
+      contract
+        .name()
+        .then(async () => {
+          let symbol: string = await contract.symbol()
+          let decimals: number = await contract.decimals()
+          let otherToken = {
+            address: address,
+            symbol: symbol,
+            decimals: decimals,
+          }
+          store.commit('addNewTokenCache', otherToken)
+          resolve(otherToken)
+        })
+        .catch((err: Error) => {
+          console.log(err.message)
+          reject(err)
+        })
+    })
   }
 
   static getERC20Contract(address: string) {

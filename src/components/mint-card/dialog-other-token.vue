@@ -4,9 +4,11 @@ import { NModal, NButton, NInput, useMessage } from 'naive-ui'
 import ERC20Util from '@/common/utils/erc20'
 import { useEthers } from 'vue-dapp'
 import emitter from '@/emitter'
+import { useStore } from '@/store'
 
 const { signer } = useEthers()
 const message = useMessage()
+const store = useStore()
 
 let bodyStyle = {
   width: '600px',
@@ -30,11 +32,13 @@ function searchContract() {
     .then(async () => {
       let symbol: string = await contract.symbol()
       let decimals: number = await contract.decimals()
-      emitter.emit('searchContractResult', {
+      let otherToken = {
         address: address.value,
         symbol: symbol,
         decimals: decimals,
-      })
+      }
+      emitter.emit('searchContractResult', otherToken)
+      store.commit('addNewTokenCache', otherToken)
       searching.value = false
       showDialog.value = false
     })
