@@ -8,6 +8,7 @@ import { Api } from '@/common/net'
 import { useEthers } from 'vue-dapp'
 import { ethers } from 'ethers'
 import Constants from '@/common/data/constants'
+import emitter from '@/emitter'
 
 const store = useStore()
 const { signer } = useEthers()
@@ -18,13 +19,12 @@ let nftListData = ref(Array<NFTItemProps>())
 onMounted(() => {
   getAllNft()
   nftListLoading.value = true
+  emitter.on('refreshNftList', (val) => {
+    if (val) {
+      getAllNft()
+    }
+  })
 })
-
-function refreshNftList(bool: boolean) {
-  if (bool) {
-    getAllNft()
-  }
-}
 
 function getAllNft() {
   // 检测缓存
@@ -75,7 +75,6 @@ function getAllNft() {
         <div id="nftdiv">
           <nft-item
             v-for="(item, index) in nftListData"
-            @refresh="refreshNftList"
             :key="index"
             :tokenId="item.tokenId"
             :imageUrl="item.imageUrl"

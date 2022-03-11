@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Ref, ref } from 'vue'
+import { ref } from 'vue'
 import {
   NInput,
   NUpload,
@@ -9,7 +9,6 @@ import {
   NCollapseItem,
   NCheckbox,
   NInputNumber,
-  NModal,
   NSpin,
   UploadCustomRequestOptions,
   useMessage,
@@ -24,7 +23,9 @@ import util from '@/common/utils/common-util'
 import SelectSymbol from './select-symbol.vue'
 import emitter from '@/emitter'
 import { useStore } from '@/store'
-import ERC20Util, * as erc20 from '../../common/utils/erc20'
+import DialogOtherToken from './dialog-other-token.vue'
+import DialogAfterMint from './dialog-after-mint.vue'
+import ERC20Util from '@/common/utils/erc20'
 
 let message = useMessage()
 const store = useStore()
@@ -49,7 +50,9 @@ let bulk = ref(false)
 let uploadSuccess = ref(false)
 let loading = ref(false)
 
-let afterMintDialog = ref(false)
+// dialog
+let otherTokenDialog = ref<any>(null)
+let afterMintDialog = ref<any>(null)
 
 function mint() {
   if (!uploadSuccess.value) {
@@ -131,7 +134,7 @@ function mintSingle() {
                 (res.events[0].args[2] as BigNumber).toString()
               )
               message.success(i18n.global.t('sucess.mint_success'))
-              afterMintDialog.value = true
+              afterMintDialog.value.show()
               mintIng.value = false
             })
             .catch((err: Error) => {
@@ -180,7 +183,7 @@ function mintMultiple() {
                 (res.events[0].args[2] as BigNumber).toString()
               )
               message.success(i18n.global.t('sucess.mint_success'))
-              afterMintDialog.value = true
+              afterMintDialog.value.show()
               mintIng.value = false
             })
             .catch((err: Error) => {
@@ -390,10 +393,6 @@ function uploadImage(options: UploadCustomRequestOptions) {
   }
 }
 
-let bodyStyle = {
-  width: '600px',
-}
-
 // 监听切换代币
 emitter.on('changeSymbol', async (val) => {
   if (signer.value === null) {
@@ -406,6 +405,7 @@ emitter.on('changeSymbol', async (val) => {
   }
   if (val === 'Other Token') {
     // TODO
+    otherTokenDialog.value.show()
     return
   }
   loading.value = true
@@ -418,6 +418,7 @@ emitter.on('changeSymbol', async (val) => {
     erc20Decimals.value = _erc20Decimals
     symbol.value = val
     loading.value = false
+    store.commit('setSymbol', val)
     return
   }
 })
@@ -512,46 +513,8 @@ emitter.on('changeSymbol', async (val) => {
       </div>
     </div>
   </n-spin>
-  <!-- 铸造完成弹窗 -->
-  <n-modal
-    v-model:show="afterMintDialog"
-    :mask-closable="false"
-    class="custom-card"
-    preset="card"
-    :style="bodyStyle"
-    :title="$t('prompt')"
-    size="huge"
-    :bordered="false"
-  >
-    <a>Minting, check and trade directly on OpenSea</a>
-    <div
-      style="
-        display: flex;
-        flex-direction: row;
-        margin-top: 16px;
-        justify-content: space-around;
-      "
-    >
-      <n-button
-        color="#8FDBFD"
-        style="flex-basis: 100; flex-grow: 1; margin-right: 16px"
-        @click="afterMintDialog = false"
-      >
-        Countiun Mint
-      </n-button>
-      <n-button
-        color="#8FDBFD"
-        style="flex-basis: 150; flex-grow: 2"
-        type="primary"
-        @click="
-          util.openLink(
-            `https://opensea.io/assets/0x842864f1cd1491b77a404b0e30aac2b67b2c647b/${lastTokenId}`
-          )
-        "
-        >Go OpenSea</n-button
-      >
-    </div>
-  </n-modal>
+  <dialog-other-token ref="otherTokenDialog" />
+  <dialog-after-mint ref="afterMintDialog"/>
 </template>
 
 <style scoped>

@@ -88,4 +88,14 @@ const darkThemeOverrides: GlobalThemeOverrides = {
   background-color: var(--color-background);
   height: 100vh;
 }
+
+.cancle {
+  width: 40%;
+  margin-right: 16px;
+  color: var(--color-text);
+}
+
+.confirm {
+  width: 60%;
+}
 </style>

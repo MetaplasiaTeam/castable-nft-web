@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import NftImage from './nft-img.vue'
-import { NButton, NModal, NInput, useMessage } from 'naive-ui'
-import { defineEmits, defineComponent, ref, onMounted } from 'vue'
-import { useEthers } from 'vue-dapp'
-import i18n from '@/i18n'
-import { ethers } from 'ethers'
-import Constants from '@/common/data/constants'
+import { NButton } from 'naive-ui'
+import { defineComponent, ref, onMounted } from 'vue'
 import commonUtil from '@/common/utils/common-util'
 import ERC20Util from '@/common/utils/erc20'
+import DialogSend from './dialog-send.vue'
+import DialogBurn from './dialog-burn.vue'
 
 let props = defineProps({
   tokenId: Number,
@@ -21,23 +19,8 @@ defineComponent({
   name: 'nft-item',
 })
 
-let bodyStyle = {
-  width: '600px',
-}
-
-const { signer, address, provider } = useEthers()
-const message = useMessage()
-const emit = defineEmits<{
-  (e: 'refresh', b: boolean): void
-}>()
-
-let showGiveAwayDialog = ref(false)
-let showBurnDialog = ref(false)
-
-let friendAddress = ref('')
-
-let sending = ref(false)
-let burndialog = ref(false)
+let sendDialog = ref<any>(null)
+let burnDialog = ref<any>(null)
 
 let symbol = ref('ETH')
 let value = ref(0)
@@ -56,108 +39,6 @@ onMounted(() => {
     }
   }
 })
-
-async function giveaway() {
-  if (signer.value === null) {
-    message.error(i18n.global.t('error.please_connect_web3'))
-    return
-  }
-  if (friendAddress.value && provider.value !== null) {
-    let sendAddress: string | null = ''
-    if (friendAddress.value.endsWith('.eth')) {
-      sendAddress = await provider.value.resolveName(friendAddress.value)
-    } else if (friendAddress.value.startsWith('0x')) {
-      sendAddress = friendAddress.value
-    } else {
-      message.error(i18n.global.t('error.input_error'))
-      return
-    }
-    if (sendAddress === null) {
-      message.error(i18n.global.t('error.input_error'))
-      return
-    }
-
-    sending.value = true
-
-    let trueSigner = signer.value
-
-    let contract = new ethers.Contract(
-      Constants.CONTRACT_ADDRESS,
-      Constants.CONTRACT_ABI,
-      signer.value
-    )
-    contract.estimateGas
-      .safeTransferFrom(
-        ethers.utils.getAddress(address.value),
-        ethers.utils.getAddress(friendAddress.value),
-        props.tokenId
-      )
-      .then((gas) => {
-        let contractWithSigner = contract!!.connect(trueSigner)
-        contractWithSigner
-          .safeTransferFrom(
-            ethers.utils.getAddress(address.value),
-            ethers.utils.getAddress(friendAddress.value),
-            props.tokenId,
-            {
-              gasLimit: gas,
-            }
-          )
-          .then((tx: any) => {
-            console.log(tx)
-            message.success(i18n.global.t('sucess.send_success'))
-            showGiveAwayDialog.value = false
-            sending.value = false
-            emit('refresh', true)
-          })
-          .catch((err: Error) => {
-            message.error(err.message)
-            sending.value = false
-          })
-      })
-  }
-}
-
-function burn() {
-  if (signer.value === null) {
-    message.error(i18n.global.t('error.please_connect_web3'))
-    return
-  }
-  burndialog.value = true
-
-  let trueSigner = signer.value
-
-  let contract = new ethers.Contract(
-    Constants.CONTRACT_ADDRESS,
-    Constants.CONTRACT_ABI,
-    signer.value
-  )
-  contract.estimateGas.burn(props.tokenId).then((gas) => {
-    let contractWithSigner = contract!!.connect(trueSigner)
-    contractWithSigner
-      .burn(props.tokenId, {
-        gasLimit: gas,
-      })
-      .then((tx: any) => {
-        console.log(tx)
-        tx.wait()
-          .then(() => {
-            message.success(i18n.global.t('sucess.burn_success'))
-            showBurnDialog.value = false
-            burndialog.value = false
-            emit('refresh', true)
-          })
-          .catch((err: Error) => {
-            message.error(err.message)
-            burndialog.value = false
-          })
-      })
-      .catch((err: Error) => {
-        message.error(err.message)
-        burndialog.value = false
-      })
-  })
-}
 
 function toInfo() {
   commonUtil.openLink(
@@ -181,7 +62,7 @@ function toInfo() {
         ghost
         text-color="#000"
         round
-        @click="showGiveAwayDialog = true"
+        @click="sendDialog.show()"
         >{{ $t('nft_item.giveaway') }}</n-button
       >
       <n-button
@@ -190,99 +71,18 @@ function toInfo() {
         round
         text-color="#fff"
         type="primary"
-        @click="showBurnDialog = true"
+        @click="burnDialog.show()"
         >{{ $t('nft_item.burn') }}</n-button
       >
     </div>
   </div>
-  <!-- 赠送对话框 -->
-  <n-modal
-    v-model:show="showGiveAwayDialog"
-    :mask-closable="false"
-    class="custom-card"
-    preset="card"
-    :style="bodyStyle"
-    :title="$t('nft_item.send.title')"
-    size="huge"
-    :bordered="false"
-  >
-    <n-input
-      v-model:value="friendAddress"
-      placeholder="Address/ENS"
-      :disabled="sending"
-    />
-    <div
-      style="
-        display: flex;
-        flex-direction: row;
-        margin-top: 16px;
-        justify-content: space-around;
-      "
-    >
-      <n-button
-        id="cancle"
-        color="#E1E4E6"
-        ghost
-        text-color="#000"
-        round
-        @click="showGiveAwayDialog = false"
-        >{{ $t('cancle') }}</n-button
-      >
-      <n-button
-        id="confirm"
-        color="#F85A02"
-        round
-        text-color="#fff"
-        type="primary"
-        @click="giveaway"
-        >{{ $t('nft_item.send.button') }}</n-button
-      >
-    </div>
-  </n-modal>
-  <!-- 熔炼对话框 -->
-  <n-modal
-    v-model:show="showBurnDialog"
-    :mask-closable="false"
-    class="custom-card"
-    preset="card"
-    :style="bodyStyle"
-    :title="$t('nft_item.burn_d.title')"
-    size="huge"
-    :bordered="false"
-  >
-    <a>{{ $t('nft_item.burn_d.message1', [value, symbol]) }}</a
-    ><br />
-    <a>{{ $t('nft_item.burn_d.message2', [value, symbol]) }}</a>
-    <div
-      style="
-        display: flex;
-        flex-direction: row;
-        margin-top: 16px;
-        justify-content: space-around;
-      "
-    >
-      <n-button
-        id="cancle"
-        color="#E1E4E6"
-        ghost
-        round
-        :disabled="burndialog"
-        @click="showBurnDialog = false"
-      >
-        {{ $t('cancle') }}</n-button
-      >
-      <n-button
-        id="confirm"
-        color="#F85A02"
-        round
-        text-color="#fff"
-        :loading="burndialog"
-        type="primary"
-        @click="burn"
-        >{{ $t('nft_item.burn') }}</n-button
-      >
-    </div>
-  </n-modal>
+  <dialog-send ref="sendDialog" :token-id="tokenId" />
+  <dialog-burn
+    ref="burnDialog"
+    :token-id="tokenId"
+    :value="value"
+    :symbol="symbol"
+  />
 </template>
 
 <style scoped>
@@ -320,15 +120,5 @@ function toInfo() {
 
 #burn {
   width: 40%;
-}
-
-#cancle {
-  width: 40%;
-  margin-right: 16px;
-  color: var(--color-text);
-}
-
-#confirm {
-  width: 60%;
 }
 </style>

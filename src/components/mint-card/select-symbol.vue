@@ -28,7 +28,6 @@ function selectSymbol(key: string) {
     message.error(i18n.global.t('error.please_connect_web3'))
     return
   }
-  store.commit('setSymbol', key)
   emitter.emit('changeSymbol', key)
 }
 </script>
