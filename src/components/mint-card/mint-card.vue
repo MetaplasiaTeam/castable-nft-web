@@ -404,7 +404,6 @@ emitter.on('changeSymbol', async (val) => {
     mintErc20.value = true
   }
   if (val === 'Other Token') {
-    // TODO
     otherTokenDialog.value.show()
     return
   }
@@ -421,6 +420,13 @@ emitter.on('changeSymbol', async (val) => {
     store.commit('setSymbol', val)
     return
   }
+})
+
+emitter.on('searchContractResult', (res) => {
+  erc20Address.value = res.address
+  erc20Decimals.value = res.decimals
+  symbol.value = res.symbol
+  store.commit('setSymbol', res.symbol)
 })
 </script>
 
@@ -514,7 +520,7 @@ emitter.on('changeSymbol', async (val) => {
     </div>
   </n-spin>
   <dialog-other-token ref="otherTokenDialog" />
-  <dialog-after-mint ref="afterMintDialog"/>
+  <!-- <dialog-after-mint ref="afterMintDialog" /> -->
 </template>
 
 <style scoped>

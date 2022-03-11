@@ -4,6 +4,7 @@
   "disconnect": "Disconnect Web3",
   "profile": "Profile",
   "cancle": "Cancel",
+  "confirm" : "Confirm",
   "prompt": "Prompt",
   "home": {
     "title": "Mint",

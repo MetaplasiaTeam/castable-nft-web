@@ -4,6 +4,7 @@
   "disconnect": "断开 Web3",
   "profile": "个人资料",
   "cancle": "取消",
+  "confirm" : "确认",
   "prompt": "提示",
   "home": {
     "title": "铸造",

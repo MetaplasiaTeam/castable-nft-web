@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { NModal, NButton, NInput } from 'naive-ui'
+import { NModal, NButton, NInput, useMessage } from 'naive-ui'
+import ERC20Util from '@/common/utils/erc20'
+import { useEthers } from 'vue-dapp'
+import emitter from '@/emitter'
+
+const { signer } = useEthers()
+const message = useMessage()
 
 let bodyStyle = {
   width: '600px',
@@ -8,6 +14,36 @@ let bodyStyle = {
 let showDialog = ref(false)
 let address = ref('')
 let searching = ref(false)
+
+function searchContract() {
+  searching.value = true
+  if (address.value === '' || signer.value === null) {
+    searching.value = false
+    return
+  }
+  searching.value = true
+  let contract = ERC20Util.getERC20Contract(address.value)?.connect(
+    signer.value
+  )
+  contract
+    .name()
+    .then(async () => {
+      let symbol: string = await contract.symbol()
+      let decimals: number = await contract.decimals()
+      emitter.emit('searchContractResult', {
+        address: address.value,
+        symbol: symbol,
+        decimals: decimals,
+      })
+      searching.value = false
+      showDialog.value = false
+    })
+    .catch((err: Error) => {
+      console.log(err.message)
+      message.error(err.message)
+      searching.value = false
+    })
+}
 
 function show() {
   showDialog.value = true
@@ -30,13 +66,13 @@ defineExpose({
     class="custom-card"
     preset="card"
     :style="bodyStyle"
-    :title="$t('nft_item.send.title')"
+    :title="$t('cancle')"
     size="huge"
     :bordered="false"
   >
     <n-input
       v-model:value="address"
-      placeholder="Address/ENS"
+      placeholder="Token contracts"
       :disabled="searching"
     />
     <div
@@ -53,6 +89,7 @@ defineExpose({
         ghost
         text-color="#000"
         round
+        :disabled="searching"
         @click="showDialog = false"
         >{{ $t('cancle') }}</n-button
       >
@@ -60,10 +97,11 @@ defineExpose({
         class="confirm"
         color="#F85A02"
         round
+        :loading="searching"
         text-color="#fff"
         type="primary"
-        @click="showDialog = true"
-        >{{ $t('nft_item.send.button') }}</n-button
+        @click="searchContract"
+        >{{ $t('confirm') }}</n-button
       >
     </div>
   </n-modal>
