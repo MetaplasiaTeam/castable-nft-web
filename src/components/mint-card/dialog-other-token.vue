@@ -24,6 +24,18 @@ function searchContract() {
     return
   }
   searching.value = true
+
+  let testSymbol = ERC20Util.getSymbol(address.value)
+  if (testSymbol !== undefined) {
+    let otherToken = {
+      address: address.value,
+      symbol: ERC20Util.getSymbol(address.value)!,
+      decimals: ERC20Util.getDecimals(address.value)!,
+    }
+    emitter.emit('searchContractResult', otherToken)
+    return
+  }
+
   let contract = ERC20Util.getERC20Contract(address.value)?.connect(
     signer.value
   )

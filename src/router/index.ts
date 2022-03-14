@@ -10,6 +10,7 @@ const routes: Array<RouteRecordRaw> = [
     component: Home,
     meta: {
       title: 'Castable NFT',
+      keepAlive: true,
     },
   },
   {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { Ref, ref } from 'vue'
 import {
   NInput,
   NUpload,
@@ -25,16 +25,20 @@ import emitter from '@/emitter'
 import { useStore } from '@/store'
 import DialogOtherToken from './dialog-other-token.vue'
 import ERC20Util from '@/common/utils/erc20'
+import { PinIPFS } from '@/types/pin-ipfs'
 
 let message = useMessage()
 const store = useStore()
-const { signer, address } = useEthers()
+const { signer } = useEthers()
+
+type MintType = 'ETH' | 'ERC20'
 
 let imageHash = ref('')
 let nftName = ref('')
 let nftPrice = ref('')
 let jsonUrl = ref('')
 let symbol = ref('ETH')
+let mintType: Ref<MintType> = ref('ETH')
 
 // erc20
 let erc20Address = ref('')
@@ -59,8 +63,8 @@ function mint() {
     return
   }
   mintIng.value = true
-  // 开始上传 JSON
-  Api.uploadJson({
+
+  let pinJson: PinIPFS = {
     name: nftName.value,
     description: nftName.value,
     image: `ipfs://${imageHash.value}`,
@@ -70,7 +74,18 @@ function mint() {
         value: ethers.utils.parseEther(nftPrice.value).toString(),
       },
     ],
-  })
+  }
+  if (mintType.value === 'ERC20') {
+    pinJson.attributes?.push({
+      castable_address: erc20Address.value,
+    })
+    pinJson.attributes?.push({
+      castable_standard: 'ERC20',
+    })
+  }
+  console.log(pinJson)
+  // 开始上传 JSON
+  Api.uploadJson(pinJson)
     .then((res: any) => {
       console.log(res)
       jsonUrl.value = `ipfs://${res.IpfsHash}`
@@ -399,6 +414,7 @@ emitter.on('changeSymbol', async (val) => {
   }
   if (val === 'ETH') {
     mintErc20.value = false
+    mintType.value = 'ETH'
   } else {
     mintErc20.value = true
   }
@@ -417,6 +433,7 @@ emitter.on('changeSymbol', async (val) => {
     symbol.value = val
     loading.value = false
     store.setSymbol(val)
+    mintType.value = 'ERC20'
     return
   }
 })
@@ -426,6 +443,7 @@ emitter.on('searchContractResult', (res) => {
   erc20Decimals.value = res.decimals
   symbol.value = res.symbol
   store.setSymbol(res.symbol)
+  mintType.value = 'ERC20'
 })
 </script>
 

@@ -34,12 +34,22 @@ const darkThemeOverrides: GlobalThemeOverrides = {
 </script>
 
 <template>
-  <n-config-provider :theme="theme" :theme-overrides="themeOverrides">
-    <n-message-provider
-      ><n-dialog-provider
-        ><div id="nftapp"><router-view /></div></n-dialog-provider
-    ></n-message-provider>
-  </n-config-provider>
+  <keep-alive>
+    <n-config-provider :theme="theme" :theme-overrides="themeOverrides">
+      <n-message-provider
+        ><n-dialog-provider
+          ><div id="nftapp">
+            <router-view v-slot="{ Component }">
+              <keep-alive>
+                <component v-if="$route.meta.keepAlive" :is="Component" />
+              </keep-alive>
+            </router-view>
+            <router-view
+              v-if="!$route.meta.keepAlive"
+            ></router-view></div></n-dialog-provider
+      ></n-message-provider>
+    </n-config-provider>
+  </keep-alive>
   <vdapp-board />
 </template>
 
