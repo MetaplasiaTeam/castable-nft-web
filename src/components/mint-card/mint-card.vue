@@ -24,7 +24,6 @@ import SelectSymbol from './select-symbol.vue'
 import emitter from '@/emitter'
 import { useStore } from '@/store'
 import DialogOtherToken from './dialog-other-token.vue'
-import DialogAfterMint from './dialog-after-mint.vue'
 import ERC20Util from '@/common/utils/erc20'
 
 let message = useMessage()
@@ -417,7 +416,7 @@ emitter.on('changeSymbol', async (val) => {
     erc20Decimals.value = _erc20Decimals
     symbol.value = val
     loading.value = false
-    store.commit('setSymbol', val)
+    store.setSymbol(val)
     return
   }
 })
@@ -426,7 +425,7 @@ emitter.on('searchContractResult', (res) => {
   erc20Address.value = res.address
   erc20Decimals.value = res.decimals
   symbol.value = res.symbol
-  store.commit('setSymbol', res.symbol)
+  store.setSymbol(res.symbol)
 })
 </script>
 

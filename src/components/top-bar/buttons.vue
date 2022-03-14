@@ -2,11 +2,9 @@
 import { watch } from 'vue'
 import { useBoard, useEthers, useWallet, shortenAddress } from 'vue-dapp'
 import { useStore } from '@/store'
-import Constants from '@/common/data/constants'
 import { useRouter } from 'vue-router'
-import { ethers } from 'ethers'
 import i18n from '@/i18n'
-import { NButton, NTag } from 'naive-ui'
+import { NButton } from 'naive-ui'
 
 const { open } = useBoard()
 const { disconnect } = useWallet()
@@ -32,23 +30,15 @@ function toProfile() {
 
 watch(address, async (address) => {
   if (address !== null && address !== undefined && signer.value !== null) {
-    store.commit('setWeb3Address', address)
-    store.commit(
-      'setNFTContract',
-      new ethers.Contract(
-        Constants.CONTRACT_ADDRESS,
-        Constants.CONTRACT_ABI,
-        signer.value
-      )
-    )
+    store.setWeb3Address(address)
   }
 })
 
 watch(isActivated, async (val) => {
   if (val) {
-    store.commit('setTopbarButtonText', shortenAddress(address.value))
+    store.setTopbarButtonText(shortenAddress(address.value))
   } else {
-    store.commit('setTopbarButtonText', i18n.global.t('connect'))
+    store.setTopbarButtonText(i18n.global.t('connect'))
   }
 })
 </script>
@@ -80,7 +70,7 @@ watch(isActivated, async (val) => {
       text-color="#000000"
       round
     >
-      {{ store.state.topbarButtonText }}
+      {{ store.topbarButtonText }}
     </n-button>
   </div>
 </template>

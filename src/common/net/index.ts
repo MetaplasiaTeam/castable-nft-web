@@ -1,7 +1,7 @@
 import { PinIPFS } from '@/types/pin-ipfs'
 import { ethers } from 'ethers'
 import Request from './request'
-import { store } from '@/store'
+import { useStore } from '@/store'
 import axios from 'axios'
 import { NFTInfo } from '@/types/nft-info'
 
@@ -74,8 +74,9 @@ export class Api {
         reject('contract is undefined')
         return
       }
+      const store = useStore()
       contract
-        .getByOwner(store.state.web3address)
+        .getByOwner(store.web3address)
         .then(async (res: NFTInfo[]) => {
           let allNFTInfo: Array<{
             id: number

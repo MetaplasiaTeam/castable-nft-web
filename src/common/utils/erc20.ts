@@ -8,8 +8,7 @@ export default class ERC20Util {
     const store = useStore()
     let dataList: IERC20[] = []
     dataList.push(...ERC20Data.ALL_DATA)
-    dataList.push(...store.state.tokenCache)
-    console.log(dataList)
+    dataList.push(...store.tokenCache)
     let filterData = dataList.filter((data: IERC20) => {
       return data.address == addr
     })
@@ -24,8 +23,7 @@ export default class ERC20Util {
     const store = useStore()
     let dataList: IERC20[] = []
     dataList.push(...ERC20Data.ALL_DATA)
-    dataList.push(...store.state.tokenCache)
-    console.log(dataList)
+    dataList.push(...store.tokenCache)
     let filterData = dataList.filter((data: IERC20) => {
       return data.symbol == symbol
     })
@@ -39,8 +37,7 @@ export default class ERC20Util {
     const store = useStore()
     let dataList: IERC20[] = []
     dataList.push(...ERC20Data.ALL_DATA)
-    dataList.push(...store.state.tokenCache)
-    console.log(dataList)
+    dataList.push(...store.tokenCache)
     let filterData = dataList.filter((data: IERC20) => {
       return data.address == addressOrSymbol || data.symbol == addressOrSymbol
     })
@@ -64,12 +61,12 @@ export default class ERC20Util {
         .then(async () => {
           let symbol: string = await contract.symbol()
           let decimals: number = await contract.decimals()
-          let otherToken = {
-            address: address,
+          let otherToken: IERC20 = {
             symbol: symbol,
+            address: address,
             decimals: decimals,
           }
-          store.commit('addNewTokenCache', otherToken)
+          store.addTokenCache(otherToken)
           resolve(otherToken)
         })
         .catch((err: Error) => {

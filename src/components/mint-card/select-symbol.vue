@@ -34,6 +34,6 @@ function selectSymbol(key: string) {
 
 <template>
   <n-dropdown trigger="click" :options="symbol" @select="selectSymbol">
-    {{ store.state.symbol }}
+    {{ store.symbol }}
   </n-dropdown>
 </template>

@@ -38,7 +38,7 @@ function searchContract() {
         decimals: decimals,
       }
       emitter.emit('searchContractResult', otherToken)
-      store.commit('addNewTokenCache', otherToken)
+      store.addTokenCache(otherToken)
       searching.value = false
       showDialog.value = false
     })

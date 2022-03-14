@@ -28,8 +28,8 @@ onMounted(() => {
 
 function getAllNft() {
   // 检测缓存
-  if (store.state.nftList !== undefined) {
-    nftListData.value = store.state.nftList
+  if (store.nftList !== undefined) {
+    nftListData.value = store.nftList
   }
   if (signer.value !== null) {
     let contract = new ethers.Contract(
@@ -53,7 +53,7 @@ function getAllNft() {
           })
         })
         nftListData.value = tempList
-        store.commit('setNftList', tempList)
+        store.setNftList(tempList)
       })
       .catch((err) => {
         console.log(err)
