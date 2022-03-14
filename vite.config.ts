@@ -47,23 +47,6 @@ export default defineConfig({
       //     }
       //   },
       // },
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (
-              id
-                .toString()
-                .split('node_modules/')[1]
-                .split('/')[0]
-                .includes('pdfjs-dist')
-            ) {
-              return 'pdfjs-dist'
-            } else {
-              return 'wq'
-            }
-          }
-        },
-      },
     },
   },
 })

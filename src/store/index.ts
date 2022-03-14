@@ -13,6 +13,7 @@ export const useStore = defineStore({
     nftList: Array<NFTItemProps>(),
     symbol: 'ETH',
     tokenCache: Array<IERC20>(),
+    currIpfs: 0,
   }),
   actions: {
     setWeb3Address(address: string) {
@@ -29,6 +30,9 @@ export const useStore = defineStore({
     },
     addTokenCache(data: IERC20) {
       this.tokenCache.push(data)
+    },
+    setCurrIpfs(ipfs: number) {
+      this.currIpfs = ipfs
     },
   },
 })

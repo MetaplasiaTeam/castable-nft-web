@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/node": "^17.0.19",
     "axios": "^0.26.0",
+    "axios-retry": "^3.2.4",
     "ethers": "^5.5.4",
     "form-data": "^4.0.0",
     "mitt": "^3.0.0",

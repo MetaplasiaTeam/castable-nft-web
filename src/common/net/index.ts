@@ -4,6 +4,7 @@ import Request from './request'
 import { useStore } from '@/store'
 import axios from 'axios'
 import { NFTInfo } from '@/types/nft-info'
+import axiosRetry from 'axios-retry'
 
 const request = new Request({
   timeout: 30000,
@@ -27,6 +28,12 @@ const request = new Request({
     },
   },
 })
+
+const ipfsNetwork = [
+  'https://ipfs.io/ipfs',
+  'https://gateway.pinata.cloud/ipfs',
+  'https://cloudflare-ipfs.com/ipfs',
+]
 
 export class Api {
   static testApi() {
@@ -88,16 +95,19 @@ export class Api {
             if (ele.uri === '') {
               continue
             }
-            let link = `https://gateway.pinata.cloud/ipfs${ele.uri.substring(
-              ele.uri.lastIndexOf('/'),
-              ele.uri.length
-            )}`
-            let info = await axios.get(link)
+
+            let info = await axios.get(
+              `${ipfsNetwork[window.ipfs]}${ele.uri.substring(
+                ele.uri.lastIndexOf('/'),
+                ele.uri.length
+              )}`
+            )
+
             allNFTInfo.push({
               id: ele.id.toNumber(),
               value: ele.value.toString(),
               addr: ele.addr.toString(),
-              info: await info.data,
+              info: info.data,
             })
           }
           resolve(allNFTInfo)
