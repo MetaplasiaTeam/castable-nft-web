@@ -74,8 +74,8 @@ function getAllNft() {
       <n-spin :show="nftListLoading">
         <div id="nftdiv">
           <nft-item
-            v-for="(item, index) in nftListData"
-            :key="index"
+            v-for="item in nftListData"
+            :key="item.title"
             :tokenId="item.tokenId"
             :imageUrl="item.imageUrl"
             :title="item.title"

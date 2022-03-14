@@ -7,9 +7,6 @@ import inject from '@rollup/plugin-inject'
 export default defineConfig({
   plugins: [vue()],
   assetsInclude: ['src/assets/*'],
-  optimizeDeps: {
-    include: ['vue3-pdfjs', 'pdfjs-dist'],
-  },
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
@@ -20,6 +17,9 @@ export default defineConfig({
       zlib: 'browserify-zlib',
       util: 'util',
     },
+  },
+  optimizeDeps: {
+    exclude: ['@fortawesome/fontawesome-free'],
   },
   base: './',
   server: {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NDropdown, useMessage } from 'naive-ui'
+import { NIcon, NDropdown, useMessage } from 'naive-ui'
 import { useStore } from '@/store'
 import i18n from '@/i18n'
 import emitter from '@/emitter'
@@ -49,7 +49,10 @@ function selectSymbol(key: string) {
 </script>
 
 <template>
-  <n-dropdown trigger="click" :options="symbol" @select="selectSymbol">
-    {{ store.symbol }}
-  </n-dropdown>
+  <div>
+    <i class="fa-solid fa-angle-down" style="margin-right: 8px"></i>
+    <n-dropdown trigger="click" :options="symbol" @select="selectSymbol">
+      {{ store.symbol }}
+    </n-dropdown>
+  </div>
 </template>

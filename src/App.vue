@@ -108,4 +108,9 @@ const darkThemeOverrides: GlobalThemeOverrides = {
 .confirm {
   width: 60%;
 }
+
+* {
+  margin: 0;
+  padding: 0;
+}
 </style>

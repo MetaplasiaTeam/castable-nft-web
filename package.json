@@ -20,9 +20,7 @@
     "vue": "^3.2.25",
     "vue-dapp": "^0.4.7",
     "vue-i18n": "9",
-    "vue-router": "4",
-    "vue3-pdfjs": "^0.1.6",
-    "vuex": "^4.0.2"
+    "vue-router": "4"
   },
   "devDependencies": {
     "@rollup/plugin-inject": "^4.0.4",
