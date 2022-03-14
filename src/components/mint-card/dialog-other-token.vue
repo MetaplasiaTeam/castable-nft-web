@@ -26,6 +26,7 @@ function searchContract() {
   searching.value = true
 
   let testSymbol = ERC20Util.getSymbol(address.value)
+  console.log(testSymbol)
   if (testSymbol !== undefined) {
     let otherToken = {
       address: address.value,
@@ -33,6 +34,8 @@ function searchContract() {
       decimals: ERC20Util.getDecimals(address.value)!,
     }
     emitter.emit('searchContractResult', otherToken)
+    searching.value = false
+    showDialog.value = false
     return
   }
 

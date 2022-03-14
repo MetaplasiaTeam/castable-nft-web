@@ -14,8 +14,24 @@ let symbol = [
     key: 'ETH',
   },
   {
-    label: 'DAI',
-    key: 'DAI',
+    label: 'USDT',
+    key: 'USDT',
+  },
+  {
+    label: 'USDC',
+    key: 'USC',
+  },
+  {
+    label: 'AAVE',
+    key: 'AAVE',
+  },
+  {
+    label: 'UNI',
+    key: 'UNI',
+  },
+  {
+    label: 'LINK',
+    key: 'LINK',
   },
   {
     label: 'Other Token',

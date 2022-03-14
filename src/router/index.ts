@@ -9,7 +9,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'home',
     component: Home,
     meta: {
-      title: 'Castable NFT',
+      title: 'CastableNFT',
       keepAlive: true,
     },
   },
@@ -17,7 +17,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/profile',
     name: 'profile',
     meta: {
-      title: 'Castable NFT | Profile',
+      title: 'CastableNFT | Profile',
     },
     component: () => import('@page/profile/index.vue'),
     beforeEnter: (to, from, next) => {

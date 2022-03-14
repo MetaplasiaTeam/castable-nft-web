@@ -496,7 +496,7 @@ emitter.on('searchContractResult', (res) => {
             v-model:value="nftPrice"
             type="text"
             maxlength="8"
-            :placeholder="$t('home.input.placeholder_2', [symbol])"
+            :placeholder="$t('home.input.placeholder_2', ['ETH'])"
             style="width: 100%; margin-right: 0"
           >
             <template #suffix> <select-symbol /> </template
