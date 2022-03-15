@@ -16,7 +16,6 @@
     "ethers": "^5.5.4",
     "form-data": "^4.0.0",
     "mitt": "^3.0.0",
-    "pdfjs-dist": "^2.13.216",
     "pinia": "^2.0.11",
     "vue": "^3.2.25",
     "vue-dapp": "^0.4.7",
@@ -45,6 +44,7 @@
     "util": "^0.12.4",
     "vfonts": "^0.0.3",
     "vite": "^2.8.5",
+    "vite-plugin-compression": "^0.5.1",
     "vue-cli-plugin-i18n": "~2.3.1",
     "vue-tsc": "^0.29.8"
   },
