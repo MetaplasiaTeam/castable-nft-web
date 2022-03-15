@@ -2,6 +2,15 @@
 import TopBar from '@/components/top-bar/topbar.vue'
 import { MintCard } from '@/components'
 import { NLayout, NLayoutHeader, NLayoutContent } from 'naive-ui'
+import { onMounted, ref } from 'vue'
+
+let show = ref(false)
+
+onMounted(() => {
+  setTimeout(function () {
+    show.value = true
+  }, 500)
+})
 </script>
 
 <template>
@@ -9,8 +18,11 @@ import { NLayout, NLayoutHeader, NLayoutContent } from 'naive-ui'
     <n-layout-header>
       <top-bar ref="connect" />
     </n-layout-header>
-    <n-layout-content id="mint-app">
-      <mint-card></mint-card>
+    <n-layout-content
+      class="animate__animated animate__zoomInDown"
+      id="mint-app"
+    >
+      <mint-card />
     </n-layout-content>
   </n-layout>
 </template>

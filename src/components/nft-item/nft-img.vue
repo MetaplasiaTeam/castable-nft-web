@@ -16,7 +16,6 @@ div {
   width: 275px;
   height: 275px;
   vertical-align: middle;
-  overflow: hidden;
   border-radius: 25px;
 }
 

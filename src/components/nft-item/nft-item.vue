@@ -62,8 +62,8 @@ function toInfo() {
     <nft-image @click="toInfo" :image-url="imageUrl" />
     <div id="content">
       <a>{{ title }}#{{ tokenId?.toString() }}</a>
-      <a>Prize</a>
-      <a>{{ value }} {{ symbol }}</a>
+      <a style="font-size: 12px; color: var(--color-text-emphasize)">Prize</a>
+      <a style="font-size: 14px">{{ value }} {{ symbol }}</a>
     </div>
     <div id="buttons">
       <n-button
@@ -95,8 +95,9 @@ function toInfo() {
   />
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 #nft-card {
+  overflow: hidden;
   border-radius: 25px;
   border-style: solid;
   border-width: 0.5px;
@@ -106,6 +107,16 @@ function toInfo() {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02), 0 2px 4px rgba(0, 0, 0, 0.02),
     0 4px 8px rgba(0, 0, 0, 0.02), 0 8px 16px rgba(0, 0, 0, 0.02),
     0 16px 32px rgba(0, 0, 0, 0.02), 0 32px 64px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s;
+  &:hover {
+    -webkit-transform: scale(1.05);
+    -ms-transform: scale(1.05);
+    transform: scale(1.05);
+    zoom: 1.05;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 2px 4px rgba(0, 0, 0, 0.03),
+      0 4px 8px rgba(0, 0, 0, 0.03), 0 8px 16px rgba(0, 0, 0, 0.03),
+      0 16px 32px rgba(0, 0, 0, 0.03), 0 32px 64px rgba(0, 0, 0, 0.03);
+  }
 }
 
 #content {
@@ -126,6 +137,9 @@ function toInfo() {
 #giveaway {
   width: 40%;
   color: var(--color-text);
+  &:hover {
+    color: var(--color-text-emphasize);
+  }
 }
 
 #burn {

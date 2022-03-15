@@ -20,14 +20,14 @@ let bodyStyle = {
   width: '600px',
 }
 let showDialog = ref(false)
-let burndialog = ref(false)
+let buring = ref(false)
 
 function burn() {
   if (signer.value === null) {
     message.error(i18n.global.t('error.please_connect_web3'))
     return
   }
-  burndialog.value = true
+  buring.value = true
 
   let trueSigner = signer.value
 
@@ -48,17 +48,17 @@ function burn() {
           .then(() => {
             message.success(i18n.global.t('sucess.burn_success'))
             showDialog.value = false
-            burndialog.value = false
+            buring.value = false
             emitter.emit('refreshNftList', true)
           })
           .catch((err: Error) => {
             message.error(err.message)
-            burndialog.value = false
+            buring.value = false
           })
       })
       .catch((err: Error) => {
         message.error(err.message)
-        burndialog.value = false
+        buring.value = false
       })
   })
 }
@@ -100,10 +100,9 @@ defineExpose({
     >
       <n-button
         class="cancle"
-        color="#E1E4E6"
         ghost
         round
-        :disabled="burndialog"
+        :disabled="buring"
         @click="showDialog = false"
       >
         {{ $t('cancle') }}</n-button
@@ -113,7 +112,7 @@ defineExpose({
         color="#F85A02"
         round
         text-color="#fff"
-        :loading="burndialog"
+        :loading="buring"
         type="primary"
         @click="burn"
         >{{ $t('nft_item.burn') }}</n-button

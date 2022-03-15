@@ -59,11 +59,13 @@ function languageSelect(key: string) {
       >BSC TEST</a
     >
     <buttons id="nomal-buttons" />
-    <n-popover trigger="click">
+    <n-popover trigger="click" raw :show-arrow="false" :duration="5000">
       <template #trigger>
         <button id="menu" class="nft-button" text-color="#fff">Menu</button>
       </template>
-      <buttons />
+      <div id="button_menu_div">
+        <buttons />
+      </div>
     </n-popover>
   </div>
 </template>
@@ -112,6 +114,19 @@ function languageSelect(key: string) {
 #nomal-buttons {
   display: flex;
   justify-content: center;
+}
+
+#button_menu_div {
+  padding: 16px;
+  display: block;
+  border-radius: 25px;
+  background-color: #19191a;
+}
+
+@media screen and (min-width: 678px) {
+  #button_menu_div {
+    display: none;
+  }
 }
 
 @media screen and (max-height: 900px) {

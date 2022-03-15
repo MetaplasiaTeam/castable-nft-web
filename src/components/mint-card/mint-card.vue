@@ -26,6 +26,7 @@ import { useStore } from '@/store'
 import DialogOtherToken from './dialog-other-token.vue'
 import ERC20Util from '@/common/utils/erc20'
 import { PinIPFS } from '@/types/pin-ipfs'
+import 'animate.css'
 
 let message = useMessage()
 const store = useStore()

@@ -4,7 +4,6 @@ import Request from './request'
 import { useStore } from '@/store'
 import axios from 'axios'
 import { NFTInfo } from '@/types/nft-info'
-import axiosRetry from 'axios-retry'
 
 const request = new Request({
   timeout: 30000,
@@ -102,6 +101,10 @@ export class Api {
                 ele.uri.length
               )}`
             )
+
+            if (info.status !== 200) {
+              continue
+            }
 
             allNFTInfo.push({
               id: ele.id.toNumber(),

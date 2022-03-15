@@ -53,10 +53,11 @@ const darkThemeOverrides: GlobalThemeOverrides = {
   <vdapp-board />
 </template>
 
-<style>
+<style lang="scss">
 :root {
   --color-background: #19191a;
   --color-card-background: #ffffff;
+  --color-card-hover: #f5f5f5;
   --color-text: #515151;
   --color-text-emphasize: #333333;
   --color-text-lighter: rgba(0, 0, 0, 0.4);
@@ -69,11 +70,12 @@ const darkThemeOverrides: GlobalThemeOverrides = {
 
 @media screen and (prefers-color-scheme: dark) {
   :root {
-    --color-text: rgba(255, 255, 255, 0.6);
+    --color-text: rgba(255, 255, 255, 0.8);
     --color-text-emphasize: #eeeeee;
     --color-text-lighter: rgba(255, 255, 255, 0.4);
     --color-text-solight: rgba(255, 255, 255, 0.16);
     --color-card-background: #303030;
+    --color-card-hover: #404040;
     --color-background: #19191a;
     --color-hint: #202020;
     --color-background-inner: rgba(hexToRGB(#19191a), 0.8);
@@ -103,6 +105,9 @@ const darkThemeOverrides: GlobalThemeOverrides = {
   width: 40%;
   margin-right: 16px;
   color: var(--color-text);
+  &:hover {
+    color: var(--color-text-emphasize);
+  }
 }
 
 .confirm {

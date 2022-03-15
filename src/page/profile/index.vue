@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import { onMounted, ref } from '@vue/runtime-dom'
 import TopBar from '@/components/top-bar/topbar.vue'
-import { NLayout, NLayoutHeader, NLayoutContent, NSpin } from 'naive-ui'
-import { NftItem, NFTItemProps } from '@/components'
+import {
+  NLayout,
+  NLayoutHeader,
+  NLayoutContent,
+  NSpin,
+  NBackTop,
+} from 'naive-ui'
+import { NftItem, NFTItemProps, NftItemLoading } from '@/components'
 import { useStore } from '@/store'
 import { Api } from '@/common/net'
 import { useEthers } from 'vue-dapp'
@@ -13,12 +19,11 @@ import emitter from '@/emitter'
 const store = useStore()
 const { signer } = useEthers()
 
-let nftListLoading = ref(false)
+let loadError = ref(false)
 let nftListData = ref(Array<NFTItemProps>())
 
 onMounted(() => {
   getAllNft()
-  nftListLoading.value = true
   emitter.on('refreshNftList', (val) => {
     if (val) {
       getAllNft()
@@ -31,6 +36,7 @@ function getAllNft() {
   if (store.nftList !== undefined) {
     nftListData.value = store.nftList
   }
+  loadError.value = false
   if (signer.value !== null) {
     let contract = new ethers.Contract(
       Constants.CONTRACT_ADDRESS,
@@ -54,13 +60,13 @@ function getAllNft() {
         })
         nftListData.value = tempList
         store.setNftList(tempList)
+        store.setShowNftSkeleton(false)
       })
       .catch((err) => {
         console.log(err)
+        loadError.value = true
       })
-      .finally(() => {
-        nftListLoading.value = false
-      })
+      .finally(() => {})
   }
 }
 </script>
@@ -70,9 +76,36 @@ function getAllNft() {
     <n-layout-header>
       <top-bar />
     </n-layout-header>
-    <n-layout-content>
-      <n-spin :show="nftListLoading">
+    <n-layout-content
+      style="
+        background-color: var(--color-card-background);
+        border-top-left-radius: 25px;
+        border-top-right-radius: 25px;
+      "
+    >
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+        "
+      >
+        <div
+          v-if="loadError"
+          id="refresh"
+          class="animate__animated animate__pulse"
+          @click="getAllNft"
+        >
+          <i class="fa-solid fa-arrow-rotate-right"></i> Refresh
+        </div>
         <div id="nftdiv">
+          <nft-item-loading
+            v-if="store.showNftSkeleton"
+            v-for="item in [0, 1, 2, 3, 4, 5]"
+            :error="loadError"
+            :key="item"
+          />
           <nft-item
             v-for="item in nftListData"
             :key="item.title"
@@ -82,24 +115,38 @@ function getAllNft() {
             :price="item.price"
             :addr="item.addr"
           ></nft-item>
+          <n-back-top :right="100" :visibility-height="300"> test </n-back-top>
         </div>
-      </n-spin>
+      </div>
     </n-layout-content>
   </n-layout>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 #nftdiv {
   background-color: var(--color-card-background);
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   padding-top: 5vh;
   padding-left: 10vw;
   padding-right: 10vw;
   padding-bottom: 5vh;
-  border-top-left-radius: 25px;
-  border-top-right-radius: 25px;
+  justify-content: center;
+}
+
+#refresh {
+  margin-top: 16px;
+  border-radius: 25px;
+  margin-bottom: 32px;
+  width: 20%;
+  padding: 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02), 0 2px 4px rgba(0, 0, 0, 0.02),
+    0 4px 8px rgba(0, 0, 0, 0.02), 0 8px 16px rgba(0, 0, 0, 0.02),
+    0 16px 32px rgba(0, 0, 0, 0.02), 0 32px 64px rgba(0, 0, 0, 0.02);
+  &:hover {
+    cursor: pointer;
+    background-color: var(--color-card-hover);
+  }
 }
 
 @media screen and (max-width: 1080px) {

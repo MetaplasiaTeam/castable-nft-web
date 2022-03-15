@@ -85,7 +85,8 @@ watch(isActivated, async (val) => {
   background: linear-gradient(110deg, #f7ffff, #8edbfd, #f85a02);
 }
 #pdf {
-  background-image: linear-gradient(#19191a, #19191a);
+  background-image: linear-gradient(#19191a, #19191a),
+    linear-gradient(#7f8fa6, #7f8fa6);
 }
 .nft-button {
   border: none;
@@ -107,7 +108,7 @@ watch(isActivated, async (val) => {
   margin-right: 18px;
 }
 
-@media screen and (width<678px) {
+@media screen and (max-width: 768px) {
   #buttons {
     background: #19191a;
     flex-direction: column;
