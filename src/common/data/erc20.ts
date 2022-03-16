@@ -1,4 +1,11 @@
 export class ERC20Data {
+  // test value
+  static DAI_TEST: IERC20 = {
+    symbol: 'DAI TEST',
+    address: '0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867',
+    decimals: 18,
+  }
+
   static ETH: IERC20 = {
     symbol: 'ETH',
     address: '0x0000000000000000000000000000000000000000',
@@ -468,6 +475,7 @@ export class ERC20Data {
     ERC20Data.FUN,
     ERC20Data.USDC,
     ERC20Data.GRT,
+    ERC20Data.DAI_TEST,
   ]
 }
 

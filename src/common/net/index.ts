@@ -94,24 +94,25 @@ export class Api {
             if (ele.uri === '') {
               continue
             }
+            try {
+              let info = await axios.get(
+                `${
+                  ipfsNetwork[
+                    window.ipfs
+                  ]
+                }${ele.uri.substring(ele.uri.lastIndexOf('/'), ele.uri.length)}`
+              )
 
-            let info = await axios.get(
-              `${ipfsNetwork[window.ipfs]}${ele.uri.substring(
-                ele.uri.lastIndexOf('/'),
-                ele.uri.length
-              )}`
-            )
-
-            if (info.status !== 200) {
+              allNFTInfo.push({
+                id: ele.id.toNumber(),
+                value: ele.value.toString(),
+                addr: ele.addr.toString(),
+                info: info.data,
+              })
+            } catch (e) {
+              console.log(1)
               continue
             }
-
-            allNFTInfo.push({
-              id: ele.id.toNumber(),
-              value: ele.value.toString(),
-              addr: ele.addr.toString(),
-              info: info.data,
-            })
           }
           resolve(allNFTInfo)
         })

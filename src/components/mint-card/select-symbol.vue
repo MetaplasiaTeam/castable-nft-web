@@ -4,6 +4,7 @@ import { useStore } from '@/store'
 import i18n from '@/i18n'
 import emitter from '@/emitter'
 import { useEthers } from 'vue-dapp'
+import Constants from '@/common/data/constants'
 const store = useStore()
 const { signer } = useEthers()
 const message = useMessage()
@@ -38,6 +39,15 @@ let symbol = [
     key: 'Other Token',
   },
 ]
+
+if (
+  Constants.CONTRACT_ADDRESS === '0xb55C74905572A47DE02167D19687d495Fc2C3F1b'
+) {
+  symbol.push({
+    label: 'DAI(test)',
+    key: 'DAI TEST',
+  })
+}
 
 function selectSymbol(key: string) {
   if (signer.value === null) {

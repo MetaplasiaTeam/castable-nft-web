@@ -27,6 +27,12 @@ import DialogOtherToken from './dialog-other-token.vue'
 import ERC20Util from '@/common/utils/erc20'
 import { PinIPFS } from '@/types/pin-ipfs'
 import 'animate.css'
+import {
+  useMintSingle,
+  useMintMultiple,
+  useMintSingleERC20,
+  useMintMultipleERC20,
+} from './use-mint'
 
 let message = useMessage()
 const store = useStore()
@@ -87,26 +93,52 @@ function mint() {
   console.log(pinJson)
   // 开始上传 JSON
   Api.uploadJson(pinJson)
-    .then((res: any) => {
+    .then(async (res: any) => {
       console.log(res)
       jsonUrl.value = `ipfs://${res.IpfsHash}`
-      if (bulk.value) {
-        // 铸造多个
-        if (mintErc20.value) {
-          // erc20
-          mintMultipleERC20()
+      try {
+        if (bulk.value) {
+          // 铸造多个
+          if (mintErc20.value) {
+            // erc20
+            await useMintMultipleERC20(
+              { address: erc20Address },
+              { decimals: erc20Decimals },
+              { jsonUrl: jsonUrl },
+              { price: nftPrice },
+              { amount: amount }
+            )
+          } else {
+            // eth
+            await useMintMultiple(
+              { jsonUrl: jsonUrl },
+              { price: nftPrice },
+              { amount: amount }
+            )
+          }
+          mintSuccess()
         } else {
-          // eth
-          mintMultiple()
+          // 铸造单个
+          if (mintErc20.value) {
+            // erc20
+            lastTokenId.value = await useMintSingleERC20(
+              { address: erc20Address },
+              { decimals: erc20Decimals },
+              { jsonUrl: jsonUrl },
+              { price: nftPrice }
+            )
+          } else {
+            // eth
+            lastTokenId.value = await useMintSingle(
+              { jsonUrl: jsonUrl },
+              { price: nftPrice }
+            )
+          }
+          afterMintDialog.value.show()
+          mintSuccess()
         }
-      } else {
-        if (mintErc20.value) {
-          // erc20
-          mintSingleERC20()
-        } else {
-          // eth
-          mintSingle()
-        }
+      } catch (e) {
+        mintFail(e)
       }
     })
     .catch((err: any) => {
@@ -116,244 +148,15 @@ function mint() {
     })
 }
 
-// 铸造单个
-function mintSingle() {
-  if (signer.value === null) {
-    message.error(i18n.global.t('error.please_connect_web3'))
-    // connect?.value?.connectWeb3()
-    mintIng.value = false
-    return
-  }
-  let contract = new ethers.Contract(
-    Constants.CONTRACT_ADDRESS,
-    Constants.CONTRACT_ABI,
-    signer.value
-  )
-  let mySigner = signer.value
-  contract.estimateGas
-    .mint(jsonUrl.value, 0, {
-      value: ethers.utils.parseEther(nftPrice.value),
-    })
-    .then((gas) => {
-      let contractWithSigner = contract!!.connect(mySigner)
-      contractWithSigner
-        .mint(jsonUrl.value, 0, {
-          gasLimit: gas.add(BigNumber.from(10000)),
-          value: ethers.utils.parseEther(nftPrice.value),
-        })
-        .then((tx: any) => {
-          // 等待链上执行完成
-          tx.wait()
-            .then((res: any) => {
-              lastTokenId.value = parseInt(
-                (res.events[0].args[2] as BigNumber).toString()
-              )
-              message.success(i18n.global.t('sucess.mint_success'))
-              afterMintDialog.value.show()
-              mintIng.value = false
-            })
-            .catch((err: Error) => {
-              message.error(err.message)
-              mintIng.value = false
-            })
-        })
-        .catch((err: Error) => {
-          message.error(err.message)
-          mintIng.value = false
-        })
-    })
+function mintSuccess() {
+  message.success(i18n.global.t('sucess.mint_success'))
+  mintIng.value = false
 }
 
-// 铸造多个
-function mintMultiple() {
-  if (signer.value === null) {
-    message.error(i18n.global.t('error.please_connect_web3'))
-    // connect?.value?.connectWeb3()
-    mintIng.value = false
-    return
-  }
-  let contract = new ethers.Contract(
-    Constants.CONTRACT_ADDRESS,
-    Constants.CONTRACT_ABI,
-    signer.value
-  )
-  let mySigner = signer.value
-
-  contract.estimateGas
-    .mintAvg(jsonUrl.value, amount.value, 0, {
-      value: ethers.utils.parseEther(nftPrice.value),
-    })
-    .then((gas) => {
-      let contractWithSigner = contract!!.connect(mySigner)
-      contractWithSigner
-        .mintAvg(jsonUrl.value, amount.value, 0, {
-          gasLimit: gas.add(BigNumber.from(10000)),
-          value: ethers.utils.parseEther(nftPrice.value),
-        })
-        .then((tx: any) => {
-          // 等待链上执行完成
-          tx.wait()
-            .then((res: any) => {
-              lastTokenId.value = parseInt(
-                (res.events[0].args[2] as BigNumber).toString()
-              )
-              message.success(i18n.global.t('sucess.mint_success'))
-              afterMintDialog.value.show()
-              mintIng.value = false
-            })
-            .catch((err: Error) => {
-              message.error(err.message)
-              console.log(err)
-              mintIng.value = false
-            })
-        })
-        .catch((err: Error) => {
-          message.error(err.message)
-          console.log(err)
-          mintIng.value = false
-        })
-    })
-}
-
-// 铸造单个 ERC20
-function mintSingleERC20() {
-  if (signer.value === null) {
-    return
-  }
-  // 代币合约
-  let _erc20Contract = new ethers.Contract(
-    erc20Address.value,
-    ERC20.abi,
-    signer.value
-  )
-  _erc20Contract.estimateGas
-    .approve(
-      Constants.CONTRACT_ADDRESS,
-      BigNumber.from(parseFloat(nftPrice.value) * 10 ** erc20Decimals.value)
-    )
-    .then(async (gas) => {
-      // 允许调用资产
-      let tx = await _erc20Contract.approve(
-        Constants.CONTRACT_ADDRESS,
-        BigNumber.from(parseFloat(nftPrice.value) * 10 ** erc20Decimals.value),
-        {
-          gasLimit: gas.add(BigNumber.from(10000)),
-        }
-      )
-      let res = await tx.wait()
-      if (res && signer.value !== null) {
-        // 开始铸造
-        let _contract = new ethers.Contract(
-          Constants.CONTRACT_ADDRESS,
-          Constants.CONTRACT_ABI,
-          signer.value
-        )
-        let gas = await _contract.estimateGas.mintByERC20(
-          erc20Address.value,
-          BigNumber.from(
-            parseFloat(nftPrice.value) * 10 ** erc20Decimals.value
-          ),
-          jsonUrl.value,
-          0
-        )
-        _contract
-          .mintByERC20(
-            erc20Address.value,
-            BigNumber.from(
-              parseFloat(nftPrice.value) * 10 ** erc20Decimals.value
-            ),
-            jsonUrl.value,
-            0,
-            {
-              gasLimit: gas.add(BigNumber.from(10000)),
-            }
-          )
-          .then((tx: any) => {
-            tx.wait().then((res: any) => {
-              message.success(i18n.global.t('sucess.mint_success'))
-              mintIng.value = false
-            })
-          })
-      }
-    })
-    .catch((err: Error) => {
-      message.error(err.message)
-      mintIng.value = false
-    })
-}
-
-// 铸造多个 ERC20
-function mintMultipleERC20() {
-  if (signer.value === null) {
-    return
-  }
-  // 代币合约
-  let _erc20Contract = new ethers.Contract(
-    erc20Address.value,
-    ERC20.abi,
-    signer.value
-  )
-  _erc20Contract.estimateGas
-    .approve(
-      Constants.CONTRACT_ADDRESS,
-      BigNumber.from(
-        parseFloat(nftPrice.value) * 10 ** erc20Decimals.value
-      ).mul(amount.value)
-    )
-    .then(async (gas) => {
-      // 允许调用资产
-      let tx = await _erc20Contract.approve(
-        Constants.CONTRACT_ADDRESS,
-        BigNumber.from(
-          parseFloat(nftPrice.value) * 10 ** erc20Decimals.value
-        ).mul(amount.value),
-        {
-          gasLimit: gas.add(BigNumber.from(10000)),
-        }
-      )
-      let res = await tx.wait()
-      if (res && signer.value !== null) {
-        // 开始铸造
-        let _contract = new ethers.Contract(
-          Constants.CONTRACT_ADDRESS,
-          Constants.CONTRACT_ABI,
-          signer.value
-        )
-        let gas = await _contract.estimateGas.mintByERC20Avg(
-          erc20Address.value,
-          jsonUrl.value,
-          BigNumber.from(
-            parseFloat(nftPrice.value) * 10 ** erc20Decimals.value
-          ).mul(amount.value),
-          amount.value,
-          0
-        )
-        _contract
-          .mintByERC20Avg(
-            erc20Address.value,
-            jsonUrl.value,
-            BigNumber.from(
-              parseFloat(nftPrice.value) * 10 ** erc20Decimals.value
-            ).mul(amount.value),
-            amount.value,
-            0,
-            {
-              gasLimit: gas.add(BigNumber.from(10000)),
-            }
-          )
-          .then((tx: any) => {
-            tx.wait().then((res: any) => {
-              message.success(i18n.global.t('sucess.mint_success'))
-              mintIng.value = false
-            })
-          })
-      }
-    })
-    .catch((err: Error) => {
-      message.error(err.message)
-      console.log(err.message)
-      mintIng.value = false
-    })
+function mintFail(e: any) {
+  console.log(e)
+  message.error(e.message)
+  mintIng.value = false
 }
 
 async function checkImage(data: {
