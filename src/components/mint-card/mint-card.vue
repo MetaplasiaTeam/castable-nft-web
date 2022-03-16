@@ -14,16 +14,16 @@ import {
   useMessage,
   UploadFileInfo,
 } from 'naive-ui'
-import { useEthers, ERC20 } from 'vue-dapp'
-import { BigNumber, ethers } from 'ethers'
+import { useEthers } from 'vue-dapp'
+import { ethers } from 'ethers'
 import { Api } from '@/common/net'
-import Constants from '@/common/data/constants'
 import i18n from '@/i18n'
 import util from '@/common/utils/common-util'
 import SelectSymbol from './select-symbol.vue'
 import emitter from '@/emitter'
 import { useStore } from '@/store'
 import DialogOtherToken from './dialog-other-token.vue'
+import DialogAfterMint from './dialog-after-mint.vue'
 import ERC20Util from '@/common/utils/erc20'
 import { PinIPFS } from '@/types/pin-ipfs'
 import 'animate.css'
@@ -341,7 +341,7 @@ emitter.on('searchContractResult', (res) => {
     </div>
   </n-spin>
   <dialog-other-token ref="otherTokenDialog" />
-  <!-- <dialog-after-mint ref="afterMintDialog" /> -->
+  <dialog-after-mint ref="afterMintDialog" />
 </template>
 
 <style scoped>

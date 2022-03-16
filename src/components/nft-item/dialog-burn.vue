@@ -43,7 +43,6 @@ function burn() {
         gasLimit: gas,
       })
       .then((tx: any) => {
-        console.log(tx)
         tx.wait()
           .then(() => {
             message.success(i18n.global.t('sucess.burn_success'))

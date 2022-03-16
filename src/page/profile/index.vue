@@ -5,7 +5,6 @@ import {
   NLayout,
   NLayoutHeader,
   NLayoutContent,
-  NSpin,
   NBackTop,
 } from 'naive-ui'
 import { NftItem, NFTItemProps, NftItemLoading } from '@/components'
@@ -15,6 +14,7 @@ import { useEthers } from 'vue-dapp'
 import { ethers } from 'ethers'
 import Constants from '@/common/data/constants'
 import emitter from '@/emitter'
+import IPFSUtil from '@/common/utils/ipfs'
 
 const store = useStore()
 const { signer } = useEthers()
@@ -49,9 +49,8 @@ function getAllNft() {
         nftInfoList.forEach((element) => {
           tempList.push({
             tokenId: element.id,
-            imageUrl: `https://cloudflare-ipfs.com/ipfs${element.info.image.substring(
-              element.info.image.lastIndexOf('/'),
-              element.info.image.length
+            imageUrl: `https://cloudflare-ipfs.com/ipfs/${IPFSUtil.getHash(
+              element.info.image
             )}`,
             addr: element.addr,
             title: element.info.name,

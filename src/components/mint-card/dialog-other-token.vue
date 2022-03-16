@@ -26,7 +26,6 @@ function searchContract() {
   searching.value = true
 
   let testSymbol = ERC20Util.getSymbol(address.value)
-  console.log(testSymbol)
   if (testSymbol !== undefined) {
     let otherToken = {
       address: address.value,

@@ -4,6 +4,7 @@ import Request from './request'
 import { useStore } from '@/store'
 import axios from 'axios'
 import { NFTInfo } from '@/types/nft-info'
+import IPFSUtil from '../utils/ipfs'
 
 const request = new Request({
   timeout: 30000,
@@ -27,12 +28,6 @@ const request = new Request({
     },
   },
 })
-
-const ipfsNetwork = [
-  'https://ipfs.io/ipfs',
-  'https://gateway.pinata.cloud/ipfs',
-  'https://cloudflare-ipfs.com/ipfs',
-]
 
 export class Api {
   static testApi() {
@@ -72,6 +67,26 @@ export class Api {
     })
   }
 
+  // 暂不使用
+  static async getIpfsImgRace(url: string) {
+    let hash = IPFSUtil.getHash(url)
+
+    let imgBlob = await Promise.race([
+      axios.get(`${IPFSUtil.ipfsGateway[0]}/${hash}`, {
+        responseType: 'blob',
+      }),
+      axios.get(`${IPFSUtil.ipfsGateway[1]}/${hash}`, {
+        responseType: 'blob',
+      }),
+      axios.get(`${IPFSUtil.ipfsGateway[2]}/${hash}`, {
+        responseType: 'blob',
+      }),
+    ])
+
+    let imgUrl = URL.createObjectURL(imgBlob.data)
+    console.log(imgUrl)
+  }
+
   static getAllNftInfo(
     contract: ethers.Contract | undefined
   ): Promise<{ id: number; value: string; addr: string; info: PinIPFS }[]> {
@@ -95,13 +110,13 @@ export class Api {
               continue
             }
             try {
-              let info = await axios.get(
-                `${
-                  ipfsNetwork[
-                    window.ipfs
-                  ]
-                }${ele.uri.substring(ele.uri.lastIndexOf('/'), ele.uri.length)}`
-              )
+              let hash = IPFSUtil.getHash(ele.uri)
+
+              let info = await Promise.race([
+                axios.get(`${IPFSUtil.ipfsGateway[0]}/${hash}`),
+                axios.get(`${IPFSUtil.ipfsGateway[1]}/${hash}`),
+                axios.get(`${IPFSUtil.ipfsGateway[2]}/${hash}`),
+              ])
 
               allNFTInfo.push({
                 id: ele.id.toNumber(),
@@ -110,7 +125,6 @@ export class Api {
                 info: info.data,
               })
             } catch (e) {
-              console.log(1)
               continue
             }
           }

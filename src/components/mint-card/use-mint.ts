@@ -140,7 +140,6 @@ export function useMintSingleERC20(
         )
 
       let result = await tx.wait()
-      console.log(result)
       let tokenId = parseInt((result.events[2].args[2] as BigNumber).toString())
 
       resolve(tokenId)
@@ -213,7 +212,6 @@ export function useMintMultipleERC20(
         )
 
       let result = await tx.wait()
-      console.log(result)
       let tokenId = parseInt((result.events[0].args[2] as BigNumber).toString())
 
       resolve(tokenId)
