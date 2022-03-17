@@ -71,15 +71,16 @@ async function switchNetwork() {
       chainId: '0x61',
       chainName: 'BSC Testnet',
       nativeCurrency: {
-        symbol: 'BSC',
+        symbol: 'tBNB',
         decimals: 18,
       },
-      rpcUrls: ['https://testnet.bsc.network'],
-      blockExplorerUrls: ['https://testnet.bsc.network'],
+      rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+      blockExplorerUrls: ['https://testnet.bscscan.com'],
     })
-    Metamask.switchChain(provider.value as MetaMaskProvider, 0x61)
+    await Metamask.switchChain(provider.value as MetaMaskProvider, 0x61)
+    Metamask.connect()
   } else {
-    Metamask.addChain(provider.value as MetaMaskProvider, {
+    await Metamask.addChain(provider.value as MetaMaskProvider, {
       chainId: '0x01',
       chainName: 'Ethereum Mainnet',
       nativeCurrency: {
@@ -89,7 +90,8 @@ async function switchNetwork() {
       rpcUrls: ['https://mainnet.infura.io/v3/'],
       blockExplorerUrls: ['https://etherscan.io'],
     })
-    Metamask.switchChain(provider.value as MetaMaskProvider, 0x01)
+    await Metamask.switchChain(provider.value as MetaMaskProvider, 0x01)
+    Metamask.connect()
   }
 }
 </script>
