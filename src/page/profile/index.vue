@@ -6,6 +6,7 @@ import {
   NLayoutHeader,
   NLayoutContent,
   NBackTop,
+  NResult,
 } from 'naive-ui'
 import { NftItem, NFTItemProps, NftItemLoading } from '@/components'
 import { useStore } from '@/store'
@@ -21,6 +22,7 @@ const { signer } = useEthers()
 
 let loadError = ref(false)
 let nftListData = ref(Array<NFTItemProps>())
+let blankData = ref(false)
 
 onMounted(() => {
   getAllNft()
@@ -37,6 +39,12 @@ function getAllNft() {
     nftListData.value = store.nftList
   }
   loadError.value = false
+
+  if (blankData.value) {
+    store.setShowNftSkeleton(true)
+    blankData.value = false
+  }
+
   if (signer.value !== null) {
     let contract = new ethers.Contract(
       Constants.CONTRACT_ADDRESS,
@@ -45,6 +53,11 @@ function getAllNft() {
     )
     Api.getAllNftInfo(contract)
       .then((nftInfoList) => {
+        if (nftInfoList.length === 0) {
+          blankData.value = true
+          store.setShowNftSkeleton(false)
+          return
+        }
         let tempList: NFTItemProps[] = []
         nftInfoList.forEach((element) => {
           tempList.push({
@@ -91,13 +104,20 @@ function getAllNft() {
         "
       >
         <div
-          v-if="loadError"
+          v-if="loadError || blankData"
           id="refresh"
           class="animate__animated animate__pulse"
           @click="getAllNft"
         >
           <i class="fa-solid fa-arrow-rotate-right"></i> Refresh
         </div>
+        <n-result
+          v-if="blankData"
+          style="margin-top: 100px; height: 60vh"
+          status="info"
+          title="Can't find your NFT"
+        >
+        </n-result>
         <div id="nftdiv">
           <nft-item-loading
             v-if="store.showNftSkeleton"

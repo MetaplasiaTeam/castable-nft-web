@@ -20,7 +20,7 @@ let symbol = [
   },
   {
     label: 'USDC',
-    key: 'USC',
+    key: 'USDC',
   },
   {
     label: 'AAVE',

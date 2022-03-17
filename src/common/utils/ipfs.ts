@@ -11,7 +11,7 @@ export default class IPFSUtil {
       let hash = _url.pathname.slice(_url.pathname.indexOf('/ipfs/') + 6)
       return hash
     } else {
-      return _url.hostname + _url.pathname
+      return url.slice(7)
     }
   }
 }

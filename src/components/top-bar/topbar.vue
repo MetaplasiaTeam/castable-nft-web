@@ -3,30 +3,16 @@ import { defineExpose, onMounted } from '@vue/runtime-dom'
 import buttons from './buttons.vue'
 import i18n from '@/i18n'
 import { NPopover } from 'naive-ui'
-import { useStore } from '@/store'
-import { useRouter } from 'vue-router'
 import { useBoard, useEthers, useWallet } from 'vue-dapp'
 import Constants from '@/common/data/constants'
 const { open } = useBoard()
 const { disconnect } = useWallet()
-const { address, isActivated, signer, provider } = useEthers()
-const store = useStore()
-const router = useRouter()
+const { isActivated } = useEthers()
 
 onMounted(() => {
   i18n.global.locale = 'en'
 })
 
-let language = [
-  {
-    label: '简体中文',
-    key: 'zh-CN',
-  },
-  {
-    label: 'English',
-    key: 'en',
-  },
-]
 
 async function connectWeb3() {
   if (isActivated.value) {
@@ -40,9 +26,6 @@ defineExpose({
   connectWeb3,
 })
 
-function languageSelect(key: string) {
-  i18n.global.locale = key
-}
 </script>
 
 <template>

@@ -1,14 +1,23 @@
 <script setup lang="ts">
 import { watch } from 'vue'
-import { useBoard, useEthers, useWallet, shortenAddress } from 'vue-dapp'
+import {
+  useBoard,
+  useEthers,
+  useWallet,
+  shortenAddress,
+  Metamask,
+  MetaMaskProvider,
+} from 'vue-dapp'
 import { useStore } from '@/store'
 import { useRouter } from 'vue-router'
 import i18n from '@/i18n'
 import { NButton } from 'naive-ui'
+import { Contract } from 'ethers'
+import Constants from '@/common/data/constants'
 
 const { open } = useBoard()
-const { disconnect } = useWallet()
-const { address, isActivated, signer, provider } = useEthers()
+const { disconnect, provider } = useWallet()
+const { address, isActivated, signer, network } = useEthers()
 const store = useStore()
 const router = useRouter()
 
@@ -37,10 +46,52 @@ watch(address, async (address) => {
 watch(isActivated, async (val) => {
   if (val) {
     store.setTopbarButtonText(shortenAddress(address.value))
+    switchNetwork()
   } else {
     store.setTopbarButtonText(i18n.global.t('connect'))
   }
 })
+
+// chainId: string;
+//     chainName: string;
+//     nativeCurrency: {
+//         name?: string;
+//         symbol: string;
+//         decimals: number;
+//     };
+//     rpcUrls: string[];
+//     blockExplorerUrls?: string[];
+//     iconUrls?: string[];
+
+async function switchNetwork() {
+  if (
+    Constants.CONTRACT_ADDRESS == '0xb55C74905572A47DE02167D19687d495Fc2C3F1b'
+  ) {
+    await Metamask.addChain(provider.value as MetaMaskProvider, {
+      chainId: '0x61',
+      chainName: 'BSC Testnet',
+      nativeCurrency: {
+        symbol: 'BSC',
+        decimals: 18,
+      },
+      rpcUrls: ['https://testnet.bsc.network'],
+      blockExplorerUrls: ['https://testnet.bsc.network'],
+    })
+    Metamask.switchChain(provider.value as MetaMaskProvider, 0x61)
+  } else {
+    Metamask.addChain(provider.value as MetaMaskProvider, {
+      chainId: '0x01',
+      chainName: 'Ethereum Mainnet',
+      nativeCurrency: {
+        symbol: 'ETH',
+        decimals: 18,
+      },
+      rpcUrls: ['https://mainnet.infura.io/v3/'],
+      blockExplorerUrls: ['https://etherscan.io'],
+    })
+    Metamask.switchChain(provider.value as MetaMaskProvider, 0x01)
+  }
+}
 </script>
 
 <template>

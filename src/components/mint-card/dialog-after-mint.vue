@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { NModal, NButton } from 'naive-ui'
 import util from '@/common/utils/common-util'
 
 let bodyStyle = {
