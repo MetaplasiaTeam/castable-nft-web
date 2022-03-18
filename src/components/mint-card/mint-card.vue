@@ -38,14 +38,12 @@ let message = useMessage()
 const store = useStore()
 const { signer } = useEthers()
 
-type MintType = 'ETH' | 'ERC20'
-
 let imageHash = ref('')
 let nftName = ref('')
 let nftPrice = ref('')
 let jsonUrl = ref('')
 let symbol = ref('ETH')
-let mintType: Ref<MintType> = ref('ETH')
+let mintType: 'ETH' | 'ERC20' | 'ERC721' = 'ETH'
 
 // erc20
 let erc20Address = ref('')
@@ -64,6 +62,9 @@ let loading = ref(false)
 let otherTokenDialog = ref<any>(null)
 let afterMintDialog = ref<any>(null)
 
+/**
+ * 铸造 NFT 的函数
+ */
 function mint() {
   if (!uploadSuccess.value) {
     message.error(i18n.global.t('error.please_upload_image'))
@@ -82,7 +83,7 @@ function mint() {
       },
     ],
   }
-  if (mintType.value === 'ERC20') {
+  if (mintType === 'ERC20') {
     pinJson.attributes?.push({
       castable_address: erc20Address.value,
     })
@@ -102,19 +103,15 @@ function mint() {
           if (mintErc20.value) {
             // erc20
             await useMintMultipleERC20(
-              { address: erc20Address },
-              { decimals: erc20Decimals },
-              { jsonUrl: jsonUrl },
-              { price: nftPrice },
-              { amount: amount }
+              erc20Address,
+              erc20Decimals,
+              jsonUrl,
+              nftPrice,
+              amount
             )
           } else {
             // eth
-            await useMintMultiple(
-              { jsonUrl: jsonUrl },
-              { price: nftPrice },
-              { amount: amount }
-            )
+            await useMintMultiple(jsonUrl, nftPrice, amount)
           }
           mintSuccess()
         } else {
@@ -122,17 +119,14 @@ function mint() {
           if (mintErc20.value) {
             // erc20
             lastTokenId.value = await useMintSingleERC20(
-              { address: erc20Address },
-              { decimals: erc20Decimals },
-              { jsonUrl: jsonUrl },
-              { price: nftPrice }
+              erc20Address,
+              erc20Decimals,
+              jsonUrl,
+              nftPrice
             )
           } else {
             // eth
-            lastTokenId.value = await useMintSingle(
-              { jsonUrl: jsonUrl },
-              { price: nftPrice }
-            )
+            lastTokenId.value = await useMintSingle(jsonUrl, nftPrice)
           }
           afterMintDialog.value.show()
           mintSuccess()
@@ -159,6 +153,9 @@ function mintFail(e: any) {
   mintIng.value = false
 }
 
+/**
+ * 检查图片的格式和大小
+ */
 async function checkImage(data: {
   file: UploadFileInfo
   fileList: UploadFileInfo[]
@@ -180,7 +177,9 @@ async function checkImage(data: {
   return true
 }
 
-// 传图，注意 uploadSuccess 数据
+/**
+ * 上传图标到 IPFS
+ */
 function uploadImage(options: UploadCustomRequestOptions) {
   message.loading(i18n.global.t('loading.upload_image_loading'), {
     duration: 0,
@@ -218,7 +217,7 @@ emitter.on('changeSymbol', async (val) => {
   }
   if (val === 'ETH') {
     mintErc20.value = false
-    mintType.value = 'ETH'
+    mintType = 'ETH'
   } else {
     mintErc20.value = true
   }
@@ -237,7 +236,7 @@ emitter.on('changeSymbol', async (val) => {
     symbol.value = val
     loading.value = false
     store.setSymbol(val)
-    mintType.value = 'ERC20'
+    mintType = 'ERC20'
     return
   }
 })
@@ -247,7 +246,7 @@ emitter.on('searchContractResult', (res) => {
   erc20Decimals.value = res.decimals
   symbol.value = res.symbol
   store.setSymbol(res.symbol)
-  mintType.value = 'ERC20'
+  mintType = 'ERC20'
 })
 </script>
 

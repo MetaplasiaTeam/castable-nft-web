@@ -4,10 +4,14 @@ import { BigNumber, ethers } from 'ethers'
 import Constants from '@/common/data/constants'
 import { Ref } from 'vue'
 
-export function useMintSingle(
-  { jsonUrl }: { jsonUrl: Ref<string> },
-  { price }: { price: Ref<string> }
-) {
+/**
+ * 铸造单个 NFT
+ *
+ * @param jsonUrl 上传 JSON 返回的链接
+ * @param price 单个 NFT 的价格
+ * @returns NFT 的 ID
+ */
+export function useMintSingle(jsonUrl: Ref<string>, price: Ref<string>) {
   return new Promise<number>(async (resolve, rejects) => {
     const { signer } = useEthers()
     if (signer.value === null) {
@@ -41,10 +45,18 @@ export function useMintSingle(
   })
 }
 
+/**
+ * 铸造多个 NFT
+ *
+ * @param jsonUrl 上传 JSON 返回的链接
+ * @param price 单个 NFT 的价格
+ * @param amount NFT 的数量
+ * @returns
+ */
 export function useMintMultiple(
-  { jsonUrl }: { jsonUrl: Ref<string> },
-  { price }: { price: Ref<string> },
-  { amount }: { amount: Ref<number> }
+  jsonUrl: Ref<string>,
+  price: Ref<string>,
+  amount: Ref<number>
 ) {
   return new Promise<any>(async (resolve, rejects) => {
     const { signer } = useEthers()
@@ -88,11 +100,20 @@ export function useMintMultiple(
   })
 }
 
+/**
+ * 使用 ERC20 代币铸造单个 NFT
+ *
+ * @param address ERC20 合约地址
+ * @param decimals 该 ERC20 合约的精度
+ * @param jsonUrl 上传 JSON 返回的链接
+ * @param price 单个 NFT 的价格
+ * @returns NFT 的 ID
+ */
 export function useMintSingleERC20(
-  { address }: { address: Ref<string> },
-  { decimals }: { decimals: Ref<number> },
-  { jsonUrl }: { jsonUrl: Ref<string> },
-  { price }: { price: Ref<string> }
+  address: Ref<string>,
+  decimals: Ref<number>,
+  jsonUrl: Ref<string>,
+  price: Ref<string>
 ) {
   return new Promise<number>(async (resolve, rejects) => {
     const { signer } = useEthers()
@@ -149,12 +170,22 @@ export function useMintSingleERC20(
   })
 }
 
+/**
+ * 使用 ERC20 代币铸造多个 NFT
+ * 
+ * @param address ERC20 合约地址
+ * @param decimals 该 ERC20 合约的精度
+ * @param jsonUrl 上传 JSON 返回的链接
+ * @param price 单个 NFT 的价格
+ * @param amount NFT 的数量
+ * @returns 
+ */
 export function useMintMultipleERC20(
-  { address }: { address: Ref<string> },
-  { decimals }: { decimals: Ref<number> },
-  { jsonUrl }: { jsonUrl: Ref<string> },
-  { price }: { price: Ref<string> },
-  { amount }: { amount: Ref<number> }
+  address: Ref<string>,
+  decimals: Ref<number>,
+  jsonUrl: Ref<string>,
+  price: Ref<string>,
+  amount: Ref<number>
 ) {
   return new Promise<number>(async (resolve, rejects) => {
     const { signer } = useEthers()

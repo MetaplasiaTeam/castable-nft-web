@@ -6,45 +6,36 @@ import { useEthers } from 'vue-dapp'
 export default class ERC20Util {
   static getSymbol(addr: string): string | undefined {
     const store = useStore()
-    let dataList: IERC20[] = []
-    dataList.push(...ERC20Data.ALL_DATA)
-    dataList.push(...store.tokenCache)
-    let filterData = dataList.filter((data: IERC20) => {
+    let dataList: IERC20[] = [...ERC20Data.ERC20_DATA, ...store.tokenCache]
+    let filterData = dataList.find((data: IERC20) => {
       return data.address == addr
     })
 
-    if (filterData.length > 0) {
-      return filterData[0].symbol
-    }
-    return undefined
+    return filterData?.symbol
   }
 
   static getAddress(symbol: string): string | undefined {
     const store = useStore()
     let dataList: IERC20[] = []
-    dataList.push(...ERC20Data.ALL_DATA)
+    dataList.push(...ERC20Data.ERC20_DATA)
     dataList.push(...store.tokenCache)
-    let filterData = dataList.filter((data: IERC20) => {
+    let filterData = dataList.find((data: IERC20) => {
       return data.symbol == symbol
     })
-    if (filterData.length > 0) {
-      return filterData[0].address
-    }
-    return undefined
+
+    return filterData?.address
   }
 
   static getDecimals(addressOrSymbol: string): number | undefined {
     const store = useStore()
     let dataList: IERC20[] = []
-    dataList.push(...ERC20Data.ALL_DATA)
+    dataList.push(...ERC20Data.ERC20_DATA)
     dataList.push(...store.tokenCache)
-    let filterData = dataList.filter((data: IERC20) => {
+    let filterData = dataList.find((data: IERC20) => {
       return data.address == addressOrSymbol || data.symbol == addressOrSymbol
     })
-    if (filterData.length > 0) {
-      return filterData[0].decimals
-    }
-    return undefined
+
+    return filterData?.decimals
   }
 
   static searchToken(address: string): Promise<IERC20> {
