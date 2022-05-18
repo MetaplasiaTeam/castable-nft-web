@@ -10,14 +10,14 @@ import emitter from '@/emitter'
 const { signer, provider, address } = useEthers()
 const message = useMessage()
 
-let bodyStyle = {
+const bodyStyle = {
   width: '600px',
 }
-let showDialog = ref(false)
-let friendAddress = ref('')
-let sending = ref(false)
+const showDialog = ref(false)
+const friendAddress = ref('')
+const sending = ref(false)
 
-let props = defineProps({
+const props = defineProps({
   tokenId: Number,
 })
 
@@ -43,9 +43,9 @@ async function giveaway() {
 
     sending.value = true
 
-    let trueSigner = signer.value
+    const trueSigner = signer.value
 
-    let contract = new ethers.Contract(
+    const contract = new ethers.Contract(
       Constants.CONTRACT_ADDRESS,
       Constants.CONTRACT_ABI,
       signer.value
@@ -57,7 +57,8 @@ async function giveaway() {
         props.tokenId
       )
       .then((gas) => {
-        let contractWithSigner = contract!!.connect(trueSigner)
+        // eslint-disable-next-line @typescript-eslint/no-extra-non-null-assertion
+        const contractWithSigner = contract!!.connect(trueSigner)
         contractWithSigner
           .safeTransferFrom(
             ethers.utils.getAddress(address.value),

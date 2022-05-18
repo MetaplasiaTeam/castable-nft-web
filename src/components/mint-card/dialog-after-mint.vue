@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { NModal, NButton } from 'naive-ui'
 import util from '@/common/utils/common-util'
 
-let bodyStyle = {
+const bodyStyle = {
   width: '600px',
 }
 
@@ -11,7 +11,7 @@ defineProps({
   tokenId: Number,
 })
 
-let showDialog = ref(false)
+const showDialog = ref(false)
 
 function show() {
   showDialog.value = true

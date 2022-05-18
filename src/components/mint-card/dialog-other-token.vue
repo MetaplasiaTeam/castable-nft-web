@@ -10,12 +10,12 @@ const { signer } = useEthers()
 const message = useMessage()
 const store = useStore()
 
-let bodyStyle = {
+const bodyStyle = {
   width: '600px',
 }
-let showDialog = ref(false)
-let address = ref('')
-let searching = ref(false)
+const showDialog = ref(false)
+const address = ref('')
+const searching = ref(false)
 
 function searchContract() {
   searching.value = true
@@ -25,28 +25,31 @@ function searchContract() {
   }
   searching.value = true
 
-  let testSymbol = ERC20Util.getSymbol(address.value)
+  const testSymbol = ERC20Util.getSymbol(address.value)
   if (testSymbol !== undefined) {
-    let otherToken = {
+    const otherToken = {
       address: address.value,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       symbol: ERC20Util.getSymbol(address.value)!,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       decimals: ERC20Util.getDecimals(address.value)!,
     }
-    emitter.emit('searchContractResult', otherToken)
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    emitter.emit('searchContractResult', otherToken!)
     searching.value = false
     showDialog.value = false
     return
   }
 
-  let contract = ERC20Util.getERC20Contract(address.value)?.connect(
+  const contract = ERC20Util.getERC20Contract(address.value)?.connect(
     signer.value
   )
   contract
     .name()
     .then(async () => {
-      let symbol: string = await contract.symbol()
-      let decimals: number = await contract.decimals()
-      let otherToken = {
+      const symbol: string = await contract.symbol()
+      const decimals: number = await contract.decimals()
+      const otherToken = {
         address: address.value,
         symbol: symbol,
         decimals: decimals,

@@ -7,20 +7,20 @@ import { ethers } from 'ethers'
 import Constants from '@/common/data/constants'
 import emitter from '@/emitter'
 
-const { signer, provider, address } = useEthers()
+const { signer } = useEthers()
 const message = useMessage()
 
-let props = defineProps({
+const props = defineProps({
   tokenId: Number,
   value: Number,
   symbol: String,
 })
 
-let bodyStyle = {
+const bodyStyle = {
   width: '600px',
 }
-let showDialog = ref(false)
-let buring = ref(false)
+const showDialog = ref(false)
+const buring = ref(false)
 
 function burn() {
   if (signer.value === null) {
@@ -29,15 +29,18 @@ function burn() {
   }
   buring.value = true
 
-  let trueSigner = signer.value
+  const trueSigner = signer.value
 
-  let contract = new ethers.Contract(
+  const contract = new ethers.Contract(
     Constants.CONTRACT_ADDRESS,
     Constants.CONTRACT_ABI,
     signer.value
   )
   contract.estimateGas.burn(props.tokenId).then((gas) => {
-    let contractWithSigner = contract!!.connect(trueSigner)
+    if (contract === null) {
+      return
+    }
+    const contractWithSigner = contract.connect(trueSigner)
     contractWithSigner
       .burn(props.tokenId, {
         gasLimit: gas,

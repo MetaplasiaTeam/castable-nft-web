@@ -2,7 +2,7 @@ import { createI18n } from 'vue-i18n'
 import zhCN from './locales/zh-cn.json'
 import en from './locales/en.json'
 
-let i18n = createI18n({
+const i18n = createI18n({
   locale: 'en',
   messages: {
     'zh-CN': zhCN,
@@ -11,4 +11,3 @@ let i18n = createI18n({
 })
 
 export default i18n
-

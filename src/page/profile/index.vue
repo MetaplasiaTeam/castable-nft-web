@@ -20,9 +20,9 @@ import IPFSUtil from '@/common/utils/ipfs'
 const store = useStore()
 const { signer } = useEthers()
 
-let loadError = ref(false)
-let nftListData = ref(Array<NFTItemProps>())
-let blankData = ref(false)
+const loadError = ref(false)
+const nftListData = ref(Array<NFTItemProps>())
+const blankData = ref(false)
 
 onMounted(() => {
   getAllNft()
@@ -46,7 +46,7 @@ function getAllNft() {
   }
 
   if (signer.value !== null) {
-    let contract = new ethers.Contract(
+    const contract = new ethers.Contract(
       Constants.CONTRACT_ADDRESS,
       Constants.CONTRACT_ABI,
       signer.value
@@ -58,7 +58,7 @@ function getAllNft() {
           store.setShowNftSkeleton(false)
           return
         }
-        let tempList: NFTItemProps[] = []
+        const tempList: NFTItemProps[] = []
         nftInfoList.forEach((element) => {
           tempList.push({
             tokenId: element.id,
@@ -78,7 +78,6 @@ function getAllNft() {
         console.log(err)
         loadError.value = true
       })
-      .finally(() => {})
   }
 }
 </script>
@@ -120,7 +119,7 @@ function getAllNft() {
         </n-result>
         <div id="nftdiv">
           <nft-item-loading
-            v-if="store.showNftSkeleton"
+            v-show="store.showNftSkeleton"
             v-for="item in [0, 1, 2, 3, 4, 5]"
             :error="loadError"
             :key="item"

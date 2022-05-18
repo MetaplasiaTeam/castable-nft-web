@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { Api } from '@/common/net'
-
-let prop = defineProps({
+defineProps({
   imageUrl: String,
 })
 // Api.getIpfsImgRace(prop.imageUrl!)

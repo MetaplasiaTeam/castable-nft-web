@@ -7,7 +7,7 @@ import ERC20Util from '@/common/utils/erc20'
 import DialogSend from './dialog-send.vue'
 import DialogBurn from './dialog-burn.vue'
 
-let props = defineProps({
+const props = defineProps({
   tokenId: Number,
   imageUrl: String,
   addr: String,
@@ -19,16 +19,16 @@ defineComponent({
   name: 'nft-item',
 })
 
-let sendDialog = ref<any>(null)
-let burnDialog = ref<any>(null)
+const sendDialog = ref<any>(null)
+const burnDialog = ref<any>(null)
 
-let symbol = ref('ETH')
-let value = ref(0)
+const symbol = ref('ETH')
+const value = ref(0)
 
 onMounted(() => {
   if (props.addr !== undefined && props.price !== undefined) {
-    let _symbol = ERC20Util.getSymbol(props.addr)
-    let _decimal = ERC20Util.getDecimals(props.addr)
+    const _symbol = ERC20Util.getSymbol(props.addr)
+    const _decimal = ERC20Util.getDecimals(props.addr)
     if (_symbol !== undefined) {
       symbol.value = _symbol
     } else {
@@ -43,6 +43,7 @@ onMounted(() => {
     } else {
       ERC20Util.searchToken(props.addr).then((res) => {
         value.value = parseFloat(
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           (parseFloat(props.price!) / Math.pow(10, res.decimals)).toFixed(5)
         )
       })

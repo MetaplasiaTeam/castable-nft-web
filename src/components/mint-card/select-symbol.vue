@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NIcon, NDropdown, useMessage } from 'naive-ui'
+import { NDropdown, useMessage } from 'naive-ui'
 import { useStore } from '@/store'
 import i18n from '@/i18n'
 import emitter from '@/emitter'
@@ -9,7 +9,7 @@ const store = useStore()
 const { signer } = useEthers()
 const message = useMessage()
 
-let symbol = [
+const symbol = [
   {
     label: 'ETH',
     key: 'ETH',

@@ -12,12 +12,11 @@ import { useStore } from '@/store'
 import { useRouter } from 'vue-router'
 import i18n from '@/i18n'
 import { NButton } from 'naive-ui'
-import { Contract } from 'ethers'
 import Constants from '@/common/data/constants'
 
 const { open } = useBoard()
 const { disconnect, provider } = useWallet()
-const { address, isActivated, signer, network } = useEthers()
+const { address, isActivated, signer } = useEthers()
 const store = useStore()
 const router = useRouter()
 

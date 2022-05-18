@@ -6,8 +6,8 @@ import { useEthers } from 'vue-dapp'
 export default class ERC20Util {
   static getSymbol(addr: string): string | undefined {
     const store = useStore()
-    let dataList: IERC20[] = [...ERC20Data.ERC20_DATA, ...store.tokenCache]
-    let filterData = dataList.find((data: IERC20) => {
+    const dataList: IERC20[] = [...ERC20Data.ERC20_DATA, ...store.tokenCache]
+    const filterData = dataList.find((data: IERC20) => {
       return data.address == addr
     })
 
@@ -16,10 +16,10 @@ export default class ERC20Util {
 
   static getAddress(symbol: string): string | undefined {
     const store = useStore()
-    let dataList: IERC20[] = []
+    const dataList: IERC20[] = []
     dataList.push(...ERC20Data.ERC20_DATA)
     dataList.push(...store.tokenCache)
-    let filterData = dataList.find((data: IERC20) => {
+    const filterData = dataList.find((data: IERC20) => {
       return data.symbol == symbol
     })
 
@@ -28,43 +28,45 @@ export default class ERC20Util {
 
   static getDecimals(addressOrSymbol: string): number | undefined {
     const store = useStore()
-    let dataList: IERC20[] = []
+    const dataList: IERC20[] = []
     dataList.push(...ERC20Data.ERC20_DATA)
     dataList.push(...store.tokenCache)
-    let filterData = dataList.find((data: IERC20) => {
+    const filterData = dataList.find((data: IERC20) => {
       return data.address == addressOrSymbol || data.symbol == addressOrSymbol
     })
 
     return filterData?.decimals
   }
 
-  static searchToken(address: string): Promise<IERC20> {
-    return new Promise((resolve, reject) => {
-      const { signer } = useEthers()
-      const store = useStore()
+  static async searchToken(address: string): Promise<IERC20> {
+    const { signer } = useEthers()
+    const store = useStore()
 
-      if (address === '' || signer.value === null) {
-        return
+    if (address === '' || signer.value === null) {
+      throw new Error('address is empty')
+    }
+    try {
+      const contract = ERC20Util.getERC20Contract(address)?.connect(
+        signer.value
+      )
+      const name = await contract.name()
+      if (name === '' || name === null || name === undefined) {
+        throw new Error('name is empty')
       }
-      let contract = ERC20Util.getERC20Contract(address)?.connect(signer.value)
-      contract
-        .name()
-        .then(async () => {
-          let symbol: string = await contract.symbol()
-          let decimals: number = await contract.decimals()
-          let otherToken: IERC20 = {
-            symbol: symbol,
-            address: address,
-            decimals: decimals,
-          }
-          store.addTokenCache(otherToken)
-          resolve(otherToken)
-        })
-        .catch((err: Error) => {
-          console.log(err.message)
-          reject(err)
-        })
-    })
+      const symbol = await contract.symbol()
+      const decimals = await contract.decimals()
+
+      const otherToken = {
+        symbol,
+        address,
+        decimals,
+      }
+      store.addTokenCache(otherToken)
+      return otherToken
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
   }
 
   static getERC20Contract(address: string) {

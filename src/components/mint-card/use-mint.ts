@@ -2,7 +2,6 @@ import { ERC20, useEthers } from 'vue-dapp'
 import i18n from '@/i18n'
 import { BigNumber, ethers } from 'ethers'
 import Constants from '@/common/data/constants'
-import { Ref } from 'vue'
 
 /**
  * 铸造单个 NFT
@@ -11,38 +10,36 @@ import { Ref } from 'vue'
  * @param price 单个 NFT 的价格
  * @returns NFT 的 ID
  */
-export function useMintSingle(jsonUrl: Ref<string>, price: Ref<string>) {
-  return new Promise<number>(async (resolve, rejects) => {
-    const { signer } = useEthers()
-    if (signer.value === null) {
-      rejects(i18n.global.t('error.please_connect_web3'))
-    }
-    let mySigner = signer.value!
-    let contract = new ethers.Contract(
+export async function useMintSingle(
+  jsonUrl: string,
+  price: string
+): Promise<number> {
+  const { signer } = useEthers()
+  if (signer.value === null) {
+    throw new Error(i18n.global.t('error.please_connect_web3'))
+  }
+  try {
+    const _singer = signer.value
+    const contract = new ethers.Contract(
       Constants.CONTRACT_ADDRESS,
       Constants.CONTRACT_ABI,
-      mySigner
+      _singer
     )
 
-    try {
-      let gas = await contract.estimateGas.mint(jsonUrl.value, 0, {
-        value: ethers.utils.parseEther(price.value),
-      })
+    const gas = await contract.estimateGas.mint(jsonUrl, 0, {
+      value: ethers.utils.parseEther(price),
+    })
+    const tx = await contract.connect(_singer).mint(jsonUrl, 0, {
+      gasLimit: gas.add(BigNumber.from(10000)),
+      value: ethers.utils.parseEther(price),
+    })
+    const result = await tx.wait()
 
-      let tx = await contract.connect(mySigner).mint(jsonUrl.value, 0, {
-        gasLimit: gas.add(BigNumber.from(10000)),
-        value: ethers.utils.parseEther(price.value),
-      })
-
-      let result = await tx.wait()
-
-      let tokenId = parseInt((result.events[0].args[2] as BigNumber).toString())
-
-      resolve(tokenId)
-    } catch (e) {
-      rejects(e)
-    }
-  })
+    return result
+  } catch (e) {
+    console.error(e)
+    throw e
+  }
 }
 
 /**
@@ -53,51 +50,39 @@ export function useMintSingle(jsonUrl: Ref<string>, price: Ref<string>) {
  * @param amount NFT 的数量
  * @returns
  */
-export function useMintMultiple(
-  jsonUrl: Ref<string>,
-  price: Ref<string>,
-  amount: Ref<number>
+export async function useMintMultiple(
+  jsonUrl: string,
+  price: string,
+  amount: number
 ) {
-  return new Promise<any>(async (resolve, rejects) => {
-    const { signer } = useEthers()
-    if (signer.value === null) {
-      rejects(i18n.global.t('error.please_connect_web3'))
-    }
-    let mySigner = signer.value!
-    let contract = new ethers.Contract(
+  const { signer } = useEthers()
+  if (signer.value === null) {
+    throw new Error(i18n.global.t('error.please_connect_web3'))
+  }
+  try {
+    const _signer = signer.value
+    const contract = new ethers.Contract(
       Constants.CONTRACT_ADDRESS,
       Constants.CONTRACT_ABI,
-      mySigner
+      _signer
     )
 
-    try {
-      let gas = await contract.estimateGas.mintAvg(
-        jsonUrl.value,
-        amount.value,
-        0,
-        {
-          value: ethers.utils.parseEther(
-            (parseFloat(price.value) * amount.value).toString()
-          ),
-        }
-      )
+    const gas = await contract.estimateGas.mintAvg(jsonUrl, amount, 0, {
+      value: ethers.utils.parseEther((parseFloat(price) * amount).toString()),
+    })
 
-      let tx = await contract
-        .connect(mySigner)
-        .mintAvg(jsonUrl.value, amount.value, 0, {
-          gasLimit: gas.add(BigNumber.from(10000)),
-          value: ethers.utils.parseEther(
-            (parseFloat(price.value) * amount.value).toString()
-          ),
-        })
+    const tx = await contract.connect(_signer).mintAvg(jsonUrl, amount, 0, {
+      gasLimit: gas.add(BigNumber.from(10000)),
+      value: ethers.utils.parseEther((parseFloat(price) * amount).toString()),
+    })
 
-      let result = await tx.wait()
+    const result = await tx.wait()
 
-      resolve(result)
-    } catch (e) {
-      rejects(e)
-    }
-  })
+    return result
+  } catch (e) {
+    console.error(e)
+    throw e
+  }
 }
 
 /**
@@ -109,145 +94,137 @@ export function useMintMultiple(
  * @param price 单个 NFT 的价格
  * @returns NFT 的 ID
  */
-export function useMintSingleERC20(
-  address: Ref<string>,
-  decimals: Ref<number>,
-  jsonUrl: Ref<string>,
-  price: Ref<string>
+export async function useMintSingleERC20(
+  address: string,
+  decimals: number,
+  jsonUrl: string,
+  price: string
 ) {
-  return new Promise<number>(async (resolve, rejects) => {
-    const { signer } = useEthers()
-    if (signer.value === null) {
-      rejects(i18n.global.t('error.please_connect_web3'))
-    }
-    let mySigner = signer.value!
-    let erc20Contract = new ethers.Contract(address.value, ERC20.abi, mySigner)
-    let mintContract = new ethers.Contract(
+  const { signer } = useEthers()
+  if (signer.value === null) {
+    throw new Error(i18n.global.t('error.please_connect_web3'))
+  }
+  try {
+    const _signer = signer.value
+    const erc20Contract = new ethers.Contract(address, ERC20.abi, _signer)
+    const mintContract = new ethers.Contract(
       Constants.CONTRACT_ADDRESS,
       Constants.CONTRACT_ABI,
-      mySigner
+      _signer
     )
-    try {
-      // 允许调用资产
-      let approveGas = await erc20Contract.estimateGas.approve(
-        Constants.CONTRACT_ADDRESS,
-        BigNumber.from(parseFloat(price.value) * 10 ** decimals.value)
-      )
-      await erc20Contract.approve(
-        Constants.CONTRACT_ADDRESS,
-        BigNumber.from(parseFloat(price.value) * 10 ** decimals.value),
+
+    // 允许调用资产
+    const approveGas = await erc20Contract.estimateGas.approve(
+      Constants.CONTRACT_ADDRESS,
+      BigNumber.from(parseFloat(price) * 10 ** decimals)
+    )
+    await erc20Contract.approve(
+      Constants.CONTRACT_ADDRESS,
+      BigNumber.from(parseFloat(price) * 10 ** decimals),
+      {
+        gasLimit: approveGas.add(BigNumber.from(10000)),
+      }
+    )
+
+    const mintGas = await mintContract.estimateGas.mintByERC20(
+      address,
+      BigNumber.from(parseFloat(price) * 10 ** decimals),
+      jsonUrl,
+      0
+    )
+
+    const tx = await mintContract
+      .connect(_signer)
+      .mintByERC20(
+        address,
+        BigNumber.from(parseFloat(price) * 10 ** decimals),
+        jsonUrl,
+        0,
         {
-          gasLimit: approveGas.add(BigNumber.from(10000)),
+          gasLimit: mintGas.add(BigNumber.from(10000)),
         }
       )
 
-      let mintGas = await mintContract.estimateGas.mintByERC20(
-        address.value,
-        BigNumber.from(parseFloat(price.value) * 10 ** decimals.value),
-        jsonUrl.value,
-        0
-      )
+    const result = await tx.wait()
+    const tokenId = parseInt((result.events[2].args[2] as BigNumber).toString())
 
-      let tx = await mintContract
-        .connect(mySigner)
-        .mintByERC20(
-          address.value,
-          BigNumber.from(parseFloat(price.value) * 10 ** decimals.value),
-          jsonUrl.value,
-          0,
-          {
-            gasLimit: mintGas.add(BigNumber.from(10000)),
-          }
-        )
-
-      let result = await tx.wait()
-      let tokenId = parseInt((result.events[2].args[2] as BigNumber).toString())
-
-      resolve(tokenId)
-    } catch (e) {
-      rejects(e)
-    }
-  })
+    return tokenId
+  } catch (e) {
+    console.error(e)
+    throw e
+  }
 }
 
 /**
  * 使用 ERC20 代币铸造多个 NFT
- * 
+ *
  * @param address ERC20 合约地址
  * @param decimals 该 ERC20 合约的精度
  * @param jsonUrl 上传 JSON 返回的链接
  * @param price 单个 NFT 的价格
  * @param amount NFT 的数量
- * @returns 
+ * @returns
  */
-export function useMintMultipleERC20(
-  address: Ref<string>,
-  decimals: Ref<number>,
-  jsonUrl: Ref<string>,
-  price: Ref<string>,
-  amount: Ref<number>
+export async function useMintMultipleERC20(
+  address: string,
+  decimals: number,
+  jsonUrl: string,
+  price: string,
+  amount: number
 ) {
-  return new Promise<number>(async (resolve, rejects) => {
-    const { signer } = useEthers()
-    if (signer.value === null) {
-      rejects(i18n.global.t('error.please_connect_web3'))
-    }
-    let mySigner = signer.value!
-    let erc20Contract = new ethers.Contract(address.value, ERC20.abi, mySigner)
-    let mintContract = new ethers.Contract(
+  const { signer } = useEthers()
+  if (signer.value === null) {
+    return new Error(i18n.global.t('error.please_connect_web3'))
+  }
+
+  try {
+    const mySigner = signer.value
+    const erc20Contract = new ethers.Contract(address, ERC20.abi, mySigner)
+    const mintContract = new ethers.Contract(
       Constants.CONTRACT_ADDRESS,
       Constants.CONTRACT_ABI,
       mySigner
     )
-    try {
-      // 允许调用资产
-      let approveGas = await erc20Contract.estimateGas.approve(
-        Constants.CONTRACT_ADDRESS,
-        BigNumber.from(parseFloat(price.value) * 10 ** decimals.value).mul(
-          amount.value
-        )
-      )
-      await erc20Contract.approve(
-        Constants.CONTRACT_ADDRESS,
-        BigNumber.from(parseFloat(price.value) * 10 ** decimals.value).mul(
-          amount.value
-        ),
+    // 允许调用资产
+    const approveGas = await erc20Contract.estimateGas.approve(
+      Constants.CONTRACT_ADDRESS,
+      BigNumber.from(parseFloat(price) * 10 ** decimals).mul(amount)
+    )
+    await erc20Contract.approve(
+      Constants.CONTRACT_ADDRESS,
+      BigNumber.from(parseFloat(price) * 10 ** decimals).mul(amount),
+      {
+        gasLimit: approveGas.add(BigNumber.from(10000)),
+      }
+    )
+
+    const mintGas = await mintContract.estimateGas.mintByERC20Avg(
+      address,
+      jsonUrl,
+      BigNumber.from(parseFloat(price) * 10 ** decimals).mul(amount),
+      amount,
+      0
+    )
+
+    const tx = await mintContract
+      .connect(mySigner)
+      .mintByERC20Avg(
+        address,
+        jsonUrl,
+        BigNumber.from(parseFloat(price) * 10 ** decimals).mul(amount),
+        amount,
+        0,
         {
-          gasLimit: approveGas.add(BigNumber.from(10000)),
+          gasLimit: mintGas.add(BigNumber.from(10000)),
         }
       )
 
-      let mintGas = await mintContract.estimateGas.mintByERC20Avg(
-        address.value,
-        jsonUrl.value,
-        BigNumber.from(parseFloat(price.value) * 10 ** decimals.value).mul(
-          amount.value
-        ),
-        amount.value,
-        0
-      )
+    const result = await tx.wait()
+    const tokenId = parseInt((result.events[0].args[2] as BigNumber).toString())
 
-      let tx = await mintContract
-        .connect(mySigner)
-        .mintByERC20Avg(
-          address.value,
-          jsonUrl.value,
-          BigNumber.from(parseFloat(price.value) * 10 ** decimals.value).mul(
-            amount.value
-          ),
-          amount.value,
-          0,
-          {
-            gasLimit: mintGas.add(BigNumber.from(10000)),
-          }
-        )
-
-      let result = await tx.wait()
-      let tokenId = parseInt((result.events[0].args[2] as BigNumber).toString())
-
-      resolve(tokenId)
-    } catch (e) {
-      rejects(e)
-    }
-  })
+    return tokenId
+  } catch (e) {
+    console.error(e)
+    throw e
+  }
 }

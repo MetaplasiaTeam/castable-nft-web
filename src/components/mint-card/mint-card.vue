@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Ref, ref } from 'vue'
+import { ref } from 'vue'
 import {
   NInput,
   NUpload,
@@ -34,33 +34,33 @@ import {
   useMintMultipleERC20,
 } from './use-mint'
 
-let message = useMessage()
+const message = useMessage()
 const store = useStore()
 const { signer } = useEthers()
 
-let imageHash = ref('')
-let nftName = ref('')
-let nftPrice = ref('')
-let jsonUrl = ref('')
-let symbol = ref('ETH')
+const imageHash = ref('')
+const nftName = ref('')
+const nftPrice = ref('')
+const jsonUrl = ref('')
+const symbol = ref('ETH')
 let mintType: 'ETH' | 'ERC20' | 'ERC721' = 'ETH'
 
 // erc20
-let erc20Address = ref('')
-let erc20Decimals = ref(0)
+const erc20Address = ref('')
+const erc20Decimals = ref(0)
 
-let amount = ref(1)
-let lastTokenId = ref(0)
+const amount = ref(1)
+const lastTokenId = ref(0)
 
-let mintErc20 = ref(false)
-let mintIng = ref(false)
-let bulk = ref(false)
-let uploadSuccess = ref(false)
-let loading = ref(false)
+const mintErc20 = ref(false)
+const mintIng = ref(false)
+const bulk = ref(false)
+const uploadSuccess = ref(false)
+const loading = ref(false)
 
 // dialog
-let otherTokenDialog = ref<any>(null)
-let afterMintDialog = ref<any>(null)
+const otherTokenDialog = ref<any>(null)
+const afterMintDialog = ref<any>(null)
 
 /**
  * 铸造 NFT 的函数
@@ -72,7 +72,7 @@ function mint() {
   }
   mintIng.value = true
 
-  let pinJson: PinIPFS = {
+  const pinJson: PinIPFS = {
     name: nftName.value,
     description: nftName.value,
     image: `ipfs://${imageHash.value}`,
@@ -103,15 +103,15 @@ function mint() {
           if (mintErc20.value) {
             // erc20
             await useMintMultipleERC20(
-              erc20Address,
-              erc20Decimals,
-              jsonUrl,
-              nftPrice,
-              amount
+              erc20Address.value,
+              erc20Decimals.value,
+              jsonUrl.value,
+              nftPrice.value,
+              amount.value
             )
           } else {
             // eth
-            await useMintMultiple(jsonUrl, nftPrice, amount)
+            await useMintMultiple(jsonUrl.value, nftPrice.value, amount.value)
           }
           mintSuccess()
         } else {
@@ -119,14 +119,14 @@ function mint() {
           if (mintErc20.value) {
             // erc20
             lastTokenId.value = await useMintSingleERC20(
-              erc20Address,
-              erc20Decimals,
-              jsonUrl,
-              nftPrice
+              erc20Address.value,
+              erc20Decimals.value,
+              jsonUrl.value,
+              nftPrice.value
             )
           } else {
             // eth
-            lastTokenId.value = await useMintSingle(jsonUrl, nftPrice)
+            lastTokenId.value = await useMintSingle(jsonUrl.value, nftPrice.value)
           }
           afterMintDialog.value.show()
           mintSuccess()
@@ -185,7 +185,7 @@ function uploadImage(options: UploadCustomRequestOptions) {
     duration: 0,
   })
   uploadSuccess.value = false
-  let file = options.file
+  const file = options.file
   if (file.file !== null && file.file !== undefined) {
     // 上传图片
     Api.uploadFile(file.file)
@@ -227,8 +227,8 @@ emitter.on('changeSymbol', async (val) => {
   }
   loading.value = true
 
-  let _erc20Address = ERC20Util.getAddress(val)
-  let _erc20Decimals = ERC20Util.getDecimals(val)
+  const _erc20Address = ERC20Util.getAddress(val)
+  const _erc20Decimals = ERC20Util.getDecimals(val)
 
   if (_erc20Address !== undefined && _erc20Decimals !== undefined) {
     erc20Address.value = _erc20Address

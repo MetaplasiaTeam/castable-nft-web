@@ -42,7 +42,7 @@ export class Api {
   }
 
   static uploadFile(file: File) {
-    let data = new FormData()
+    const data = new FormData()
     data.append('file', file)
     return request.post({
       url: 'pinning/pinFileToIPFS',
@@ -69,9 +69,9 @@ export class Api {
 
   // 暂不使用
   static async getIpfsImgRace(url: string) {
-    let hash = IPFSUtil.getHash(url)
+    const hash = IPFSUtil.getHash(url)
 
-    let imgBlob = await Promise.race([
+    const imgBlob = await Promise.race([
       axios.get(`${IPFSUtil.ipfsGateway[0]}/${hash}`, {
         responseType: 'blob',
       }),
@@ -83,57 +83,50 @@ export class Api {
       }),
     ])
 
-    let imgUrl = URL.createObjectURL(imgBlob.data)
+    const imgUrl = URL.createObjectURL(imgBlob.data)
     console.log(imgUrl)
   }
 
-  static getAllNftInfo(
-    contract: ethers.Contract | undefined
-  ): Promise<{ id: number; value: string; addr: string; info: PinIPFS }[]> {
-    return new Promise((resolve, reject) => {
-      if (contract === undefined) {
-        reject('contract is undefined')
-        return
-      }
+  static async getAllNftInfo(contract: ethers.Contract | undefined) {
+    if (contract === undefined) {
+      throw new Error('contract is undefined')
+    }
+    try {
       const store = useStore()
-      contract
-        .getByOwner(store.web3address)
-        .then(async (res: NFTInfo[]) => {
-          let allNFTInfo: Array<{
-            id: number
-            addr: string
-            value: string
-            info: PinIPFS
-          }> = []
-          for (let ele of res) {
-            if (ele.uri === '') {
-              continue
-            }
-            try {
-              let hash = IPFSUtil.getHash(ele.uri)
+      const nftInfo: NFTInfo[] = await contract.getByOwner(store.web3address)
+      const allNftInfo: Array<{
+        id: number
+        addr: string
+        value: string
+        info: PinIPFS
+      }> = []
+      for (const ele of nftInfo) {
+        if (ele.uri === '') {
+          continue
+        }
+        try {
+          const hash = IPFSUtil.getHash(ele.uri)
+          const info = await Promise.race([
+            axios.get(`${IPFSUtil.ipfsGateway[0]}/${hash}`),
+            axios.get(`${IPFSUtil.ipfsGateway[1]}/${hash}`),
+            axios.get(`${IPFSUtil.ipfsGateway[2]}/${hash}`),
+          ])
 
-              let info = await Promise.race([
-                axios.get(`${IPFSUtil.ipfsGateway[0]}/${hash}`),
-                axios.get(`${IPFSUtil.ipfsGateway[1]}/${hash}`),
-                axios.get(`${IPFSUtil.ipfsGateway[2]}/${hash}`),
-              ])
-
-              allNFTInfo.push({
-                id: ele.id.toNumber(),
-                value: ele.value.toString(),
-                addr: ele.addr.toString(),
-                info: info.data,
-              })
-            } catch (e) {
-              continue
-            }
-          }
-          resolve(allNFTInfo)
-        })
-        .catch((err: Error) => {
-          reject(err)
-        })
-    })
+          allNftInfo.push({
+            id: ele.id.toNumber(),
+            value: ele.value.toString(),
+            addr: ele.addr.toString(),
+            info: info.data,
+          })
+        } catch {
+          continue
+        }
+      }
+      return allNftInfo
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
   }
 }
 

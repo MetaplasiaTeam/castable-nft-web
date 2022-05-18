@@ -1,4 +1,3 @@
-import Constants from '../data/constants'
 
 export default {
   name: 'commonUtil',
